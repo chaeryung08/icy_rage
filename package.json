@@ -1,0 +1,25 @@
+{
+  "name": "icy_rage",
+  "version": "1.0.0",
+  "description": "노션 ( https://www.notion.so/3359998c0b6480719a7beb928aa1fbfe?v=3359998c0b64804faaf6000c155d4977&source=copy_link )",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaeryung08/icy_rage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chaeryung08/icy_rage/issues"
+  },
+  "homepage": "https://github.com/chaeryung08/icy_rage#readme",
+  "dependencies": {
+    "three": "^0.184.0",
+    "vite": "^8.0.10"
+  }
+}
