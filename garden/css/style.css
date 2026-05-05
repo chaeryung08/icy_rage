@@ -1,0 +1,235 @@
+/* ── 리셋 & 기본 ── */
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+:root {
+  --green-dark:  #1a3a1a;
+  --green-mid:   #2d6a2d;
+  --green-pale:  #e8f5e9;
+  --white:       #ffffff;
+  --text-dark:   #1a1a1a;
+  --text-muted:  #777;
+  --radius:      12px;
+  --spring-color: #fce4ec;
+  --summer-color: #e8f5e9;
+  --autumn-color: #fff8e1;
+  --winter-color: #e3f2fd;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  background: #fff;
+  color: var(--text-dark);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 헤더 ── */
+.header {
+  padding: 1rem 2rem 0.75rem;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  flex-shrink: 0;
+}
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+.header-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* ── 슬라이더 ── */
+.slider-section {
+  padding: 0.75rem 2rem 0.5rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 700px;
+}
+.slider-edge-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 32px;
+}
+.slider-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.year-slider {
+  width: 100%;
+  accent-color: var(--green-mid);
+  cursor: pointer;
+  height: 4px;
+}
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #bbb;
+}
+
+/* 수치 행 */
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.year-badge {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+.stat-chip {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--green-pale);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.stat-chip strong {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+/* ── 사계절 4분할 ── */
+.seasons-section {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 10px;
+  padding: 0.75rem 1.5rem 1rem;
+  min-height: 0;
+}
+
+/* ── 계절 카드 ── */
+.season-card {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: flex 0.45s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.season-card.expanded {
+  flex: 3;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+}
+
+/* 배경 이미지 */
+.season-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+.season-card.expanded .season-bg { transform: scale(1.04); }
+
+/* 이미지 없을 때 임시 색상 */
+.season-fallback { position: absolute; inset: 0; z-index: -1; }
+.spring-fallback { background: var(--spring-color); }
+.summer-fallback { background: var(--summer-color); }
+.autumn-fallback { background: var(--autumn-color); }
+.winter-fallback { background: var(--winter-color); }
+
+/* 오버레이 */
+.season-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  transition: background 0.3s;
+}
+.season-card.expanded .season-overlay { background: rgba(0,0,0,0.15); }
+
+/* 카드 콘텐츠 */
+.season-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 4px;
+}
+.season-emoji { font-size: 28px; }
+.season-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+.season-period {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+}
+
+/* 생장 바 */
+.growth-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.growth-bar {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.6s ease, background-color 0.6s ease;
+}
+
+/* 동물 아이콘 */
+.animal-icons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  min-height: 24px;
+}
+.animal-icon {
+  font-size: 18px;
+  animation: popIn 0.4s ease forwards;
+}
+@keyframes popIn {
+  0%   { opacity:0; transform:scale(0.3) translateY(8px); }
+  70%  { transform:scale(1.15) translateY(-2px); }
+  100% { opacity:1; transform:scale(1) translateY(0); }
+}
+
+/* 호버 힌트 */
+.hover-hint {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 3;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: rgba(0,0,0,0.3);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.season-card.expanded .hover-hint { opacity: 1; }

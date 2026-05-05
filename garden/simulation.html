@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- TODO: 페이지 제목 나중에 수정 -->
+  <!-- TODO: 제목 확정 후 수정 -->
   <title>별빛 정원 생물 다양성 시뮬레이션</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -11,26 +11,22 @@
 
   <!-- ── 헤더 ── -->
   <header class="header">
-    <!-- TODO: 프로젝트 제목 확정 후 수정 -->
     <h1 class="header-title">별빛 정원 생물 다양성 시뮬레이션</h1>
-    <p class="header-sub">창원성민여자고등학교 · 2025–2050</p>
+    <p class="header-sub">창원성민여자고등학교 · 2025 – 2050</p>
   </header>
 
-  <!-- ── 연도 슬라이더 ── -->
+  <!-- ── 슬라이더 ── -->
   <section class="slider-section">
     <div class="slider-wrap">
-      <span class="slider-label">2025</span>
-      <div class="slider-track-wrap">
+      <span class="slider-edge-label">2025</span>
+      <div class="slider-inner">
         <input
           type="range"
           id="yearSlider"
-          min="2025"
-          max="2051"
-          step="2"
+          min="2025" max="2050" step="2"
           value="2025"
           class="year-slider"
         />
-        <!-- 눈금 표시 -->
         <div class="slider-ticks">
           <span>2025</span>
           <span>2031</span>
@@ -39,10 +35,25 @@
           <span>2050</span>
         </div>
       </div>
-      <span class="slider-label">2050</span>
+      <span class="slider-edge-label">2050</span>
     </div>
-    <div class="year-display">
-      <span id="currentYear">2025</span>년
+
+    <!-- 연도 + 효과 수치 -->
+    <div class="stats-row">
+      <div class="year-badge" id="currentYear">2025년</div>
+      <div class="stat-chip">
+        🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong>
+      </div>
+      <div class="stat-chip">
+        🌿 Shannon H' <strong id="statShannon">3.8</strong>
+      </div>
+      <div class="stat-chip">
+        ☀️ 태양복사 감소 <strong id="statSolar">0%</strong>
+      </div>
+      <!-- TODO: 동물 자료 오면 수치 업데이트 -->
+      <div class="stat-chip">
+        🦋 유입 동물 <strong id="statAnimals">조사 중</strong>
+      </div>
     </div>
   </section>
 
@@ -50,133 +61,97 @@
   <section class="seasons-section">
 
     <!-- 봄 -->
-    <div class="season-card" id="card-spring" data-season="spring"
+    <div class="season-card" id="card-spring"
          onmouseenter="expandCard(this)"
-         onmouseleave="collapseCard(this)">
-      <div class="season-bg spring-bg"></div>
+         onmouseleave="collapseCard(this)"
+         onclick="goToSeason('spring')">
+      <div class="season-bg" style="background-image:url('assets/images/spring.jpg')">
+        <div class="season-fallback spring-fallback"></div>
+      </div>
       <div class="season-overlay"></div>
       <div class="season-content">
-        <div class="season-icon">🌸</div>
-        <h2 class="season-title">봄</h2>
-        <p class="season-desc">3월 – 5월</p>
-        <div class="season-info" id="info-spring">
-          <!-- js/seasons.js 에서 동적으로 채워짐 -->
+        <span class="season-emoji">🌸</span>
+        <h2 class="season-name">봄</h2>
+        <p class="season-period">3월 – 5월</p>
+        <div class="growth-bar-wrap">
+          <div class="growth-bar" id="growth-spring"></div>
         </div>
+        <!-- TODO: 동물 자료 오면 채워짐 -->
+        <div class="animal-icons" id="animals-spring"></div>
       </div>
-      <!-- 확대 시 보이는 정원 뷰 -->
-      <div class="garden-view" id="view-spring">
-        <canvas id="canvas-spring" class="garden-canvas"></canvas>
-        <div class="zone-labels">
-          <div class="zone-tag" data-zone="A" data-season="spring">Site A</div>
-          <div class="zone-tag" data-zone="B" data-season="spring">Site B</div>
-          <div class="zone-tag" data-zone="C" data-season="spring">Site C</div>
-          <div class="zone-tag" data-zone="D" data-season="spring">Site D</div>
-        </div>
-        <!-- 동물 애니메이션 컨테이너 -->
-        <div class="animal-layer" id="animals-spring"></div>
-      </div>
+      <div class="hover-hint">클릭해서 자세히 보기 →</div>
     </div>
 
     <!-- 여름 -->
-    <div class="season-card" id="card-summer" data-season="summer"
+    <div class="season-card" id="card-summer"
          onmouseenter="expandCard(this)"
-         onmouseleave="collapseCard(this)">
-      <div class="season-bg summer-bg"></div>
+         onmouseleave="collapseCard(this)"
+         onclick="goToSeason('summer')">
+      <div class="season-bg" style="background-image:url('assets/images/summer.jpg')">
+        <div class="season-fallback summer-fallback"></div>
+      </div>
       <div class="season-overlay"></div>
       <div class="season-content">
-        <div class="season-icon">☀️</div>
-        <h2 class="season-title">여름</h2>
-        <p class="season-desc">6월 – 8월</p>
-        <div class="season-info" id="info-summer"></div>
-      </div>
-      <div class="garden-view" id="view-summer">
-        <canvas id="canvas-summer" class="garden-canvas"></canvas>
-        <div class="zone-labels">
-          <div class="zone-tag" data-zone="A" data-season="summer">Site A</div>
-          <div class="zone-tag" data-zone="B" data-season="summer">Site B</div>
-          <div class="zone-tag" data-zone="C" data-season="summer">Site C</div>
-          <div class="zone-tag" data-zone="D" data-season="summer">Site D</div>
+        <span class="season-emoji">☀️</span>
+        <h2 class="season-name">여름</h2>
+        <p class="season-period">6월 – 8월</p>
+        <div class="growth-bar-wrap">
+          <div class="growth-bar" id="growth-summer"></div>
         </div>
-        <div class="animal-layer" id="animals-summer"></div>
+        <div class="animal-icons" id="animals-summer"></div>
       </div>
+      <div class="hover-hint">클릭해서 자세히 보기 →</div>
     </div>
 
     <!-- 가을 -->
-    <div class="season-card" id="card-autumn" data-season="autumn"
+    <div class="season-card" id="card-autumn"
          onmouseenter="expandCard(this)"
-         onmouseleave="collapseCard(this)">
-      <div class="season-bg autumn-bg"></div>
+         onmouseleave="collapseCard(this)"
+         onclick="goToSeason('autumn')">
+      <div class="season-bg" style="background-image:url('assets/images/autumn.jpg')">
+        <div class="season-fallback autumn-fallback"></div>
+      </div>
       <div class="season-overlay"></div>
       <div class="season-content">
-        <div class="season-icon">🍂</div>
-        <h2 class="season-title">가을</h2>
-        <p class="season-desc">9월 – 11월</p>
-        <div class="season-info" id="info-autumn"></div>
-      </div>
-      <div class="garden-view" id="view-autumn">
-        <canvas id="canvas-autumn" class="garden-canvas"></canvas>
-        <div class="zone-labels">
-          <div class="zone-tag" data-zone="A" data-season="autumn">Site A</div>
-          <div class="zone-tag" data-zone="B" data-season="autumn">Site B</div>
-          <div class="zone-tag" data-zone="C" data-season="autumn">Site C</div>
-          <div class="zone-tag" data-zone="D" data-season="autumn">Site D</div>
+        <span class="season-emoji">🍂</span>
+        <h2 class="season-name">가을</h2>
+        <p class="season-period">9월 – 11월</p>
+        <div class="growth-bar-wrap">
+          <div class="growth-bar" id="growth-autumn"></div>
         </div>
-        <div class="animal-layer" id="animals-autumn"></div>
+        <div class="animal-icons" id="animals-autumn"></div>
       </div>
+      <div class="hover-hint">클릭해서 자세히 보기 →</div>
     </div>
 
     <!-- 겨울 -->
-    <div class="season-card" id="card-winter" data-season="winter"
+    <div class="season-card" id="card-winter"
          onmouseenter="expandCard(this)"
-         onmouseleave="collapseCard(this)">
-      <div class="season-bg winter-bg"></div>
+         onmouseleave="collapseCard(this)"
+         onclick="goToSeason('winter')">
+      <div class="season-bg" style="background-image:url('assets/images/winter.jpg')">
+        <div class="season-fallback winter-fallback"></div>
+      </div>
       <div class="season-overlay"></div>
       <div class="season-content">
-        <div class="season-icon">❄️</div>
-        <h2 class="season-title">겨울</h2>
-        <p class="season-desc">12월 – 2월</p>
-        <div class="season-info" id="info-winter"></div>
-      </div>
-      <div class="garden-view" id="view-winter">
-        <canvas id="canvas-winter" class="garden-canvas"></canvas>
-        <div class="zone-labels">
-          <div class="zone-tag" data-zone="A" data-season="winter">Site A</div>
-          <div class="zone-tag" data-zone="B" data-season="winter">Site B</div>
-          <div class="zone-tag" data-zone="C" data-season="winter">Site C</div>
-          <div class="zone-tag" data-zone="D" data-season="winter">Site D</div>
+        <span class="season-emoji">❄️</span>
+        <h2 class="season-name">겨울</h2>
+        <p class="season-period">12월 – 2월</p>
+        <div class="growth-bar-wrap">
+          <div class="growth-bar" id="growth-winter"></div>
         </div>
-        <div class="animal-layer" id="animals-winter"></div>
+        <div class="animal-icons" id="animals-winter"></div>
       </div>
+      <div class="hover-hint">클릭해서 자세히 보기 →</div>
     </div>
 
   </section>
 
-  <!-- ── 식물 정보 팝업 ── -->
-  <div class="popup-overlay" id="popupOverlay" onclick="closePopup()">
-    <div class="popup" id="popup" onclick="event.stopPropagation()">
-      <button class="popup-close" onclick="closePopup()">✕</button>
-      <div class="popup-zone-badge" id="popupZone"></div>
-      <h3 class="popup-title" id="popupTitle"></h3>
-      <div class="popup-plants" id="popupPlants"></div>
-      <div class="popup-growth" id="popupGrowth"></div>
-      <!-- TODO: 동물 데이터 추가 후 여기에 동물 정보 섹션 추가 -->
-    </div>
-  </div>
-
-  <!-- ── 결론 페이지로 이동 ── -->
-  <footer class="sim-footer">
-    <a href="conclusion.html" class="to-conclusion">
-      2050년 결론 보기 →
-    </a>
-  </footer>
-
-  <!-- ── 스크립트 ── -->
   <script src="src_plants/plants.js"></script>
-  <!-- TODO: 동물 데이터 준비되면 아래 주석 해제 -->
+  <!-- TODO: 동물 자료 오면 주석 해제 -->
   <!-- <script src="src_creatures/animals.js"></script> -->
   <script src="js/timeline.js"></script>
   <script src="js/seasons.js"></script>
-  <script src="js/zones.js"></script>
   <script src="js/main.js"></script>
 
 </body>
