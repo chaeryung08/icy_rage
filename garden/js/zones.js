@@ -1,71 +1,89 @@
-/* ── zones.js : 구역 클릭 & 팝업 제어 ── */
+/* ── zones.js : 구역 클릭 팝업 ──
+ *
+ * 팝업 내용:
+ *   - 구역 이름/설명
+ *   - 해당 계절에 개화 중인 식물 (plants.json 연동)
+ *   - 생장 달성률 (plants.js 로지스틱 모델)
+ *   - TODO: 동물 자료 오면 추가
+ */
 
-// 구역별 식물 정보
-// TODO: plants.json 연동 후 이 데이터를 동적으로 불러오기
-const ZONE_DATA = {
+const ZONE_INFO = {
   A: {
-    name: 'Site A — 습지 생태계 공간',
-    desc: '멸종위기종 및 다양한 습지식물을 관찰할 수 있는 공간',
-    plants: ['조름나물','독미나리','두메부추','골풀','꽃창포','긴산꼬리풀','배초향','부처꽃','붓꽃','물레나물'],
-    type: '습지·음지형'
+    name: 'Site A — 습지 생태계',
+    desc: '멸종위기종 및 다양한 습지식물 관찰 공간',
+    plants: ['조름나물','독미나리','두메부추','골풀','꽃창포',
+             '긴산꼬리풀','배초향','부처꽃','붓꽃','물레나물','히어리','너도개미자리']
   },
   B: {
-    name: 'Site B — 초지 생태계 공간',
-    desc: '다양한 교관목 및 그래스, 초화류를 만날 수 있는 공간',
-    plants: ['남천','배롱나무','미스김라일락','영춘화','에메랄드그린','실유카','삼색조팝','홍가시나무','은쑥','백리향','홍지네고사리','휴케라','베르가못','아주가','노루오줌'],
-    type: '초지·관목형'
+    name: 'Site B — 초지 생태계',
+    desc: '교관목 및 그래스, 초화류 공간',
+    plants: ['배롱나무','남천','미스김라일락','영춘화','에메랄드 그린',
+             '실유카','삼색조팝','홍가시나무','은쑥','백리향',
+             '홍지네고사리','휴케라','베르가못','아주가','노루오줌']
   },
   C: {
     name: 'Site C — 커뮤니티 공간',
-    desc: '습지 및 비오톱을 관찰하고 휴식할 수 있는 커뮤니티 공간',
-    plants: ['목수국','낙상홍','흰말채나무','조름나물','독미나리','골풀','긴산꼬리풀','꽃범의꼬리','부처꽃','붓꽃','돌단풍','은사초'],
-    type: '관찰·커뮤니티형'
+    desc: '습지·비오톱 관찰 및 휴식 공간',
+    plants: ['목수국','낙상홍','흰말채나무','꽃범의꼬리','돌단풍','은사초']
   },
   D: {
     name: 'Site D — 세덤 정원',
-    desc: '겨울에도 상록성을 띠는 세덤 식물 군락지',
-    plants: ['블루엔젤','공조팝','세잎꿩의비름','상록기린초','두메부추','애기기린초','땅채송화','블루솔','알붐'],
-    type: '세덤·상록형'
+    desc: '겨울에도 상록성을 띠는 세덤 군락지',
+    plants: ['블루엔젤','공조팝','세잎꿩의비름','상록기린초',
+             '애기기린초','땅채송화','블루솔','알붐']
   }
 };
 
-function initZones() {
-  document.querySelectorAll('.zone-tag').forEach(tag => {
-    tag.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const zone = tag.dataset.zone;
-      openPopup(zone);
-    });
-  });
-}
+function openZonePopup(zoneId, season) {
+  const info = ZONE_INFO[zoneId];
+  if (!info) return;
 
-function openPopup(zoneId) {
-  const data = ZONE_DATA[zoneId];
-  const year = currentYear;
+  // 현재 연도 (seasons.html or simulation.html)
+  const year = typeof currentYear !== 'undefined'
+    ? currentYear
+    : parseInt(sessionStorage.getItem('year') || '2025');
 
-  // 생장 단계 계산 (plants.js)
-  const growthInfo = getGrowthInfo(zoneId, year);
+  // 생장 달성률 (plants.js)
+  const growth = getGrowthInfo(zoneId, year);
 
-  // 팝업 내용 채우기
-  document.getElementById('popupZone').textContent = `Site ${zoneId} · ${data.type}`;
-  document.getElementById('popupTitle').textContent = data.name;
+  // 해당 계절 개화 식물 (plants.json)
+  const blooming = getBloomingPlants(year, season)
+    .filter(p => info.plants.includes(p.name));
 
-  document.getElementById('popupPlants').innerHTML =
-    `<p style="margin-bottom:4px;font-weight:500;color:#333">주요 식물 (${data.plants.length}종)</p>
-     <p>${data.plants.join(' · ')}</p>
-     <p style="margin-top:6px;font-size:11px;color:#999">${data.desc}</p>`;
+  // 팝업 내용 구성
+  document.getElementById('popupZone').textContent  = `Site ${zoneId}`;
+  document.getElementById('popupTitle').textContent = info.name;
+  document.getElementById('popupBody').innerHTML = `
+    <p style="font-size:12px;color:#999;margin-bottom:10px">${info.desc}</p>
 
-  document.getElementById('popupGrowth').innerHTML =
-    `<span class="growth-label">${year}년 생장</span>
-     <div class="growth-bar">
-       <div class="growth-fill"
-            style="width:${growthInfo.percent}%;
-                   background:${growthInfo.color}">
-       </div>
-     </div>
-     <span class="growth-label" style="text-align:right">${growthInfo.stage}단계</span>`;
+    <p style="font-size:12px;font-weight:500;margin-bottom:4px;color:#333">
+      주요 식물 (${info.plants.length}종)
+    </p>
+    <p style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px">
+      ${info.plants.join(' · ')}
+    </p>
 
-  // 팝업 열기
+    ${blooming.length ? `
+    <p style="font-size:12px;font-weight:500;margin-bottom:4px;color:#e91e63">
+      🌸 이번 계절 개화 중 (${blooming.length}종)
+    </p>
+    <p style="font-size:12px;color:#e91e63;margin-bottom:10px">
+      ${blooming.map(p => p.honey ? `🍯${p.name}` : p.name).join(' · ')}
+    </p>` : ''}
+
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#777;margin-bottom:4px">
+      <span>${year}년 생장 달성률</span>
+      <div style="flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${growth.percent}%;background:${growth.color};
+                    border-radius:3px;transition:width 0.6s"></div>
+      </div>
+      <span style="font-weight:600;color:#333">${growth.percent}%</span>
+    </div>
+    <p style="font-size:11px;color:#aaa">${growth.label} (${growth.stage}단계)</p>
+
+    <!-- TODO: 동물 자료 오면 여기에 추가 -->
+  `;
+
   document.getElementById('popupOverlay').classList.add('active');
 }
 

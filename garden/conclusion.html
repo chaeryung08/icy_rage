@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>별빛 정원 — 2050년 결론</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/conclusion.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body class="conclusion-body">
+
+  <!-- 헤더 -->
+  <header class="con-header">
+    <a href="simulation.html" class="back-btn">← 시뮬레이션으로</a>
+    <div>
+      <!-- TODO: 제목 확정 후 수정 -->
+      <h1 class="con-title">별빛 정원 · 2050년 최종 결론</h1>
+      <p class="con-sub">2025–2050 생물 다양성 시뮬레이션 결과</p>
+    </div>
+    <div style="width:80px"></div>
+  </header>
+
+  <!-- 핵심 수치 카드 -->
+  <section class="metrics-grid">
+
+    <div class="metric-card">
+      <div class="metric-icon">🌿</div>
+      <div class="metric-val" id="mShannon">4.3</div>
+      <div class="metric-unit">Shannon H'</div>
+      <div class="metric-label">생물 다양성 지수</div>
+      <div class="metric-change">+0.5 (2025 대비)</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🌡️</div>
+      <div class="metric-val" id="mHeat">–2.6</div>
+      <div class="metric-unit">°C</div>
+      <div class="metric-label">열섬 완화 효과</div>
+      <div class="metric-change">태양복사 58% 감소</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🌸</div>
+      <div class="metric-val" id="mGrowth">83</div>
+      <div class="metric-unit">%</div>
+      <div class="metric-label">평균 생장 달성률</div>
+      <div class="metric-change">4단계 준성숙기</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon">🦋</div>
+      <div class="metric-val">조사 중</div>
+      <div class="metric-unit"></div>
+      <div class="metric-label">예상 유입 동물</div>
+      <!-- TODO: 동물 자료 오면 수치 업데이트 -->
+      <div class="metric-change">동물 조사 후 반영 예정</div>
+    </div>
+
+  </section>
+
+  <!-- 그래프 -->
+  <section class="charts-grid">
+
+    <div class="chart-card">
+      <h3 class="chart-title">Shannon-Wiener 다양성 지수 (H')</h3>
+      <p class="chart-desc">연도별 생물 다양성 변화</p>
+      <canvas id="chartShannon"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">열섬 완화 효과 (°C)</h3>
+      <p class="chart-desc">식물 생장에 따른 온도 저감 예측</p>
+      <canvas id="chartHeat"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">구역별 생장 달성률 (%)</h3>
+      <p class="chart-desc">로지스틱 생장 모델 기반 예측값</p>
+      <canvas id="chartGrowth"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">계절별 개화 식물 수</h3>
+      <p class="chart-desc">plants.json 실제 데이터 기반</p>
+      <canvas id="chartBlooming"></canvas>
+    </div>
+
+  </section>
+
+  <!-- 효과 요약 -->
+  <section class="effects-section">
+    <h2 class="section-title">종합 기대 효과</h2>
+    <div class="effects-grid">
+
+      <div class="effect-card">
+        <div class="effect-icon">🌍</div>
+        <h3>환경적 효과</h3>
+        <ul>
+          <li>열섬 완화 최대 <strong>–2.6°C</strong></li>
+          <li>태양복사 에너지 유입 <strong>58% 감소</strong></li>
+          <li>CO₂·벤젠·아황산가스 흡수</li>
+          <li>도시 생태 통로(비오톱) 역할</li>
+          <li>서식지 단편화 완화</li>
+        </ul>
+      </div>
+
+      <div class="effect-card">
+        <div class="effect-icon">📚</div>
+        <h3>교육적 효과</h3>
+        <ul>
+          <li>학교 내 생태 교육 공간 실현</li>
+          <li>야외 교실로 환경 교육 활용</li>
+          <li>생태 감수성 형성</li>
+          <li>심미적·정서적 경험 제공</li>
+        </ul>
+      </div>
+
+      <div class="effect-card">
+        <div class="effect-icon">🤝</div>
+        <h3>사회적 효과</h3>
+        <ul>
+          <li>유휴 옥상 공간 효율적 활용</li>
+          <li>도시 환경 속 자연 휴식 공간</li>
+          <li>국제 환경 문제 해결에 일조</li>
+          <li>학생 자치 생태 활동 거점</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="src_plants/plants.js"></script>
+  <script src="js/data.js"></script>
+  <script>
+  /* ── conclusion.html 스크립트 ──
+   * plants.json 실제 데이터로 그래프 생성
+   * 생장 계산: plants.js 로지스틱 모델
+   */
+  const YEARS = [2025,2027,2029,2031,2033,2035,2037,2039,2041,2043,2045,2047,2049,2050];
+  const GREEN = '#2d6a2d';
+  const CHARTOPT = { responsive:true, plugins:{legend:{display:false}},
+                     scales:{ x:{ticks:{font:{size:10}}}, y:{ticks:{font:{size:10}}} } };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadPlantsData();
+    drawCharts();
+    updateMetrics();
+  });
+
+  function updateMetrics() {
+    // 2050 기준 수치
+    const t = 1.0;
+    const g = 1/(1+Math.exp(-8*(t-0.5)));
+    document.getElementById('mShannon').textContent = (3.8+g*0.5).toFixed(2);
+    document.getElementById('mHeat').textContent    = `–${(g*2.6).toFixed(1)}`;
+    // 평균 생장 달성률
+    const avgG = ['A','B','C','D'].reduce((s,z)=>s+getGrowthInfo(z,2050).percent,0)/4;
+    document.getElementById('mGrowth').textContent  = Math.round(avgG);
+  }
+
+  function drawCharts() {
+    // Shannon H'
+    new Chart(document.getElementById('chartShannon'), {
+      type:'line',
+      data:{
+        labels: YEARS,
+        datasets:[{
+          data: YEARS.map(y => {
+            const t=(y-2025)/25, g=1/(1+Math.exp(-8*(t-0.5)));
+            return +(3.8+g*0.5).toFixed(2);
+          }),
+          borderColor: GREEN, backgroundColor: GREEN+'22',
+          fill:true, tension:0.4
+        }]
+      },
+      options: CHARTOPT
+    });
+
+    // 열섬 완화
+    new Chart(document.getElementById('chartHeat'), {
+      type:'line',
+      data:{
+        labels: YEARS,
+        datasets:[{
+          data: YEARS.map(y => {
+            const t=(y-2025)/25, g=1/(1+Math.exp(-8*(t-0.5)));
+            return +(-g*2.6).toFixed(2);
+          }),
+          borderColor:'#e53935', backgroundColor:'#e5393522',
+          fill:true, tension:0.4
+        }]
+      },
+      options: CHARTOPT
+    });
+
+    // 구역별 생장
+    new Chart(document.getElementById('chartGrowth'), {
+      type:'line',
+      data:{
+        labels: YEARS,
+        datasets:[
+          { label:'A', data:YEARS.map(y=>getGrowthInfo('A',y).percent), borderColor:'#4caf50', tension:0.4 },
+          { label:'B', data:YEARS.map(y=>getGrowthInfo('B',y).percent), borderColor:'#2196f3', tension:0.4 },
+          { label:'C', data:YEARS.map(y=>getGrowthInfo('C',y).percent), borderColor:'#ff9800', tension:0.4 },
+          { label:'D', data:YEARS.map(y=>getGrowthInfo('D',y).percent), borderColor:'#9c27b0', tension:0.4 },
+        ]
+      },
+      options:{ ...CHARTOPT, plugins:{legend:{display:true}} }
+    });
+
+    // 계절별 개화 식물 수
+    const seasons = ['spring','summer','autumn','winter'];
+    const seasonNames = ['봄','여름','가을','겨울'];
+    const colors = ['#f48fb1','#81c784','#ffb74d','#90caf9'];
+    new Chart(document.getElementById('chartBlooming'), {
+      type:'bar',
+      data:{
+        labels: YEARS,
+        datasets: seasons.map((s,i)=>({
+          label: seasonNames[i],
+          data: YEARS.map(y => getBloomingPlants(y,s).length),
+          backgroundColor: colors[i]+'99',
+          borderColor: colors[i],
+          borderWidth: 1
+        }))
+      },
+      options:{ ...CHARTOPT, plugins:{legend:{display:true}}, scales:{x:{stacked:false},y:{beginAtZero:true}} }
+    });
+  }
+  </script>
+
+</body>
+</html>

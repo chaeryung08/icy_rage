@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>별빛 정원 — 계절 시뮬레이션</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/season.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="season-page">
+
+  <!-- ── 상단 바 ── -->
+  <div class="season-topbar">
+    <a href="simulation.html" class="back-btn">← 돌아가기</a>
+    <div class="season-topbar-center">
+      <span class="topbar-emoji" id="topEmoji">🌸</span>
+      <span class="topbar-season" id="topSeason">봄</span>
+      <span class="topbar-year" id="topYear">2025년</span>
+    </div>
+    <div class="topbar-stats">
+      <span>🌡️ <strong id="topHeat">–0.0°C</strong></span>
+      <span>🌿 H' <strong id="topShannon">3.8</strong></span>
+    </div>
+  </div>
+
+  <!-- ── 슬라이드 래퍼 ── -->
+  <div class="season-slide-wrap">
+
+    <!-- 왼쪽 화살표 (세로 중앙) -->
+    <button class="season-arrow left" onclick="changeSeason(-1)">&#8249;</button>
+
+    <!-- 슬라이드 뷰포트 -->
+    <div class="season-viewport">
+      <div class="season-track" id="seasonTrack">
+
+        <!-- 봄 -->
+        <div class="season-panel" data-season="spring">
+          <div class="panel-bg" style="background-image:url('assets/images/spring.jpg')">
+            <div class="panel-fallback spring-fallback"></div>
+          </div>
+          <div class="panel-overlay"></div>
+
+          <!-- 3D 모델 -->
+          <div class="panel-model">
+            <canvas id="canvas-spring" class="model-canvas"></canvas>
+            <div class="panel-placeholder" id="placeholder-spring">
+              <p>🌸 봄 정원 모델링</p>
+              <p class="ph-sub">models/garden.glb 연결 예정</p>
+            </div>
+          </div>
+
+          <!-- 하단 정보 -->
+          <div class="panel-info">
+            <div class="growth-row">
+              <span class="growth-label-text">생장 달성률</span>
+              <div class="growth-track">
+                <div class="growth-fill" id="growth-spring"></div>
+              </div>
+              <span class="growth-pct" id="growthPct-spring">0%</span>
+            </div>
+            <div class="bloom-chips" id="blooming-spring"></div>
+            <!-- TODO: 동물 자료 오면 추가 -->
+            <div class="animal-layer" id="animals-spring"></div>
+          </div>
+        </div>
+
+        <!-- 여름 -->
+        <div class="season-panel" data-season="summer">
+          <div class="panel-bg" style="background-image:url('assets/images/summer.jpg')">
+            <div class="panel-fallback summer-fallback"></div>
+          </div>
+          <div class="panel-overlay"></div>
+          <div class="panel-model">
+            <canvas id="canvas-summer" class="model-canvas"></canvas>
+            <div class="panel-placeholder" id="placeholder-summer">
+              <p>☀️ 여름 정원 모델링</p>
+              <p class="ph-sub">models/garden.glb 연결 예정</p>
+            </div>
+          </div>
+          <div class="panel-info">
+            <div class="growth-row">
+              <span class="growth-label-text">생장 달성률</span>
+              <div class="growth-track">
+                <div class="growth-fill" id="growth-summer"></div>
+              </div>
+              <span class="growth-pct" id="growthPct-summer">0%</span>
+            </div>
+            <div class="bloom-chips" id="blooming-summer"></div>
+            <div class="animal-layer" id="animals-summer"></div>
+          </div>
+        </div>
+
+        <!-- 가을 -->
+        <div class="season-panel" data-season="autumn">
+          <div class="panel-bg" style="background-image:url('assets/images/autumn.jpg')">
+            <div class="panel-fallback autumn-fallback"></div>
+          </div>
+          <div class="panel-overlay"></div>
+          <div class="panel-model">
+            <canvas id="canvas-autumn" class="model-canvas"></canvas>
+            <div class="panel-placeholder" id="placeholder-autumn">
+              <p>🍂 가을 정원 모델링</p>
+              <p class="ph-sub">models/garden.glb 연결 예정</p>
+            </div>
+          </div>
+          <div class="panel-info">
+            <div class="growth-row">
+              <span class="growth-label-text">생장 달성률</span>
+              <div class="growth-track">
+                <div class="growth-fill" id="growth-autumn"></div>
+              </div>
+              <span class="growth-pct" id="growthPct-autumn">0%</span>
+            </div>
+            <div class="bloom-chips" id="blooming-autumn"></div>
+            <div class="animal-layer" id="animals-autumn"></div>
+          </div>
+        </div>
+
+        <!-- 겨울 -->
+        <div class="season-panel" data-season="winter">
+          <div class="panel-bg" style="background-image:url('assets/images/winter.jpg')">
+            <div class="panel-fallback winter-fallback"></div>
+          </div>
+          <div class="panel-overlay"></div>
+          <div class="panel-model">
+            <canvas id="canvas-winter" class="model-canvas"></canvas>
+            <div class="panel-placeholder" id="placeholder-winter">
+              <p>❄️ 겨울 정원 모델링</p>
+              <p class="ph-sub">models/garden.glb 연결 예정</p>
+            </div>
+          </div>
+          <div class="panel-info">
+            <div class="growth-row">
+              <span class="growth-label-text">생장 달성률</span>
+              <div class="growth-track">
+                <div class="growth-fill" id="growth-winter"></div>
+              </div>
+              <span class="growth-pct" id="growthPct-winter">0%</span>
+            </div>
+            <div class="bloom-chips" id="blooming-winter"></div>
+            <div class="animal-layer" id="animals-winter"></div>
+          </div>
+        </div>
+
+      </div><!-- /season-track -->
+    </div><!-- /season-viewport -->
+
+    <!-- 오른쪽 화살표 (세로 중앙) -->
+    <button class="season-arrow right" onclick="changeSeason(1)">&#8250;</button>
+
+  </div><!-- /season-slide-wrap -->
+
+  <!-- 계절 인디케이터 -->
+  <div class="season-dots">
+    <span class="dot active" data-idx="0" onclick="goToSeasonIdx(0)">🌸</span>
+    <span class="dot" data-idx="1" onclick="goToSeasonIdx(1)">☀️</span>
+    <span class="dot" data-idx="2" onclick="goToSeasonIdx(2)">🍂</span>
+    <span class="dot" data-idx="3" onclick="goToSeasonIdx(3)">❄️</span>
+  </div>
+
+  <!-- ── 구역 팝업 ── -->
+  <div class="popup-overlay" id="popupOverlay" onclick="closePopup()">
+    <div class="popup" onclick="event.stopPropagation()">
+      <button class="popup-close" onclick="closePopup()">✕</button>
+      <div class="popup-badge" id="popupZone"></div>
+      <h3 class="popup-title" id="popupTitle"></h3>
+      <div class="popup-body" id="popupBody"></div>
+    </div>
+  </div>
+
+  <!-- 스크립트 -->
+  <script src="src_plants/plants.js"></script>
+  <!-- TODO: 동물 자료 오면 주석 해제 -->
+  <!-- <script src="src_creatures/animals.js"></script> -->
+  <script src="js/data.js"></script>
+  <script src="js/seasons.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/zones.js"></script>
+  <script>
+    /* ── seasons.html 진입점 ──
+     * simulation.html에서 ?season=spring 파라미터로 넘어옴
+     * 연도는 sessionStorage에서 가져옴
+     */
+    const SEASONS_LIST = ['spring','summer','autumn','winter'];
+    const SEASON_META  = {
+      spring: { emoji:'🌸', name:'봄',  period:'3월–5월'  },
+      summer: { emoji:'☀️', name:'여름', period:'6월–8월'  },
+      autumn: { emoji:'🍂', name:'가을', period:'9월–11월' },
+      winter: { emoji:'❄️', name:'겨울', period:'12월–2월' },
+    };
+
+    let currentSeasonIdx = 0;
+    let currentYear = parseInt(sessionStorage.getItem('year') || '2025');
+
+    // URL 파라미터에서 계절 읽기
+    const params = new URLSearchParams(location.search);
+    const initSeason = params.get('season') || 'spring';
+    currentSeasonIdx = SEASONS_LIST.indexOf(initSeason);
+    if (currentSeasonIdx < 0) currentSeasonIdx = 0;
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadPlantsData();
+      initLoader();
+      goToSeasonIdx(currentSeasonIdx);
+      updateTopbar();
+      updateAllSeasons(currentYear);
+
+      // 키보드 ← →
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  changeSeason(-1);
+        if (e.key === 'ArrowRight') changeSeason(1);
+      });
+    });
+
+    function changeSeason(dir) {
+      currentSeasonIdx = (currentSeasonIdx + dir + 4) % 4;
+      goToSeasonIdx(currentSeasonIdx);
+    }
+
+    function goToSeasonIdx(idx) {
+      currentSeasonIdx = idx;
+      const track = document.getElementById('seasonTrack');
+      track.style.transform = `translateX(-${idx * 100}%)`;
+      // 인디케이터
+      document.querySelectorAll('.season-dots .dot').forEach((d,i) => {
+        d.classList.toggle('active', i === idx);
+      });
+      updateTopbar();
+    }
+
+    function updateTopbar() {
+      const season = SEASONS_LIST[currentSeasonIdx];
+      const meta   = SEASON_META[season];
+      document.getElementById('topEmoji').textContent  = meta.emoji;
+      document.getElementById('topSeason').textContent = meta.name;
+      document.getElementById('topYear').textContent   = `${currentYear}년`;
+
+      const t = Math.max(0, Math.min(1, (currentYear-2025)/25));
+      const g = 1 / (1 + Math.exp(-8*(t-0.5)));
+      document.getElementById('topHeat').textContent    = `–${(g*2.6).toFixed(1)}°C`;
+      document.getElementById('topShannon').textContent = (3.8+g*0.5).toFixed(2);
+    }
+
+    // getCurrentSeason (zones.js에서 사용)
+    function getCurrentSeason() {
+      return SEASONS_LIST[currentSeasonIdx];
+    }
+  </script>
+
+</body>
+</html>
