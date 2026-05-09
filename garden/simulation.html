@@ -15,45 +15,31 @@
     <p class="header-sub">창원성민여자고등학교 · 2025 – 2050</p>
   </header>
 
-  <!-- ── 슬라이더 ── -->
+  <!-- ── 연도 슬라이더 ── -->
   <section class="slider-section">
+    <div class="year-control">
+      <button class="year-btn" onclick="stepYear(-1)">&#8249;</button>
+      <span class="year-display" id="currentYear">2025년</span>
+      <button class="year-btn" onclick="stepYear(1)">&#8250;</button>
+    </div>
     <div class="slider-wrap">
       <span class="slider-edge-label">2025</span>
       <div class="slider-inner">
-        <input
-          type="range"
-          id="yearSlider"
-          min="2025" max="2050" step="2"
-          value="2025"
-          class="year-slider"
-        />
+        <input type="range" id="yearSlider"
+               min="2025" max="2050" step="2" value="2025"
+               class="year-slider"/>
         <div class="slider-ticks">
-          <span>2025</span>
-          <span>2031</span>
-          <span>2037</span>
-          <span>2043</span>
-          <span>2050</span>
+          <span>2025</span><span>2031</span><span>2037</span>
+          <span>2043</span><span>2050</span>
         </div>
       </div>
       <span class="slider-edge-label">2050</span>
     </div>
-
-    <!-- 연도 + 효과 수치 -->
     <div class="stats-row">
-      <div class="year-badge" id="currentYear">2025년</div>
-      <div class="stat-chip">
-        🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong>
-      </div>
-      <div class="stat-chip">
-        🌿 Shannon H' <strong id="statShannon">3.8</strong>
-      </div>
-      <div class="stat-chip">
-        ☀️ 태양복사 감소 <strong id="statSolar">0%</strong>
-      </div>
-      <!-- TODO: 동물 자료 오면 수치 업데이트 -->
-      <div class="stat-chip">
-        🦋 유입 동물 <strong id="statAnimals">조사 중</strong>
-      </div>
+      <div class="stat-chip">🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong></div>
+      <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">3.8</strong></div>
+      <div class="stat-chip">☀️ 태양복사 감소 <strong id="statSolar">0%</strong></div>
+      <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">조사 중</strong></div>
     </div>
   </section>
 
@@ -147,9 +133,15 @@
 
   </section>
 
+  <!-- 결론 토스트 (2050 도달 시) -->
+  <div class="conclusion-toast" id="conclusionToast">
+    <a href="conclusion.html">2050년 결론 보기 →</a>
+  </div>
+
   <script src="src_plants/plants.js"></script>
   <!-- TODO: 동물 자료 오면 주석 해제 -->
   <!-- <script src="src_creatures/animals.js"></script> -->
+  <script src="js/data.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/seasons.js"></script>
   <script src="js/main.js"></script>
