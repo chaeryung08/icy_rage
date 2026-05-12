@@ -1,32 +1,34 @@
-/* ── main.js : 전체 제어 ── */
+/* ── main.js : simulation.html 전체 제어 ── */
+let currentYear = 2026;
 
-let currentYear = 2025;
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadPlantsData();
   initTimeline();
-  updateAll(2025);
+  updateAll(2026);
 });
 
 function updateAll(year) {
   currentYear = year;
   updateStats(year);
-  updateGrowthBars(year);
-  // TODO: 동물 자료 오면 아래 주석 해제
-  // updateAnimals(year);
-
-  // 2050 도달 시 conclusion으로 이동
+  updateAllSeasons(year);
   if (year >= 2050) {
-    setTimeout(() => {
-      window.location.href = 'conclusion.html';
-    }, 800);
+    document.getElementById('conclusionToast').classList.add('show');
   }
 }
 
-// 계절 페이지로 이동
+function stepYear(dir) {
+  const slider = document.getElementById('yearSlider');
+  let year = parseInt(slider.value) + dir * 2;
+  year = Math.max(2025, Math.min(2050, year));
+  slider.value = year;
+  document.getElementById('currentYear').textContent = `${year}년`;
+  updateAll(year);
+}
+
+// 계절 클릭 → seasons.html로 이동 (연도 저장)
 function goToSeason(season) {
-  // 현재 연도 저장 후 이동
   sessionStorage.setItem('year', currentYear);
-  window.location.href = `${season}.html`;
+  window.location.href = `seasons.html?season=${season}`;
 }
 
 // 카드 호버

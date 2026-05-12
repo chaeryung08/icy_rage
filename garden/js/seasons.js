@@ -1,59 +1,100 @@
-/* ── seasons.js : 생장 바 & 수치 업데이트 ──
- *
- * plants.json 실제 데이터 연동
- * 생장 지수: GDD 기반 로지스틱 모델 (plants.js)
- * 열섬 완화: 천홍쿤(2022) 최대 –2.6°C
- * 태양복사: 옥상녹화 연구 최대 58% 감소
- * Shannon H': 3.8 → 4.3 (2025→2050)
- */
+/* seasons_page.js : seasons.html 전용 제어 */
 
-const GROWTH_COLORS = ['#E8F5A3','#B8E04A','#78C028','#3E8C14','#1A5C0A'];
+var SEASONS_LIST = ['spring', 'summer', 'autumn', 'winter'];
+var SEASON_META = {
+  spring: { emoji: '🌸', name: '봄' },
+  summer: { emoji: '☀️', name: '여름' },
+  autumn: { emoji: '🍂', name: '가을' },
+  winter: { emoji: '❄️', name: '겨울' }
+};
 
-// 상단 수치 업데이트
-function updateStats(year) {
-  const t = Math.max(0, Math.min(1, (year-2025)/25));
-  const g = logisticSimple(t);
+var currentSeasonIdx = 0;
+var currentYear = parseInt(sessionStorage.getItem('year') || '2026');
 
-  const heatEl    = document.getElementById('statHeat');
-  const shannonEl = document.getElementById('statShannon');
-  const solarEl   = document.getElementById('statSolar');
-
-  if (heatEl)    heatEl.textContent    = `–${(g*2.6).toFixed(1)}°C`;
-  if (shannonEl) shannonEl.textContent = (3.8 + g*0.5).toFixed(2);
-  if (solarEl)   solarEl.textContent   = `${Math.round(g*58)}%`;
+function changeSeason(dir) {
+  currentSeasonIdx = (currentSeasonIdx + dir + 4) % 4;
+  goToSeasonIdx(currentSeasonIdx);
 }
 
-// 모든 계절 업데이트
-function updateAllSeasons(year) {
-  ['spring','summer','autumn','winter'].forEach(s => updateOneSeason(s, year));
+function goToSeasonIdx(idx) {
+  currentSeasonIdx = idx;
+  var track = document.getElementById('seasonTrack');
+  if (track) {
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  }
+  for (var i = 0; i < 4; i++) {
+    var dot = document.getElementById('dot-' + i);
+    if (dot) {
+      dot.classList.toggle('active', i === idx);
+    }
+  }
+  updateTopbar();
 }
 
-// 계절 하나 업데이트
-function updateOneSeason(season, year) {
-  // plants.json 실제 생장 지수 사용
-  const avgIdx = getAvgGrowthIndex(year, season);
-  const pct    = Math.min(100, Math.round(avgIdx));
-  const color  = GROWTH_COLORS[Math.min(Math.floor(pct/20), 4)];
+function updateTopbar() {
+  var season = SEASONS_LIST[currentSeasonIdx];
+  var meta = SEASON_META[season];
 
-  // 생장 바
-  const fill  = document.getElementById(`growth-${season}`);
-  const pctEl = document.getElementById(`growthPct-${season}`);
-  if (fill)  { fill.style.width = `${pct}%`; fill.style.backgroundColor = color; }
-  if (pctEl) pctEl.textContent = `${pct}%`;
+  var topEmoji = document.getElementById('topEmoji');
+  var topSeason = document.getElementById('topSeason');
+  var topYear = document.getElementById('topYear');
+  if (topEmoji) topEmoji.textContent = meta.emoji;
+  if (topSeason) topSeason.textContent = meta.name;
+  if (topYear) topYear.textContent = currentYear + '년';
 
-  // 개화 식물 칩
-  const blooming = getBloomingPlants(year, season);
-  const chipsEl  = document.getElementById(`blooming-${season}`);
-  if (chipsEl) {
-    chipsEl.innerHTML = blooming.slice(0,6).map(p =>
-      `<span class="bloom-chip${p.honey?' honey':''}">${p.name}</span>`
-    ).join('');
+  var t = Math.max(0, Math.min(1, (currentYear - 2026) / 24));
+  var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
+  var topHeat = document.getElementById('topHeat');
+  var topShannon = document.getElementById('topShannon');
+  if (topHeat) topHeat.textContent = '-' + (g * 2.6).toFixed(1) + 'C';
+  if (topShannon) topShannon.textContent = (3.8 + g * 0.5).toFixed(2);
+}
+
+function getCurrentSeason() {
+  return SEASONS_LIST[currentSeasonIdx];
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // URL 파라미터로 시작 계절 결정
+  var params = new URLSearchParams(location.search);
+  var initSeason = params.get('season') || 'spring';
+  var idx = SEASONS_LIST.indexOf(initSeason);
+  currentSeasonIdx = idx >= 0 ? idx : 0;
+
+  // 버튼 이벤트
+  var btnLeft = document.getElementById('btnLeft');
+  var btnRight = document.getElementById('btnRight');
+  if (btnLeft) btnLeft.addEventListener('click', function() { changeSeason(-1); });
+  if (btnRight) btnRight.addEventListener('click', function() { changeSeason(1); });
+
+  // 인디케이터 클릭
+  for (var i = 0; i < 4; i++) {
+    (function(idx) {
+      var dot = document.getElementById('dot-' + idx);
+      if (dot) dot.addEventListener('click', function() { goToSeasonIdx(idx); });
+    })(i);
   }
 
-  // TODO: 동물 자료 오면 animal-layer 업데이트
-}
+  // 팝업 닫기
+  var overlay = document.getElementById('popupOverlay');
+  var closeBtn = document.getElementById('popupClose');
+  if (overlay) overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePopup();
+  });
+  if (closeBtn) closeBtn.addEventListener('click', closePopup);
 
-// 단순 로지스틱 (수치 계산용)
-function logisticSimple(t) {
-  return 1 / (1 + Math.exp(-8*(t-0.5)));
-}
+  // 키보드
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') changeSeason(-1);
+    if (e.key === 'ArrowRight') changeSeason(1);
+  });
+
+  // 초기화
+  goToSeasonIdx(currentSeasonIdx);
+
+  // plants 데이터 로드 후 업데이트
+  loadPlantsData().then(function() {
+    initLoader();
+    updateAllSeasons(currentYear);
+  });
+});
