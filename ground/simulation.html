@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TODO: 제목 확정 후 수정 -->
+    <title>생태 운동장 생물 다양성 시뮬레이션</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ── 헤더 ── -->
+    <header class="header">
+        <h1 class="header-title">생태 운동장 생물 다양성 시뮬레이션</h1>
+        <p class="header-sub">창원성민여자고등학교 · 2026 – 2050</p>
+    </header>
+
+    <!-- ── 연도 슬라이더 ── -->
+    <section class="slider-section">
+        <div class="year-control">
+            <button class="year-btn" onclick="stepYear(-1)">&#8249;</button>
+            <span class="year-display" id="currentYear">2026년</span>
+            <button class="year-btn" onclick="stepYear(1)">&#8250;</button>
+        </div>
+        <div class="slider-wrap">
+            <span class="slider-edge-label">2026</span>
+            <div class="slider-inner">
+                <input type="range" id="yearSlider" min="2026" max="2050" step="2" value="2026" class="year-slider" />
+                <div class="slider-ticks">
+                    <span>2026</span><span>2032</span><span>2038</span>
+                    <span>2044</span><span>2050</span>
+                </div>
+            </div>
+            <span class="slider-edge-label">2050</span>
+        </div>
+        <div class="stats-row">
+            <div class="stat-chip">🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong></div>
+            <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">3.8</strong></div>
+            <div class="stat-chip">☀️ 태양복사 감소 <strong id="statSolar">0%</strong></div>
+            <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">조사 중</strong></div>
+        </div>
+    </section>
+
+    <!-- ── 사계절 4분할 ── -->
+    <section class="seasons-section">
+
+        <!-- 봄 -->
+        <div class="season-card" id="card-spring" onmouseenter="expandCard(this)" onmouseleave="collapseCard(this)"
+            onclick="goToSeason('spring')">
+            <div class="season-bg" style="background-image:url('assets/images/spring.jpg')">
+                <div class="season-fallback spring-fallback"></div>
+            </div>
+            <div class="season-overlay"></div>
+            <div class="season-content">
+                <span class="season-emoji">🌸</span>
+                <h2 class="season-name">봄</h2>
+                <p class="season-period">3월 – 5월</p>
+                <div class="growth-bar-wrap">
+                    <div class="growth-bar" id="growth-spring"></div>
+                </div>
+                <!-- TODO: 동물 자료 오면 채워짐 -->
+                <div class="animal-icons" id="animals-spring"></div>
+            </div>
+            <div class="hover-hint">클릭해서 자세히 보기 →</div>
+        </div>
+
+        <!-- 여름 -->
+        <div class="season-card" id="card-summer" onmouseenter="expandCard(this)" onmouseleave="collapseCard(this)"
+            onclick="goToSeason('summer')">
+            <div class="season-bg" style="background-image:url('assets/images/summer.jpg')">
+                <div class="season-fallback summer-fallback"></div>
+            </div>
+            <div class="season-overlay"></div>
+            <div class="season-content">
+                <span class="season-emoji">☀️</span>
+                <h2 class="season-name">여름</h2>
+                <p class="season-period">6월 – 9월</p>
+                <div class="growth-bar-wrap">
+                    <div class="growth-bar" id="growth-summer"></div>
+                </div>
+                <div class="animal-icons" id="animals-summer"></div>
+            </div>
+            <div class="hover-hint">클릭해서 자세히 보기 →</div>
+        </div>
+
+        <!-- 가을 -->
+        <div class="season-card" id="card-autumn" onmouseenter="expandCard(this)" onmouseleave="collapseCard(this)"
+            onclick="goToSeason('autumn')">
+            <div class="season-bg" style="background-image:url('assets/images/autumn.jpg')">
+                <div class="season-fallback autumn-fallback"></div>
+            </div>
+            <div class="season-overlay"></div>
+            <div class="season-content">
+                <span class="season-emoji">🍂</span>
+                <h2 class="season-name">가을</h2>
+                <p class="season-period">10월 – 11월</p>
+                <div class="growth-bar-wrap">
+                    <div class="growth-bar" id="growth-autumn"></div>
+                </div>
+                <div class="animal-icons" id="animals-autumn"></div>
+            </div>
+            <div class="hover-hint">클릭해서 자세히 보기 →</div>
+        </div>
+
+        <!-- 겨울 -->
+        <div class="season-card" id="card-winter" onmouseenter="expandCard(this)" onmouseleave="collapseCard(this)"
+            onclick="goToSeason('winter')">
+            <div class="season-bg" style="background-image:url('assets/images/winter.jpg')">
+                <div class="season-fallback winter-fallback"></div>
+            </div>
+            <div class="season-overlay"></div>
+            <div class="season-content">
+                <span class="season-emoji">❄️</span>
+                <h2 class="season-name">겨울</h2>
+                <p class="season-period">12월 – 2월</p>
+                <div class="growth-bar-wrap">
+                    <div class="growth-bar" id="growth-winter"></div>
+                </div>
+                <div class="animal-icons" id="animals-winter"></div>
+            </div>
+            <div class="hover-hint">클릭해서 자세히 보기 →</div>
+        </div>
+
+    </section>
+
+    <!-- 결론 토스트 (2050 도달 시) -->
+    <div class="conclusion-toast" id="conclusionToast">
+        <a href="conclusion.html">2050년 결론 보기 →</a>
+    </div>
+
+    <script src="src_plants/plants.js"></script>
+    <!-- TODO: 동물 자료 오면 주석 해제 -->
+    <!-- <script src="src_creatures/animals.js"></script> -->
+    <script src="js/data.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/seasons.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
