@@ -157,13 +157,10 @@ html, body {
   transition: width 0.7s ease, background-color 0.7s ease;
 }
 
-/* 동물 아이콘 */
+/* 동물 아이콘 — simulation 카드에서는 표시 안 함 */
 .animal-icons {
-  display: flex; gap: 4px; flex-wrap: wrap;
-  margin-top: 4px; min-height: 24px;
-  opacity: 0; transition: opacity 0.3s 0.15s;
+  display: none;
 }
-.season-card.expanded .animal-icons { opacity: 1; }
 .animal-icon {
   font-size: 18px;
   animation: popIn 0.5s ease forwards;

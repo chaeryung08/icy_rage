@@ -31,10 +31,10 @@ function updateStats(year) {
   var shannon = document.getElementById('statShannon');
   var solar   = document.getElementById('statSolar');
   var animals = document.getElementById('statAnimals');
-  if (heat)    heat.textContent    = '-' + (g * 2.6).toFixed(1) + '°C';
-  if (shannon) shannon.textContent = (3.8 + g * 0.5).toFixed(2);
-  if (solar)   solar.textContent   = Math.round(g * 58) + '%';
-  if (animals) animals.textContent = Math.round(14 + g * 5) + '종';
+  if (heat)    heat.textContent    = '-' + (0.1 + g * 1.1).toFixed(1) + '°C';
+  if (shannon) shannon.textContent = (1.0 + g * 2.1).toFixed(2);
+  if (solar)   solar.textContent   = Math.round(2 + g * 38) + '%';
+  if (animals) animals.textContent = Math.round(3 + g * 15) + '종';
 }
 
 function updateAllSeasons(year) {
@@ -122,8 +122,8 @@ function updateTopbar() {
   var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
   var topHeat    = document.getElementById('topHeat');
   var topShannon = document.getElementById('topShannon');
-  if (topHeat)    topHeat.textContent    = '-' + (g * 2.6).toFixed(1) + 'C';
-  if (topShannon) topShannon.textContent = (3.8 + g * 0.5).toFixed(2);
+  if (topHeat)    topHeat.textContent    = '-' + (0.1 + g * 1.1).toFixed(1) + '°C';
+  if (topShannon) topShannon.textContent = (1.0 + g * 2.1).toFixed(2);
 }
 
 function getCurrentSeason() {

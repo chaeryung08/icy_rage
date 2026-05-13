@@ -10,208 +10,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans KR',sans-serif;color:#e8eaf0}
-
-.topbar{
-  position:fixed;top:0;left:0;right:0;height:52px;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;padding:0 1.4rem;
-  background:rgba(15,17,23,.85);backdrop-filter:blur(10px);
-  border-bottom:.5px solid rgba(255,255,255,.1);
-}
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 1.4rem;background:rgba(15,17,23,.85);backdrop-filter:blur(10px);border-bottom:.5px solid rgba(255,255,255,.1)}
 .back-btn{font-size:13px;color:rgba(255,255,255,.6);text-decoration:none}
 .back-btn:hover{color:#fff}
 .topbar-center{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:#fff}
 .topbar-stats{display:flex;gap:1.2rem;font-size:12px;color:rgba(255,255,255,.6)}
 .topbar-stats strong{color:#fff}
-
-.year-bar{
-  position:fixed;top:52px;left:0;right:0;height:46px;z-index:99;
-  background:rgba(15,17,23,.75);backdrop-filter:blur(8px);
-  border-bottom:.5px solid rgba(255,255,255,.06);
-  display:flex;align-items:center;padding:0 1.4rem;gap:.9rem;
-}
+.year-bar{position:fixed;top:52px;left:0;right:0;height:46px;z-index:99;background:rgba(15,17,23,.75);backdrop-filter:blur(8px);border-bottom:.5px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 1.4rem;gap:.9rem}
 .year-label{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase;font-weight:600;flex-shrink:0}
 .year-value{font-size:15px;font-weight:700;color:#fff;min-width:50px;text-align:center}
-.year-slider{
-  flex:1;-webkit-appearance:none;appearance:none;height:4px;
-  background:linear-gradient(90deg,#60a5fa,#a78bfa 50%,#f87171);
-  border-radius:2px;outline:none;cursor:pointer;
-}
-.year-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;
-  background:#fff;cursor:pointer;border:2px solid #1a1f2e;box-shadow:0 1px 4px rgba(0,0,0,.4);
-}
-.year-slider::-moz-range-thumb{
-  width:16px;height:16px;border-radius:50%;background:#fff;cursor:pointer;
-  border:2px solid #1a1f2e;box-shadow:0 1px 4px rgba(0,0,0,.4);
-}
+.year-slider{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:linear-gradient(90deg,#60a5fa,#a78bfa 50%,#f87171);border-radius:2px;outline:none;cursor:pointer}
+.year-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;cursor:pointer;border:2px solid #1a1f2e;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.year-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;cursor:pointer;border:2px solid #1a1f2e;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .year-trend{font-size:11px;color:rgba(255,255,255,.55);flex-shrink:0}
-.year-trend strong{color:#f87171}
-
-.slide-wrap{
-  position:fixed;top:98px;bottom:40px;left:0;right:0;
-  display:flex;align-items:center;
-}
+.year-trend strong{color:#60a5fa}
+.slide-wrap{position:fixed;top:98px;bottom:40px;left:0;right:0;display:flex;align-items:center}
 .slide-viewport{width:100%;height:100%;overflow:hidden;position:relative}
-.slide-track{
-  display:flex;height:100%;
-  transition:transform .5s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
-}
-
-.season-panel{
-  min-width:100vw;height:100%;position:relative;
-  display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
-}
+.slide-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);will-change:transform}
+.season-panel{min-width:100vw;height:100%;position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 .panel-fallback{position:absolute;inset:0;z-index:0}
 .spring-fallback{background:linear-gradient(155deg,#fce4ec,#f3e5f5 40%,#e8f5e9)}
 .summer-fallback{background:linear-gradient(155deg,#e8f5e9,#fffde7 40%,#e3f2fd)}
 .autumn-fallback{background:linear-gradient(155deg,#fff3e0,#fbe9e7 40%,#efebe9)}
 .winter-fallback{background:linear-gradient(155deg,#e8eaf6,#e3f2fd 40%,#e0f2f1)}
-.panel-overlay{
-  position:absolute;inset:0;z-index:2;
-  background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 45%,transparent 70%);
-  pointer-events:none;
-}
-
-.model-canvas{
-  position:absolute;inset:0;width:100%!important;height:100%!important;
-  z-index:1;display:block;
-}
-
-.panel-info{position:relative;z-index:3;padding:0 2rem 1.6rem;pointer-events:none}
+.panel-overlay{position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 45%,transparent 70%);pointer-events:none}
+/*
+  ================================================================
+  [🎨 블렌더 모델 교체 포인트]
+  SCENE_CONFIG.modelUrl 에 .glb 파일 경로를 입력하세요.
+  예) const SCENE_CONFIG = { modelUrl: 'assets/models/garden.glb' };
+  null 이면 기본 절차적 3D 씬이 표시됩니다.
+  계절별로 다른 모델을 원하면 JS 섹션의 주석을 참고하세요.
+  ================================================================
+*/
+.model-canvas{position:absolute;inset:0;width:100%!important;height:100%!important;z-index:1;display:block}
+.panel-bottom{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:0 1.8rem 1.5rem;display:flex;flex-direction:column;gap:0.75rem;pointer-events:none}
+.panel-bottom > *{pointer-events:auto}
+.panel-info{position:relative;padding:0;pointer-events:none}
 .panel-info > *{pointer-events:auto}
 .bloom-chips{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
 .bloom-layer-label{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.07em;text-transform:uppercase;font-weight:700;margin-bottom:3px}
 .bloom-layer-row{display:flex;flex-wrap:wrap;gap:5px}
-.bloom-chip{
-  font-size:12px;padding:4px 10px;border-radius:20px;
-  background:rgba(255,255,255,.16);color:rgba(255,255,255,.92);
-  border:.5px solid rgba(255,255,255,.22);backdrop-filter:blur(4px);white-space:nowrap;
-  cursor:pointer;transition:background .15s,transform .15s;
-}
+.bloom-chip{font-size:12px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.16);color:rgba(255,255,255,.92);border:.5px solid rgba(255,255,255,.22);backdrop-filter:blur(4px);white-space:nowrap;cursor:pointer;transition:background .15s,transform .15s}
 .bloom-chip:hover{background:rgba(255,255,255,.28);transform:translateY(-1px)}
 .bloom-chip.evg{background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.38);color:rgba(255,255,255,.95)}
-
-.fauna-layer{
-  position:absolute;left:2rem;right:2rem;bottom:80px;z-index:3;
-  display:flex;flex-direction:column;gap:6px;pointer-events:none;
-}
-.fauna-row{
-  display:flex;flex-wrap:wrap;gap:6px;align-items:center;pointer-events:auto;
-}
-.fauna-row-label{
-  font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.06em;
-  text-transform:uppercase;font-weight:600;min-width:48px;
-}
-.fauna-chip{
-  display:flex;align-items:center;gap:5px;padding:4px 10px;
-  background:rgba(0,0,0,.42);border:.5px solid rgba(255,255,255,.22);
-  border-radius:24px;cursor:pointer;transition:background .2s,transform .15s;
-  backdrop-filter:blur(6px);
-}
+.fauna-layer{position:relative;left:auto;right:auto;bottom:auto;z-index:auto;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.fauna-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;pointer-events:auto}
+.fauna-row-label{font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase;font-weight:600;min-width:48px}
+.fauna-chip{display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,0,0,.42);border:.5px solid rgba(255,255,255,.22);border-radius:24px;cursor:pointer;transition:background .2s,transform .15s;backdrop-filter:blur(6px)}
 .fauna-chip:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
 .fauna-emoji{font-size:16px;line-height:1}
 .fauna-name{font-size:12px;color:#fff;font-weight:500}
-.fauna-chip.absent{opacity:.3;cursor:default}
-.fauna-chip.absent:hover{background:rgba(0,0,0,.42);transform:none}
-
-.season-arrow{
-  position:absolute;top:50%;transform:translateY(-50%);z-index:50;
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.3);
-  color:#fff;font-size:22px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .2s,transform .15s;backdrop-filter:blur(6px);
-}
+.season-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:50;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.3);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s;backdrop-filter:blur(6px)}
 .season-arrow.left{left:14px}
 .season-arrow.right{right:14px}
 .season-arrow:hover{background:rgba(255,255,255,.28);transform:translateY(-50%) scale(1.08)}
-
-.season-dots{
-  position:fixed;bottom:0;left:0;right:0;height:40px;z-index:100;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  background:rgba(0,0,0,.45);backdrop-filter:blur(6px);
-}
-.dot{
-  width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;
-  background:rgba(255,255,255,.18);border:.5px solid rgba(255,255,255,.22);
-  display:flex;align-items:center;justify-content:center;transition:all .3s;
-}
+.season-dots{position:fixed;bottom:0;left:0;right:0;height:40px;z-index:100;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px)}
+.dot{width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;background:rgba(255,255,255,.18);border:.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;transition:all .3s}
 .dot.active{background:rgba(255,255,255,.35);transform:scale(1.2);border-color:rgba(255,255,255,.6)}
-
-.right-cards{
-  position:fixed;top:108px;right:12px;z-index:150;
-  display:flex;flex-direction:column;gap:8px;width:230px;
-}
-.r-card{
-  background:rgba(15,17,23,.88);backdrop-filter:blur(8px);
-  border:.5px solid rgba(255,255,255,.12);border-radius:12px;
-  padding:.7rem .9rem;
-}
-.rc-title{
-  font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.07em;
-  text-transform:uppercase;margin-bottom:6px;font-weight:600;
-}
+.right-cards{position:fixed;top:108px;right:12px;z-index:150;display:flex;flex-direction:column;gap:8px;width:230px}
+.r-card{background:rgba(15,17,23,.88);backdrop-filter:blur(8px);border:.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.7rem .9rem}
+.rc-title{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
 .zl-item{display:flex;align-items:center;gap:7px;font-size:11px;cursor:pointer;transition:opacity .2s;color:#e8eaf0;padding:2px 0}
 .zl-item:hover{opacity:.7}
 .zl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-
-.env-row{
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:11px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,.06);
-}
+.env-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
 .env-row:last-child{border-bottom:none}
 .env-key{color:rgba(255,255,255,.55)}
 .env-val{font-weight:600;color:#fff}
 .env-val.good{color:#4ade80}
 .env-val.warn{color:#fbbf24}
 .env-val.bad{color:#f87171}
-.env-bar-wrap{
-  height:4px;background:rgba(255,255,255,.08);border-radius:2px;
-  margin-top:3px;overflow:hidden;
-}
+.env-bar-wrap{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:3px;overflow:hidden}
 .env-bar{height:100%;border-radius:2px;transition:width .5s}
-
-.zone-popup{
-  position:fixed;z-index:200;min-width:240px;max-width:290px;
-  background:rgba(18,23,36,.97);border-radius:14px;padding:.9rem 1.1rem;
-  opacity:0;transform:translateY(6px);
-  transition:opacity .2s,transform .2s;backdrop-filter:blur(12px);
-  border:.5px solid rgba(255,255,255,.1);
-  pointer-events:none;
-}
+.zone-popup{position:fixed;z-index:200;min-width:270px;max-width:330px;background:rgba(18,23,36,.97);border-radius:16px;padding:1.1rem 1.3rem;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;backdrop-filter:blur(12px);border:.5px solid rgba(255,255,255,.12);pointer-events:none}
 .zone-popup.visible{opacity:1;transform:translateY(0);pointer-events:auto}
 .zp-header{display:flex;align-items:center;gap:7px;margin-bottom:.5rem}
 .zp-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.05em}
 .zp-title{font-size:14px;font-weight:700}
 .zp-desc{font-size:11px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:.7rem}
-.zp-plant-list{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto}
+.zp-plant-list{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto}
 .zp-plant-list::-webkit-scrollbar{width:3px}
 .zp-plant-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
-.zp-plant-item{
-  font-size:12px;padding:5px 9px;border-radius:8px;
-  background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);
-  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-  transition:background .15s;
-}
+.zp-plant-item{font-size:12px;padding:7px 11px;border-radius:8px;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
 .zp-plant-item:hover{background:rgba(255,255,255,.14)}
 .zp-plant-name{font-weight:500}
+.zp-plant-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.zp-plant-bloom{font-size:10px;color:rgba(255,180,100,.75);font-weight:500}
 .zp-plant-state{font-size:10px;color:rgba(255,255,255,.45)}
 .zp-empty{font-size:11px;color:rgba(255,255,255,.4);text-align:center;padding:8px;font-style:italic}
 .zp-footer{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:.5rem}
-
-.detail-modal{
-  position:fixed;inset:0;z-index:400;
-  display:none;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
-}
+.detail-modal{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
 .detail-modal.open{display:flex}
-.dm-card{
-  width:420px;max-width:92vw;max-height:84vh;overflow-y:auto;
-  background:#1a1f2e;border-radius:16px;padding:1.4rem 1.5rem;
-  border:.5px solid rgba(255,255,255,.12);
-  animation:dmIn .25s ease;
-}
+.dm-card{width:420px;max-width:92vw;max-height:84vh;overflow-y:auto;background:#1a1f2e;border-radius:16px;padding:1.4rem 1.5rem;border:.5px solid rgba(255,255,255,.12);animation:dmIn .25s ease}
 @keyframes dmIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 .dm-card::-webkit-scrollbar{width:4px}
 .dm-card::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
@@ -220,47 +111,26 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
 .dm-name{font-size:22px;font-weight:700;line-height:1.2}
 .dm-sci{font-size:11px;color:rgba(255,255,255,.45);font-style:italic;margin-top:3px}
 .dm-type{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px}
-.dm-close{
-  background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);
-  width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-}
+.dm-close{background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .dm-close:hover{background:rgba(255,255,255,.18)}
 .dm-section{margin-bottom:1rem}
 .dm-section:last-child{margin-bottom:0}
 .dm-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600;margin-bottom:6px}
 .dm-text{font-size:13px;color:#e8eaf0;line-height:1.6}
 .dm-tags{display:flex;flex-wrap:wrap;gap:5px}
-.dm-tag{font-size:11px;padding:3px 9px;border-radius:10px;
-  background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
-.dm-note{
-  font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;
-  background:rgba(255,255,255,.04);border-radius:8px;padding:.7rem .9rem;
-  border-left:2px solid rgba(74,222,128,.4);
-}
-.dm-chain{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  background:rgba(255,255,255,.04);border-radius:10px;padding:.7rem .9rem;
-}
-.dm-chain-item{
-  display:flex;align-items:center;gap:5px;font-size:12px;
-  padding:4px 9px;border-radius:14px;background:rgba(255,255,255,.08);
-}
+.dm-tag{font-size:11px;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.dm-note{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;background:rgba(255,255,255,.04);border-radius:8px;padding:.7rem .9rem;border-left:2px solid rgba(74,222,128,.4)}
+.dm-chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.04);border-radius:10px;padding:.7rem .9rem}
+.dm-chain-item{display:flex;align-items:center;gap:5px;font-size:12px;padding:4px 9px;border-radius:14px;background:rgba(255,255,255,.08)}
 .dm-arrow{color:rgba(255,255,255,.4);font-size:14px}
-.dm-trend{
-  display:flex;align-items:center;gap:6px;font-size:12px;
-  padding:6px 0;
-}
-.dm-trend-bar-wrap{
-  flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;
-}
+.dm-trend{display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 0}
+.dm-trend-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
 .dm-trend-bar{height:100%;border-radius:3px;transition:width .5s}
 .dm-trend-num{font-weight:600;min-width:32px;text-align:right}
 </style>
 </head>
 <body>
 
-<!-- 상단 바 -->
 <div class="topbar">
   <a href="simulation.html" class="back-btn">← 돌아가기</a>
   <div class="topbar-center">
@@ -274,15 +144,13 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
   </div>
 </div>
 
-<!-- 연도 슬라이더 -->
 <div class="year-bar">
   <span class="year-label">📅 연도</span>
   <span class="year-value" id="yearValue">2026</span>
   <input type="range" class="year-slider" id="yearSlider" min="0" max="12" step="1" value="0">
-  <span class="year-trend" id="yearTrend">2025 대비 <strong>+0.9°C</strong></span>
+  <span class="year-trend" id="yearTrend">RCP 4.5 기준 <strong>+0.1°C</strong></span>
 </div>
 
-<!-- 우측 카드들 -->
 <div class="right-cards">
   <div class="r-card">
     <div class="rc-title">구역</div>
@@ -292,9 +160,9 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
     <div class="zl-item" onclick="openPlantPanel('D')"><div class="zl-dot" style="background:#a78bfa"></div>SITE D — 세덤</div>
   </div>
   <div class="r-card">
-    <div class="rc-title">환경 지표</div>
-    <div class="env-row"><span class="env-key">연평균기온</span><span class="env-val" id="envTemp">16.7°C</span></div>
-    <div class="env-row"><span class="env-key">연강수량</span><span class="env-val" id="envRain">1219mm</span></div>
+    <div class="rc-title">환경 지표 <span style="font-size:8px;color:rgba(255,255,255,.3);font-weight:400">(RCP 4.5)</span></div>
+    <div class="env-row"><span class="env-key">연평균기온</span><span class="env-val" id="envTemp">15.9°C</span></div>
+    <div class="env-row"><span class="env-key">연강수량</span><span class="env-val" id="envRain">1152mm</span></div>
     <div class="env-row"><span class="env-key">열섬 완화</span><span class="env-val good" id="envHeat">-1.2°C</span></div>
     <div class="env-row"><span class="env-key">고온 스트레스</span><span class="env-val" id="envStress">낮음</span></div>
   </div>
@@ -308,7 +176,6 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
   </div>
 </div>
 
-<!-- 계절 슬라이드 -->
 <div class="slide-wrap">
   <button class="season-arrow left" id="btnLeft">&#8249;</button>
   <div class="slide-viewport">
@@ -317,36 +184,43 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
         <div class="panel-fallback spring-fallback"></div>
         <canvas id="canvas-spring" class="model-canvas"></canvas>
         <div class="panel-overlay"></div>
-        <div class="fauna-layer" id="fauna-spring"></div>
-        <div class="panel-info"><div class="bloom-chips" id="blooming-spring"></div></div>
+        <div class="panel-bottom">
+          <div class="fauna-layer" id="fauna-spring"></div>
+          <div class="panel-info"><div class="bloom-chips" id="blooming-spring"></div></div>
+        </div>
       </div>
       <div class="season-panel" data-season="summer">
         <div class="panel-fallback summer-fallback"></div>
         <canvas id="canvas-summer" class="model-canvas"></canvas>
         <div class="panel-overlay"></div>
-        <div class="fauna-layer" id="fauna-summer"></div>
-        <div class="panel-info"><div class="bloom-chips" id="blooming-summer"></div></div>
+        <div class="panel-bottom">
+          <div class="fauna-layer" id="fauna-summer"></div>
+          <div class="panel-info"><div class="bloom-chips" id="blooming-summer"></div></div>
+        </div>
       </div>
       <div class="season-panel" data-season="autumn">
         <div class="panel-fallback autumn-fallback"></div>
         <canvas id="canvas-autumn" class="model-canvas"></canvas>
         <div class="panel-overlay"></div>
-        <div class="fauna-layer" id="fauna-autumn"></div>
-        <div class="panel-info"><div class="bloom-chips" id="blooming-autumn"></div></div>
+        <div class="panel-bottom">
+          <div class="fauna-layer" id="fauna-autumn"></div>
+          <div class="panel-info"><div class="bloom-chips" id="blooming-autumn"></div></div>
+        </div>
       </div>
       <div class="season-panel" data-season="winter">
         <div class="panel-fallback winter-fallback"></div>
         <canvas id="canvas-winter" class="model-canvas"></canvas>
         <div class="panel-overlay"></div>
-        <div class="fauna-layer" id="fauna-winter"></div>
-        <div class="panel-info"><div class="bloom-chips" id="blooming-winter"></div></div>
+        <div class="panel-bottom">
+          <div class="fauna-layer" id="fauna-winter"></div>
+          <div class="panel-info"><div class="bloom-chips" id="blooming-winter"></div></div>
+        </div>
       </div>
     </div>
   </div>
   <button class="season-arrow right" id="btnRight">&#8250;</button>
 </div>
 
-<!-- 도트 -->
 <div class="season-dots">
   <span class="dot active" id="dot-0">🌸</span>
   <span class="dot" id="dot-1">☀️</span>
@@ -354,97 +228,61 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
   <span class="dot" id="dot-3">❄️</span>
 </div>
 
-<!-- 구역 호버 팝업 -->
 <div class="zone-popup" id="zonePopup">
-  <div class="zp-header">
-    <span class="zp-badge" id="zpBadge"></span>
-    <span class="zp-title" id="zpTitle"></span>
-  </div>
+  <div class="zp-header"><span class="zp-badge" id="zpBadge"></span><span class="zp-title" id="zpTitle"></span></div>
   <p class="zp-desc" id="zpDesc"></p>
   <div class="zp-plant-list" id="zpPlantList"></div>
   <p class="zp-footer">클릭하면 식물 상세 보기</p>
 </div>
 
-<!-- 식물 상세 모달 -->
 <div class="detail-modal" id="plantModal">
   <div class="dm-card">
     <div class="dm-header">
       <div style="display:flex;gap:12px;align-items:flex-start">
         <span class="dm-icon">🌿</span>
-        <div>
-          <div class="dm-name" id="pmName"></div>
-          <div class="dm-sci" id="pmSci"></div>
-          <div class="dm-type" id="pmType"></div>
-        </div>
+        <div><div class="dm-name" id="pmName"></div><div class="dm-sci" id="pmSci"></div><div class="dm-type" id="pmType"></div></div>
       </div>
       <button class="dm-close" data-close="plantModal">✕</button>
     </div>
-    <div class="dm-section">
-      <div class="dm-label">개화 시기 · 생활형</div>
-      <div class="dm-text" id="pmBloom"></div>
-    </div>
-    <div class="dm-section">
-      <div class="dm-label">특성</div>
-      <div class="dm-tags" id="pmTags"></div>
-    </div>
-    <div class="dm-section">
-      <div class="dm-label">생태 역할</div>
-      <div class="dm-note" id="pmNote"></div>
-    </div>
-    <div class="dm-section" id="pmGrowSection">
-      <div class="dm-label">계절별 생장지수 (현재 연도)</div>
-      <div id="pmGrowList"></div>
-    </div>
+    <div class="dm-section"><div class="dm-label">개화 시기 · 생활형</div><div class="dm-text" id="pmBloom"></div></div>
+    <div class="dm-section"><div class="dm-label">특성</div><div class="dm-tags" id="pmTags"></div></div>
+    <div class="dm-section"><div class="dm-label">생태 역할</div><div class="dm-note" id="pmNote"></div></div>
+    <div class="dm-section" id="pmGrowSection"><div class="dm-label">계절별 생장지수</div><div id="pmGrowList"></div></div>
   </div>
 </div>
 
-<!-- 동물 상세 모달 -->
 <div class="detail-modal" id="faunaModal">
   <div class="dm-card">
     <div class="dm-header">
       <div style="display:flex;gap:12px;align-items:flex-start">
         <span class="dm-icon" id="fmIcon"></span>
-        <div>
-          <div class="dm-name" id="fmName"></div>
-          <div class="dm-type" id="fmType"></div>
-        </div>
+        <div><div class="dm-name" id="fmName"></div><div class="dm-type" id="fmType"></div></div>
       </div>
       <button class="dm-close" data-close="faunaModal">✕</button>
     </div>
-    <div class="dm-section">
-      <div class="dm-label">유입 경로 (먹이사슬)</div>
-      <div class="dm-chain" id="fmChain"></div>
-    </div>
-    <div class="dm-section">
-      <div class="dm-label">왜 이 정원에 오는가</div>
-      <div class="dm-text" id="fmReason"></div>
-    </div>
-    <div class="dm-section">
-      <div class="dm-label">현재 개체수 (200㎡ 기준)</div>
-      <div id="fmCounts"></div>
-    </div>
-    <div class="dm-section">
-      <div class="dm-label">연도별 변화 추세</div>
-      <div class="dm-text" id="fmTrend"></div>
-    </div>
+    <div class="dm-section"><div class="dm-label">유입 경로 (먹이사슬)</div><div class="dm-chain" id="fmChain"></div></div>
+    <div class="dm-section"><div class="dm-label">왜 이 정원에 오는가</div><div class="dm-text" id="fmReason"></div></div>
+    <div class="dm-section"><div class="dm-label">현재 개체수 (200㎡ 기준)</div><div id="fmCounts"></div></div>
+    <div class="dm-section"><div class="dm-label">연도별 변화 추세 (RCP 4.5)</div><div class="dm-text" id="fmTrend"></div></div>
   </div>
 </div>
 
 <script>
-/* ── 연도 데이터 ── */
-const YEARS = [2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050];
-const CLIMATE = {
-  2026:{temp:16.7,rain:1219,delta:0.9}, 2028:{temp:17.2,rain:1246,delta:1.4},
-  2030:{temp:17.8,rain:1274,delta:2.0}, 2032:{temp:18.4,rain:1302,delta:2.6},
-  2034:{temp:19.1,rain:1332,delta:3.3}, 2036:{temp:19.8,rain:1362,delta:4.0},
-  2038:{temp:20.5,rain:1393,delta:4.7}, 2040:{temp:21.2,rain:1425,delta:5.4},
-  2042:{temp:21.9,rain:1458,delta:6.1}, 2044:{temp:22.5,rain:1492,delta:6.7},
-  2046:{temp:23.2,rain:1527,delta:7.4}, 2048:{temp:23.9,rain:1563,delta:8.1},
-  2050:{temp:24.6,rain:1599,delta:8.8}
+/* ================================================================
+   RCP 4.5 기후 데이터 — 창원 2025년 기준 15.8°C → 2050년 18.8°C (+3.0°C)
+================================================================ */
+const YEARS=[2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050];
+const CLIMATE={
+  2026:{temp:15.9,rain:1152,delta:0.1}, 2028:{temp:16.0,rain:1158,delta:0.2},
+  2030:{temp:16.2,rain:1163,delta:0.4}, 2032:{temp:16.5,rain:1169,delta:0.7},
+  2034:{temp:16.7,rain:1174,delta:0.9}, 2036:{temp:16.9,rain:1180,delta:1.1},
+  2038:{temp:17.2,rain:1185,delta:1.4}, 2040:{temp:17.4,rain:1191,delta:1.6},
+  2042:{temp:17.7,rain:1196,delta:1.9}, 2044:{temp:18.0,rain:1202,delta:2.2},
+  2046:{temp:18.2,rain:1207,delta:2.4}, 2048:{temp:18.5,rain:1213,delta:2.7},
+  2050:{temp:18.8,rain:1219,delta:3.0}
 };
 
-/* ── 식물 DB ── */
-const PLANT_DB = {
+const PLANT_DB={
   '히어리':{sci:'Corylopsis coreana',type:'낙엽관목',bloom:'3-4월',honey:true,fruit:true,hardy:'강',evergreen:'낙엽',seasons:['spring','summer','autumn'],note:'이른 봄 핵심 밀원, 잎보다 먼저 개화. 꿀벌·등에 유인.',grow:{spring:74.4,summer:78.3,autumn:78.7,winter:38.4}},
   '조름나물':{sci:'Menyanthes trifoliata',type:'수생다년초',bloom:'4-5월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn'],note:'수생환경 특화. 흰 꽃, 수서곤충 서식처.',grow:{spring:45.5,summer:80.7,autumn:65.6,winter:22.8}},
   '붓꽃':{sci:'Iris sanguinea',type:'다년생초본',bloom:'5-6월',honey:true,fruit:false,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn'],note:'초봄~초여름 밀원, 뒤영벌 특화.',grow:{spring:67.2,summer:70.7,autumn:74.3,winter:38.2}},
@@ -465,7 +303,7 @@ const PLANT_DB = {
   '공조팝':{sci:'Spiraea cantoniensis',type:'낙엽관목',bloom:'4-5월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn'],note:'봄 흰꽃 군락, 봄 핵심 밀원.',grow:{spring:64.2,summer:76.6,autumn:72.7,winter:38.2}},
   '실유카':{sci:'Yucca filamentosa',type:'상록관목',bloom:'6-8월',honey:true,fruit:false,hardy:'보통',evergreen:'상록',seasons:['spring','summer','autumn','winter'],note:'유카나방 의무공생, 건조척박지 적합.',grow:{spring:54.3,summer:76.6,autumn:61.5,winter:43.7}},
   '삼색조팝':{sci:"Spiraea japonica 'Gold Flame'",type:'낙엽관목',bloom:'6-7월',honey:true,fruit:false,hardy:'매우강',evergreen:'낙엽',seasons:['summer','autumn'],note:'흰꽃 군락, 꿀벌·꽃등에 유인.',grow:{spring:64.2,summer:76.6,autumn:72.7,winter:38.2}},
-  '홍가시나무':{sci:'Photinia × fraseri',type:'상록소교목',bloom:'5-6월',honey:true,fruit:true,hardy:'보통',evergreen:'상록',seasons:['spring','summer','autumn','winter'],note:'⚠ 이상한파 위험. 겨울 열매 직박구리 유인.',grow:{spring:58.4,summer:76.6,autumn:69.3,winter:37.6}},
+  '홍가시나무':{sci:'Photinia × fraseri',type:'상록소교목',bloom:'5-6월',honey:true,fruit:true,hardy:'보통',evergreen:'상록',seasons:['spring','summer','autumn','winter'],note:'겨울 열매 직박구리 유인.',grow:{spring:58.4,summer:76.6,autumn:69.3,winter:37.6}},
   '백리향':{sci:'Thymus serpyllum',type:'다년생초본',bloom:'6-8월',honey:true,fruit:true,hardy:'매우강',evergreen:'반상록',seasons:['spring','summer','autumn','winter'],note:'단위면적 최고 밀원. 기생벌 유인→해충 방제.',grow:{spring:59.8,summer:73.8,autumn:69.8,winter:43.7}},
   '은쑥':{sci:'Artemisia stelleriana',type:'다년생초본',bloom:'7-9월',honey:true,fruit:true,hardy:'강',evergreen:'낙엽',seasons:['summer','autumn'],note:'은백색 잎, 꽃등에 특화.',grow:{spring:57.3,summer:76.3,autumn:66,winter:43.7}},
   '베르가못':{sci:'Monarda didyma',type:'다년생초본',bloom:'6-9월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['summer','autumn'],note:'나비·뒤영벌 강력 유인, 꿀풀과 향기.',grow:{spring:36.6,summer:82,autumn:55.3,winter:22.8}},
@@ -474,7 +312,7 @@ const PLANT_DB = {
   '홍지네고사리':{sci:'Dryopteris erythrosora',type:'상록다년초',bloom:'-',honey:false,fruit:false,hardy:'강',evergreen:'반상록',seasons:['spring','summer','autumn','winter'],note:'음지 습윤 환경, 지표 절지동물 서식.',grow:{spring:50.3,summer:68.4,autumn:61.7,winter:8.7}},
   '남천':{sci:'Nandina domestica',type:'상록관목',bloom:'6-7월',honey:false,fruit:true,hardy:'보통',evergreen:'상록',seasons:['spring','summer','autumn','winter'],note:'⚠ 이상한파 동해 위험. 겨울 붉은 열매 조류 유인.',grow:{spring:63.4,summer:86.6,autumn:70,winter:37.8}},
   '목수국':{sci:'Hydrangea paniculata',type:'낙엽관목',bloom:'6-9월',honey:true,fruit:true,hardy:'강',evergreen:'낙엽',seasons:['summer','autumn'],note:'대형 수국류. 가임성 꽃에 꿀·꽃가루 집중.',grow:{spring:43.1,summer:79.6,autumn:61.9,winter:22.8}},
-  '낙상홍':{sci:'Ilex serrata',type:'낙엽관목',bloom:'5-6월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn','winter'],note:'겨울 붉은 열매(잔존) → 직박구리·황여새 핵심 유인.',grow:{spring:58.4,summer:76.6,autumn:69.3,winter:37.6}},
+  '낙상홍':{sci:'Ilex serrata',type:'낙엽관목',bloom:'5-6월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn','winter'],note:'겨울 붉은 열매 → 직박구리·황여새 핵심 유인.',grow:{spring:58.4,summer:76.6,autumn:69.3,winter:37.6}},
   '흰말채나무':{sci:'Cornus alba',type:'낙엽관목',bloom:'5-6월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn','winter'],note:'가을 청색 열매 + 겨울 붉은 줄기로 연중 생태 가치.',grow:{spring:64.2,summer:76.6,autumn:72.7,winter:38.2}},
   '꽃범의꼬리':{sci:'Physostegia virginiana',type:'다년생초본',bloom:'7-9월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['summer','autumn'],note:'7~9월 장기 개화 밀원, 뒤영벌·나비 특화.',grow:{spring:54.2,summer:78.2,autumn:62.7,winter:37.6}},
   '돌단풍':{sci:'Mukdenia rossii',type:'다년생초본',bloom:'5-6월',honey:true,fruit:true,hardy:'매우강',evergreen:'낙엽',seasons:['spring','summer','autumn'],note:'이른 봄~초여름 흰 꽃, 반음지 습윤.',grow:{spring:78.2,summer:78.3,autumn:80.3,winter:38.5}},
@@ -488,220 +326,184 @@ const PLANT_DB = {
   '알붐':{sci:'Sedum album',type:'다년생 다육초본',bloom:'6-8월',honey:true,fruit:true,hardy:'보통',evergreen:'반상록',seasons:['spring','summer','autumn','winter'],note:'소형 흰꽃 군락, 다육 그라운드커버.',grow:{spring:57.3,summer:76.3,autumn:66,winter:43.7}},
 };
 
-const ZONES = {
+const ZONES={
   A:{label:'SITE A',name:'습지 생태계',color:0x60a5fa,css:'#60a5fa',desc:'큰 습지 조성. 멸종위기종·음지식물 관찰 가능한 자연 생태계 재생 공간',pos:[-3.2,0,1.0],size:[2.2,0.15,3.2],plants:['히어리','조름나물','붓꽃','꽃창포','부처꽃','배초향','긴산꼬리풀','독미나리','골풀','물레나물','두메부추','배롱나무','너도개미자리']},
   B:{label:'SITE B',name:'초지·관목 구역',color:0xf472b6,css:'#f472b6',desc:'다층 식재로 사계절 릴레이 개화. 복도 유리창에서도 감상 가능하도록 설계',pos:[1.2,0,-1.6],size:[3.6,0.15,2.2],plants:['영춘화','미스김라일락','에메랄드 그린','아주가','공조팝','배롱나무','실유카','삼색조팝','홍가시나무','백리향','은쑥','베르가못','휴케라','노루오줌','홍지네고사리','남천']},
   C:{label:'SITE C',name:'중앙 커뮤니티',color:0xfb923c,css:'#fb923c',desc:'중앙 커뮤니티 공간. 벤치·빈백 등 휴식 시설 + 습지·비오톱 가까이서 관찰',pos:[1.8,0,1.4],size:[2.4,0.15,2.0],plants:['목수국','낙상홍','흰말채나무','조름나물','독미나리','골풀','꽃범의꼬리','부처꽃','붓꽃','긴산꼬리풀','돌단풍','은사초']},
-  D:{label:'SITE D',name:'세덤 정원',color:0xa78bfa,css:'#a78bfa',desc:'상록 세덤 식물 군락지. 겨울에도 녹지 경관 유지. 작고 아기자기한 세덤 위주',pos:[-3.0,0,-2.0],size:[2.0,0.15,2.0],plants:['블루엔젤','공조팝','세잎꿩의비름','상록기린초','두메부추','애기기린초','땅채송화','블루솔','알붐']}
+  D:{label:'SITE D',name:'세덤 정원',color:0xa78bfa,css:'#a78bfa',desc:'상록 세덤 식물 군락지. 겨울에도 녹지 경관 유지.',pos:[-3.0,0,-2.0],size:[2.0,0.15,2.0],plants:['블루엔젤','공조팝','세잎꿩의비름','상록기린초','두메부추','애기기린초','땅채송화','블루솔','알붐']}
 };
 
-const SEASON_META = {
+const SEASON_META={
   spring:{label:'봄',emoji:'🌸',color:'#f48fb1',fogColor:0xfce4ec,blooming:['히어리','미스김라일락','붓꽃','아주가','공조팝','영춘화','돌단풍','조름나물']},
   summer:{label:'여름',emoji:'☀️',color:'#66bb6a',fogColor:0xe8f5e9,blooming:['배초향','백리향','베르가못','꽃범의꼬리','부처꽃','배롱나무','목수국','블루엔젤']},
   autumn:{label:'가을',emoji:'🍂',color:'#ffa726',fogColor:0xfff3e0,blooming:['두메부추','세잎꿩의비름','너도개미자리','베르가못','낙상홍','흰말채나무']},
   winter:{label:'겨울',emoji:'❄️',color:'#90caf9',fogColor:0xe8eaf6,blooming:['영춘화','에메랄드 그린','블루솔','낙상홍','홍가시나무']}
 };
 
-/* ── 동물 DB ── */
-const FAUNA_DB = {
-  '꿀벌':{emoji:'🐝',type:'곤충 · 수분자',tier:1,yearTrend:'peak2035',chain:['🌸 밀원식물','🐝 꿀벌'],reason:'배초향·백리향·베르가못 등 밀원식물 군락에서 꿀과 꽃가루를 채집합니다. 200㎡ 좁은 공간이지만 단위면적당 밀원 밀도가 높아 인근 봉군에서 유입.',base:{spring:8,summer:14,autumn:6,winter:0},trendNote:'2026년 우수 → 2035년경 정점(~20개체) → 2050년 폭염으로 감소(~10개체). 32℃ 이상 시 활동량 급감.'},
-  '뒤영벌':{emoji:'🐝',type:'곤충 · 수분자',tier:1,yearTrend:'falling',chain:['🌸 깊은 통꽃','🐝 뒤영벌'],reason:'붓꽃·꽃창포·꽃범의꼬리의 깊은 통꽃을 전문 수분. 추위·습기에 강해 이른 봄·습지에서 우세.',base:{spring:5,summer:7,autumn:3,winter:0},trendNote:'한랭성 종 — 기온 상승에 취약. 2050년경 봄·여름 개체수 절반 수준으로 감소 전망.'},
-  '꽃등에':{emoji:'🪰',type:'곤충 · 수분자/포식자',tier:1,yearTrend:'stable',chain:['🌸 화분','🪰 꽃등에'],reason:'은쑥·삼색조팝·물레나물의 노출 화반에서 꽃가루 섭식. 유충은 진딧물 포식자로 자연 해충방제.',base:{spring:4,summer:9,autumn:5,winter:0},trendNote:'적응력이 높아 기후 변화에 안정적. 진딧물 발생량에 따라 변동.'},
-  '나비':{emoji:'🦋',type:'곤충 · 수분자',tier:1,yearTrend:'south',chain:['🌸 향기·색','🦋 나비'],reason:'베르가못·부처꽃·꽃범의꼬리의 진한 색과 향에 유인. 빨대 입으로 깊은 꽃의 꿀을 채취.',base:{spring:3,summer:6,autumn:4,winter:0},trendNote:'남방계 종(남방노랑나비·왕나비) 북상 — 2040년 이후 종 구성 다양화.'},
-  '박각시나방':{emoji:'🦋',type:'곤충 · 야행 수분자',tier:1,yearTrend:'rising',chain:['🌸 야간 향기','🌙 박각시나방'],reason:'블루엔젤(호스타)이 야간에 강해지는 향기로 유인. 정지비행으로 긴 꽃관의 꿀에 접근.',base:{spring:0,summer:3,autumn:2,winter:0},trendNote:'야행성 + 열대성 — 야간 기온 상승으로 활동 시간 증가, 점진적 개체수 증가.'},
-  '유카나방':{emoji:'🦋',type:'곤충 · 의무공생',tier:1,yearTrend:'stable',chain:['🌳 실유카','🦋 유카나방'],reason:'실유카와 의무공생. 다른 수분자가 접근 불가한 구조의 꽃을 유일하게 수분.',base:{spring:0,summer:2,autumn:0,winter:0},trendNote:'실유카 개체수와 1:1 동기화 — 식물이 유지되는 한 안정.'},
-  '잠자리':{emoji:'🪲',type:'곤충 · 포식자',tier:1,yearTrend:'rising',chain:['🌾 골풀·습지','🪲 잠자리 유충 → 성충'],reason:'골풀·조름나물 군락이 산란·우화 환경 제공. 성충은 모기 등 소형 곤충 포식.',base:{spring:1,summer:5,autumn:3,winter:0},trendNote:'강수량 증가로 습지 환경 강화 → 점진적 증가. 단 2040년 이후 폭염으로 우화 시기 교란.'},
-  '무당벌레':{emoji:'🐞',type:'곤충 · 포식자',tier:1,yearTrend:'stable',chain:['🌿 진딧물','🐞 무당벌레'],reason:'식물에 붙은 진딧물·깍지벌레를 포식. 천적농법 핵심 곤충.',base:{spring:2,summer:4,autumn:3,winter:1},trendNote:'고온기 진딧물 폭발적 증가 → 무당벌레도 함께 증가하나 균형은 유지.'},
-  '기생벌':{emoji:'🐝',type:'곤충 · 천적',tier:1,yearTrend:'stable',chain:['🌿 백리향 향기','🐝 기생벌'],reason:'백리향이 방출하는 휘발성 향이 기생벌을 유인. 해충 유충에 산란해 자연 방제.',base:{spring:1,summer:3,autumn:2,winter:0},trendNote:'백리향이 매우 강한 내한성을 가져 식물 자체는 안정 → 기생벌도 안정.'},
-  '청개구리':{emoji:'🐸',type:'양서류 · 포식자',tier:2,yearTrend:'falling',chain:['🌾 습지','🦟 곤충','🐸 청개구리'],reason:'습지·골풀 군락에서 산란. 잠자리 유충·모기를 포식하며 SITE A 습지 지표종.',base:{spring:1,summer:3,autumn:1,winter:0},trendNote:'고온 + 수분 증발 가속으로 산란지 축소 위험. 2040년 이후 감소 전망.'},
-  '동박새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🌸 화밀','🐦 동박새'],reason:'영춘화·동백 등 이른 봄꽃의 꿀을 직접 흡밀. 부리에 꽃가루 묻어 또 다른 수분 매개자.',base:{spring:1,summer:1,autumn:1,winter:2},trendNote:'겨울 따뜻해질수록 월동지로 적합 → 약간 증가.'},
-  '박새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'rising',chain:['🐛 애벌레','🐦 박새'],reason:'정원에 늘어난 곤충 개체수가 핵심 식량. 1쌍이 번식기에 약 7000마리의 애벌레 포식.',base:{spring:2,summer:2,autumn:2,winter:2},trendNote:'에메랄드그린 같은 상록 교목이 둥지 환경 제공 → 안정적 개체수 유지.'},
-  '직박구리':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'rising',chain:['🍒 열매','🐦 직박구리'],reason:'낙상홍·남천·홍가시나무의 붉은 열매를 선호. 가을~겨울 핵심 먹이원으로 종자 산포.',base:{spring:1,summer:1,autumn:2,winter:3},trendNote:'겨울 온난화로 도시 정원 정착 강화. 200㎡당 1-3마리 안정.'},
-  '꾀꼬리':{emoji:'🐦',type:'조류 · 여름철새',tier:3,yearTrend:'stable',chain:['🐛 곤충','🐦 꾀꼬리'],reason:'에메랄드그린 등 큰 상록수가 둥지 환경 제공. 여름철 곤충 풍부도가 번식 성공률 결정.',base:{spring:0,summer:1,autumn:0,winter:0},trendNote:'200㎡ 좁은 면적이라 1쌍 정도가 한계. 인근 녹지와 연계 시에만 안정.'},
-  '제비':{emoji:'🐦',type:'조류 · 여름철새',tier:3,yearTrend:'falling',chain:['🦟 비행 곤충','🐦 제비'],reason:'정원 상공에서 모기·꽃등에·각다귀를 포식. 곤충 개체수가 곧 제비 번식 성공률.',base:{spring:0,summer:2,autumn:1,winter:0},trendNote:'도시화·둥지 자리 부족으로 전국적 감소 추세. 정원 면적만으로는 보전 어려움.'},
-  '물총새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🐟 수서동물','🐦 물총새'],reason:'SITE A 습지의 잠자리 유충·수서곤충·소형 어류를 포식. 청정 습지 지표종.',base:{spring:1,summer:1,autumn:1,winter:0},trendNote:'200㎡ 습지는 영구 정착 면적 미달 — 통과/방문 수준이나 일관된 관찰 가능.'},
-  '황여새':{emoji:'🐦',type:'조류 · 겨울철새',tier:3,yearTrend:'falling',chain:['🍒 잔존 열매','🐦 황여새'],reason:'겨울철 낙상홍·남천에 남은 열매를 무리지어 섭식. 정원 열매 자원이 도래 핵심 요인.',base:{spring:0,summer:0,autumn:1,winter:2},trendNote:'겨울 온난화로 한반도 남부 도래 빈도 감소 전망 → 2040년 이후 점차 줄어듦.'},
-  '개똥지빠귀':{emoji:'🐦',type:'조류 · 겨울철새',tier:3,yearTrend:'falling',chain:['🍒 열매·🐛 토양곤충','🐦 개똥지빠귀'],reason:'은사초·홍지네고사리 그라운드커버 아래 지표 절지동물 + 낙상홍 열매를 섭식.',base:{spring:0,summer:0,autumn:1,winter:2},trendNote:'겨울철 온난화로 북상 한계선 이동 → 점차 감소.'},
-  '오목눈이':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🐛 작은 곤충','🐦 오목눈이'],reason:'상록수 가지 사이 은신처에서 무리 활동. 겨울에도 잎이 남는 에메랄드그린·블루솔이 핵심 서식.',base:{spring:1,summer:1,autumn:1,winter:2},trendNote:'상록 식재가 유지되는 한 안정. 200㎡당 무리(3-5마리)가 종종 통과.'}
+const FAUNA_DB={
+  '꿀벌':{emoji:'🐝',type:'곤충 · 수분자',tier:1,yearTrend:'peak2035',chain:['🌸 밀원식물','🐝 꿀벌'],reason:'배초향·백리향·베르가못 등 밀원식물 군락에서 꿀과 꽃가루를 채집합니다.',base:{spring:8,summer:14,autumn:6,winter:0},trendNote:'RCP 4.5: 2035년경 정점 → 2050년에도 비교적 안정(~12개체). 극단적 폭염 없어 감소 완만.'},
+  '뒤영벌':{emoji:'🐝',type:'곤충 · 수분자',tier:1,yearTrend:'falling',chain:['🌸 깊은 통꽃','🐝 뒤영벌'],reason:'붓꽃·꽃창포·꽃범의꼬리의 깊은 통꽃을 전문 수분.',base:{spring:5,summer:7,autumn:3,winter:0},trendNote:'RCP 4.5: 감소 속도 완화. 2050년 봄 개체 약 70% 수준 유지 전망.'},
+  '꽃등에':{emoji:'🪰',type:'곤충 · 수분자/포식자',tier:1,yearTrend:'stable',chain:['🌸 화분','🪰 꽃등에'],reason:'은쑥·삼색조팝·물레나물의 노출 화반에서 꽃가루 섭식.',base:{spring:4,summer:9,autumn:5,winter:0},trendNote:'RCP 4.5: 매우 안정적. 2050년까지 꾸준히 유지.'},
+  '나비':{emoji:'🦋',type:'곤충 · 수분자',tier:1,yearTrend:'south',chain:['🌸 향기·색','🦋 나비'],reason:'베르가못·부처꽃·꽃범의꼬리의 진한 색과 향에 유인.',base:{spring:3,summer:6,autumn:4,winter:0},trendNote:'RCP 4.5: 남방계 종 서서히 유입. 2040년 이후 종 구성 다양화 시작.'},
+  '박각시나방':{emoji:'🦋',type:'곤충 · 야행 수분자',tier:1,yearTrend:'rising',chain:['🌸 야간 향기','🌙 박각시나방'],reason:'블루엔젤(호스타)이 야간에 강해지는 향기로 유인.',base:{spring:0,summer:3,autumn:2,winter:0},trendNote:'RCP 4.5: 야간 기온 점진적 상승으로 완만히 증가.'},
+  '유카나방':{emoji:'🦋',type:'곤충 · 의무공생',tier:1,yearTrend:'stable',chain:['🌳 실유카','🦋 유카나방'],reason:'실유카와 의무공생.',base:{spring:0,summer:2,autumn:0,winter:0},trendNote:'실유카가 유지되는 한 안정.'},
+  '잠자리':{emoji:'🪲',type:'곤충 · 포식자',tier:1,yearTrend:'rising',chain:['🌾 골풀·습지','🪲 잠자리 유충 → 성충'],reason:'골풀·조름나물 군락이 산란·우화 환경 제공.',base:{spring:1,summer:5,autumn:3,winter:0},trendNote:'RCP 4.5: 강수량 적당히 증가, 습지 안정 → 꾸준히 증가.'},
+  '무당벌레':{emoji:'🐞',type:'곤충 · 포식자',tier:1,yearTrend:'stable',chain:['🌿 진딧물','🐞 무당벌레'],reason:'식물에 붙은 진딧물·깍지벌레를 포식.',base:{spring:2,summer:4,autumn:3,winter:1},trendNote:'안정적. 진딧물과 균형 유지.'},
+  '기생벌':{emoji:'🐝',type:'곤충 · 천적',tier:1,yearTrend:'stable',chain:['🌿 백리향 향기','🐝 기생벌'],reason:'백리향이 방출하는 휘발성 향이 기생벌을 유인.',base:{spring:1,summer:3,autumn:2,winter:0},trendNote:'백리향 안정 → 기생벌 안정.'},
+  '청개구리':{emoji:'🐸',type:'양서류 · 포식자',tier:2,yearTrend:'falling',chain:['🌾 습지','🦟 곤충','🐸 청개구리'],reason:'습지·골풀 군락에서 산란.',base:{spring:1,summer:3,autumn:1,winter:0},trendNote:'RCP 4.5: 수분 증발 완만 → 2050년에도 소수 유지 가능.'},
+  '동박새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🌸 화밀','🐦 동박새'],reason:'영춘화·히어리 등 이른 봄꽃의 꿀을 흡밀.',base:{spring:1,summer:1,autumn:1,winter:2},trendNote:'RCP 4.5: 안정적 증가. 겨울 적당히 따뜻해 월동 적합.'},
+  '박새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'rising',chain:['🐛 애벌레','🐦 박새'],reason:'정원에 늘어난 곤충 개체수가 핵심 식량.',base:{spring:2,summer:2,autumn:2,winter:2},trendNote:'곤충 증가에 따라 안정적으로 증가.'},
+  '직박구리':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'rising',chain:['🍒 열매','🐦 직박구리'],reason:'낙상홍·남천·홍가시나무의 붉은 열매를 선호.',base:{spring:1,summer:1,autumn:2,winter:3},trendNote:'RCP 4.5: 가장 안정적으로 증가. 도시 정원 정착 강화.'},
+  '꾀꼬리':{emoji:'🐦',type:'조류 · 여름철새',tier:3,yearTrend:'stable',chain:['🐛 곤충','🐦 꾀꼬리'],reason:'에메랄드그린 등 큰 상록수가 둥지 환경 제공.',base:{spring:0,summer:1,autumn:0,winter:0},trendNote:'좁은 면적이라 1쌍 정도가 한계.'},
+  '제비':{emoji:'🐦',type:'조류 · 여름철새',tier:3,yearTrend:'falling',chain:['🦟 비행 곤충','🐦 제비'],reason:'정원 상공에서 모기·꽃등에·각다귀를 포식.',base:{spring:0,summer:2,autumn:1,winter:0},trendNote:'도시화 감소 추세 지속.'},
+  '물총새':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🐟 수서동물','🐦 물총새'],reason:'SITE A 습지의 잠자리 유충·수서곤충을 포식.',base:{spring:1,summer:1,autumn:1,winter:0},trendNote:'RCP 4.5: 습지 환경 안정 유지 → 통과 관찰 꾸준.'},
+  '황여새':{emoji:'🐦',type:'조류 · 겨울철새',tier:3,yearTrend:'falling',chain:['🍒 잔존 열매','🐦 황여새'],reason:'겨울철 낙상홍·남천에 남은 열매를 무리지어 섭식.',base:{spring:0,summer:0,autumn:1,winter:2},trendNote:'RCP 4.5: 온난화 속도 느려 2040년대까지 간헐 관찰 가능.'},
+  '개똥지빠귀':{emoji:'🐦',type:'조류 · 겨울철새',tier:3,yearTrend:'falling',chain:['🍒 열매·🐛 토양곤충','🐦 개똥지빠귀'],reason:'지표 절지동물 + 낙상홍 열매를 섭식.',base:{spring:0,summer:0,autumn:1,winter:2},trendNote:'RCP 4.5: 완만한 감소. 2050년에도 드물게 관찰 가능.'},
+  '오목눈이':{emoji:'🐦',type:'조류 · 텃새',tier:3,yearTrend:'stable',chain:['🐛 작은 곤충','🐦 오목눈이'],reason:'상록수 가지 사이 은신처에서 무리 활동.',base:{spring:1,summer:1,autumn:1,winter:2},trendNote:'상록 식재 유지 → 안정.'}
 };
 
-/* ── 연도별 개체수 계산 ── */
-function getFaunaCount(faunaName, season, year){
-  const f = FAUNA_DB[faunaName];
-  if(!f) return 0;
-  const base = f.base[season] || 0;
-  if(base===0) return 0;
-  const yearIdx = YEARS.indexOf(year);
-  const yearProgress = yearIdx / (YEARS.length-1);
-  let multiplier = 1.0;
+/* ── RCP 4.5 개체수 계산 ── */
+function getFaunaCount(faunaName,season,year){
+  const f=FAUNA_DB[faunaName];
+  if(!f)return 0;
+  const base=f.base[season]||0;
+  if(base===0)return 0;
+  const yearIdx=YEARS.indexOf(year);
+  const yearProgress=yearIdx/(YEARS.length-1);
+  let multiplier=1.0;
   switch(f.yearTrend){
-    case 'rising': multiplier = 1.0 + yearProgress*0.5; break;
-    case 'falling': multiplier = 1.0 - yearProgress*0.6; break;
+    case 'rising': multiplier=1.0+yearProgress*0.4; break;
+    case 'falling': multiplier=1.0-yearProgress*0.35; break;
     case 'peak2035':
-      const peakIdx = 4.5;
-      const dist = Math.abs(yearIdx - peakIdx) / 7;
-      multiplier = 1.4 - dist*0.7; break;
+      const peakIdx=4.5;
+      const dist=Math.abs(yearIdx-peakIdx)/7;
+      multiplier=1.3-dist*0.5; break;
     case 'south':
-      if(yearIdx < 7) multiplier = 1.0 + yearIdx*0.05;
-      else multiplier = 1.35 + (yearIdx-7)*0.1; break;
-    default: multiplier = 1.0 + (Math.sin(yearIdx*0.7) * 0.1);
+      if(yearIdx<7)multiplier=1.0+yearIdx*0.04;
+      else multiplier=1.28+(yearIdx-7)*0.07; break;
+    default: multiplier=1.0+(Math.sin(yearIdx*0.7)*0.1);
   }
-  if(season==='summer' && yearIdx >= 7 && f.tier===1 && f.yearTrend!=='south' && f.yearTrend!=='rising'){
-    multiplier *= (1 - (yearIdx-7)*0.04);
-  }
-  return Math.max(0, Math.round(base * multiplier));
+  return Math.max(0,Math.round(base*multiplier));
 }
 
 function calcBiodiversity(year){
-  let totalAll = 0;
-  let speciesInsect = 0, speciesBird = 0;
-  const counts = {};
+  let totalAll=0,speciesInsect=0,speciesBird=0;
+  const counts={};
   Object.keys(FAUNA_DB).forEach(name=>{
-    const f = FAUNA_DB[name];
-    const avg = (['spring','summer','autumn','winter'].reduce((s,season)=>s+getFaunaCount(name,season,year),0))/4;
-    counts[name] = avg;
-    if(avg > 0){
-      if(f.tier===1) speciesInsect++;
-      else if(f.tier===3) speciesBird++;
-      totalAll += avg;
-    }
+    const f=FAUNA_DB[name];
+    const avg=(['spring','summer','autumn','winter'].reduce((s,season)=>s+getFaunaCount(name,season,year),0))/4;
+    counts[name]=avg;
+    if(avg>0){if(f.tier===1)speciesInsect++;else if(f.tier===3)speciesBird++;totalAll+=avg;}
   });
-  let H = 0;
+  let H=0;
   Object.keys(counts).forEach(name=>{
-    const avg = counts[name];
-    if(avg > 0 && totalAll > 0){ const p = avg/totalAll; H -= p*Math.log(p); }
+    const avg=counts[name];
+    if(avg>0&&totalAll>0){const p=avg/totalAll;H-=p*Math.log(p);}
   });
-  return { shannon: H, insectSpecies: speciesInsect, birdSpecies: speciesBird, totalIndividuals: Math.round(totalAll) };
+  return{shannon:H,insectSpecies:speciesInsect,birdSpecies:speciesBird,totalIndividuals:Math.round(totalAll)};
 }
 
 function calcEnvIndicators(year){
-  const c = CLIMATE[year];
-  const heatRelief = -1.2 + Math.max(0,(c.delta-4))*0.15;
-  let stress='낮음', stressClass='good';
-  if(c.temp >= 20.5){ stress='높음'; stressClass='bad'; }
-  else if(c.temp >= 19){ stress='중간'; stressClass='warn'; }
-  return { temp:c.temp, rain:c.rain, delta:c.delta, heatRelief, stress, stressClass };
+  const c=CLIMATE[year];
+  const heatRelief=-1.2+Math.max(0,(c.delta-1.5))*0.08;
+  let stress='낮음',stressClass='good';
+  if(c.temp>=18.5){stress='중간';stressClass='warn';}
+  else if(c.temp>=17.5){stress='약간';stressClass='warn';}
+  return{temp:c.temp,rain:c.rain,delta:c.delta,heatRelief,stress,stressClass};
 }
 
-/* ── Three.js 씬 ── */
-const SEASON_KEYS = ['spring','summer','autumn','winter'];
-const SCENE_CONFIG = { modelUrl: null };
+/* ================================================================
+   Three.js 씬
+   ─────────────────────────────────────────
+   [🎨 블렌더 모델 교체 방법]
+   아래 SCENE_CONFIG.modelUrl 에 .glb 경로 입력
+   예) const SCENE_CONFIG = { modelUrl: 'assets/models/garden.glb' };
+   
+   계절별 다른 모델 사용 시:
+   SeasonScene._setupFoliage() 메서드 안에서
+   SCENE_CONFIG[this.season] 형태로 분기 처리하면 됩니다.
+   ================================================================ */
+const SEASON_KEYS=['spring','summer','autumn','winter'];
+const SCENE_CONFIG={modelUrl:null}; // ← 여기에 .glb 경로 입력
 
-class SeasonScene {
-  constructor(canvasId, seasonKey){
-    this.canvas = document.getElementById(canvasId);
-    this.season = seasonKey;
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(SEASON_META[seasonKey].fogColor);
-    this.scene.fog = new THREE.Fog(SEASON_META[seasonKey].fogColor, 11, 28);
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    this.cameraTarget = new THREE.Vector3(0, 0, 0);
-    this.renderer = new THREE.WebGLRenderer({canvas:this.canvas, antialias:true, alpha:false});
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.zoneMeshes = {};
-    this.foliageGroup = new THREE.Group();
+class SeasonScene{
+  constructor(canvasId,seasonKey){
+    this.canvas=document.getElementById(canvasId);
+    this.season=seasonKey;
+    this.scene=new THREE.Scene();
+    this.scene.background=new THREE.Color(SEASON_META[seasonKey].fogColor);
+    this.scene.fog=new THREE.Fog(SEASON_META[seasonKey].fogColor,11,28);
+    this.camera=new THREE.PerspectiveCamera(50,1,0.1,100);
+    this.cameraTarget=new THREE.Vector3(0,0,0);
+    this.renderer=new THREE.WebGLRenderer({canvas:this.canvas,antialias:true,alpha:false});
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    this.zoneMeshes={};
+    this.foliageGroup=new THREE.Group();
     this.scene.add(this.foliageGroup);
-    this.animatables = [];
-    this._setupLights();
-    this._setupGround();
-    this._setupZones();
-    this._setupFoliage();
-    this._setupParticles();
-    this.sph = {theta:Math.PI*0.25, phi:Math.PI*0.35, r:11};
-    this._updateCamera();
-    this._setupInteraction();
-    this._resize();
-    this.t = 0;
-    this.hoverZone = null;
+    this.animatables=[];
+    this._setupLights();this._setupGround();this._setupZones();
+    this._setupFoliage();this._setupParticles();
+    this.sph={theta:Math.PI*0.25,phi:Math.PI*0.35,r:11};
+    this._updateCamera();this._setupInteraction();this._resize();
+    this.t=0;this.hoverZone=null;
   }
   _setupLights(){
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-    const dir = new THREE.DirectionalLight(0xffffff, 0.75);
-    dir.position.set(6, 12, 8);
-    this.scene.add(dir);
-    const fillColor = this.season==='winter'?0xb8c8ff:(this.season==='autumn'?0xffc890:0x88aaff);
-    const fill = new THREE.DirectionalLight(fillColor, 0.25);
-    fill.position.set(-6, 4, -6);
-    this.scene.add(fill);
+    this.scene.add(new THREE.AmbientLight(0xffffff,0.6));
+    const dir=new THREE.DirectionalLight(0xffffff,0.75);dir.position.set(6,12,8);this.scene.add(dir);
+    const fillColor=this.season==='winter'?0xb8c8ff:(this.season==='autumn'?0xffc890:0x88aaff);
+    const fill=new THREE.DirectionalLight(fillColor,0.25);fill.position.set(-6,4,-6);this.scene.add(fill);
   }
   _setupGround(){
-    const groundColor = {spring:0x2a3b2a,summer:0x1e3520,autumn:0x3b2e1f,winter:0x2a2e3a}[this.season];
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(20,16), new THREE.MeshLambertMaterial({color:groundColor}));
-    floor.rotation.x = -Math.PI/2;
-    this.scene.add(floor);
-    const grid = new THREE.GridHelper(20, 24, 0x303848, 0x232a38);
-    grid.material.opacity = 0.4;
-    grid.material.transparent = true;
-    this.scene.add(grid);
+    const groundColor={spring:0x2a3b2a,summer:0x1e3520,autumn:0x3b2e1f,winter:0x2a2e3a}[this.season];
+    const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,16),new THREE.MeshLambertMaterial({color:groundColor}));
+    floor.rotation.x=-Math.PI/2;this.scene.add(floor);
+    const grid=new THREE.GridHelper(20,24,0x303848,0x232a38);
+    grid.material.opacity=0.4;grid.material.transparent=true;this.scene.add(grid);
   }
   _setupZones(){
     Object.keys(ZONES).forEach(k=>{
-      const z = ZONES[k];
-      const [px,,pz] = z.pos;
-      const [sw,,sd] = z.size;
-      const plate = new THREE.Mesh(
-        new THREE.BoxGeometry(sw, 0.1, sd),
-        new THREE.MeshLambertMaterial({color:z.color, transparent:true, opacity:0.55})
-      );
-      plate.position.set(px, 0.05, pz);
-      plate.userData.zoneKey = k;
-      this.scene.add(plate);
-      this.zoneMeshes[k] = plate;
+      const z=ZONES[k];const[px,,pz]=z.pos;const[sw,,sd]=z.size;
+      const plate=new THREE.Mesh(new THREE.BoxGeometry(sw,0.1,sd),new THREE.MeshLambertMaterial({color:z.color,transparent:true,opacity:0.55}));
+      plate.position.set(px,0.05,pz);plate.userData.zoneKey=k;this.scene.add(plate);this.zoneMeshes[k]=plate;
     });
   }
   _setupFoliage(){
     if(SCENE_CONFIG.modelUrl){
-      const loader = new THREE.GLTFLoader();
-      loader.load(SCENE_CONFIG.modelUrl, (gltf)=>{ this.foliageGroup.add(gltf.scene); }, undefined, ()=>this._buildProceduralFoliage());
-    } else {
-      this._buildProceduralFoliage();
-    }
+      const loader=new THREE.GLTFLoader();
+      loader.load(SCENE_CONFIG.modelUrl,(gltf)=>{this.foliageGroup.add(gltf.scene);},undefined,()=>this._buildProceduralFoliage());
+    }else{this._buildProceduralFoliage();}
   }
   _buildProceduralFoliage(){
     Object.keys(ZONES).forEach(k=>{
-      const z = ZONES[k];
-      const [px,,pz] = z.pos;
-      const [sw,,sd] = z.size;
-      const activePlants = z.plants.map(name=>PLANT_DB[name]).filter(p=>p && p.seasons.includes(this.season));
-      const count = Math.min(Math.max(activePlants.length, 3), 7);
+      const z=ZONES[k];const[px,,pz]=z.pos;const[sw,,sd]=z.size;
+      const activePlants=z.plants.map(name=>PLANT_DB[name]).filter(p=>p&&p.seasons.includes(this.season));
+      const count=Math.min(Math.max(activePlants.length,3),7);
       for(let i=0;i<count;i++){
-        const a = (i/count)*Math.PI*2 + Math.random()*0.3;
-        const r = Math.min(sw,sd)*0.32*(0.6+Math.random()*0.5);
-        const x = px + Math.cos(a)*r;
-        const z2 = pz + Math.sin(a)*r;
-        const h = 0.35 + Math.random()*0.5;
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.09,h,8), new THREE.MeshLambertMaterial({color:this._trunkColor()}));
-        trunk.position.set(x, h/2+0.1, z2);
-        this.foliageGroup.add(trunk);
+        const a=(i/count)*Math.PI*2+Math.random()*0.3;
+        const r=Math.min(sw,sd)*0.32*(0.6+Math.random()*0.5);
+        const x=px+Math.cos(a)*r;const z2=pz+Math.sin(a)*r;const h=0.35+Math.random()*0.5;
+        const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.09,h,8),new THREE.MeshLambertMaterial({color:this._trunkColor()}));
+        trunk.position.set(x,h/2+0.1,z2);this.foliageGroup.add(trunk);
         if(this._hasLeaves(activePlants[i%activePlants.length])){
-          const crown = new THREE.Mesh(new THREE.SphereGeometry(0.18+Math.random()*0.14,8,6), new THREE.MeshLambertMaterial({color:this._crownColor(z.color)}));
-          crown.position.set(x, h+0.18, z2);
-          crown.userData.swaySeed = Math.random()*Math.PI*2;
-          crown.userData.baseY = crown.position.y;
-          this.foliageGroup.add(crown);
-          this.animatables.push(crown);
-        } else if(this.season==='winter'){
+          const crown=new THREE.Mesh(new THREE.SphereGeometry(0.18+Math.random()*0.14,8,6),new THREE.MeshLambertMaterial({color:this._crownColor(z.color)}));
+          crown.position.set(x,h+0.18,z2);crown.userData.swaySeed=Math.random()*Math.PI*2;crown.userData.baseY=crown.position.y;
+          this.foliageGroup.add(crown);this.animatables.push(crown);
+        }else if(this.season==='winter'){
           for(let j=0;j<3;j++){
-            const branch = new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.025,h*0.5,6), new THREE.MeshLambertMaterial({color:0x4a3528}));
-            branch.position.set(x+(Math.random()-0.5)*0.1, h+h*0.25, z2+(Math.random()-0.5)*0.1);
-            branch.rotation.z = (Math.random()-0.5)*0.6;
-            branch.rotation.x = (Math.random()-0.5)*0.6;
-            this.foliageGroup.add(branch);
+            const branch=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.025,h*0.5,6),new THREE.MeshLambertMaterial({color:0x4a3528}));
+            branch.position.set(x+(Math.random()-0.5)*0.1,h+h*0.25,z2+(Math.random()-0.5)*0.1);
+            branch.rotation.z=(Math.random()-0.5)*0.6;branch.rotation.x=(Math.random()-0.5)*0.6;this.foliageGroup.add(branch);
           }
         }
       }
     });
   }
-  _hasLeaves(plant){
-    if(!plant) return true;
-    if(this.season==='winter') return plant.evergreen==='상록'||plant.evergreen==='반상록';
-    return true;
-  }
-  _trunkColor(){ return this.season==='winter'?0x4a3528:0x5d4037; }
+  _hasLeaves(plant){if(!plant)return true;if(this.season==='winter')return plant.evergreen==='상록'||plant.evergreen==='반상록';return true;}
+  _trunkColor(){return this.season==='winter'?0x4a3528:0x5d4037;}
   _crownColor(baseColor){
-    const c = new THREE.Color(baseColor);
-    const seasonal = {spring:new THREE.Color(0xa8d8a8),summer:new THREE.Color(0x4d8b4d),autumn:new THREE.Color(0xc88040),winter:new THREE.Color(0x6a7a6a)}[this.season];
-    return c.lerp(seasonal, 0.45+Math.random()*0.25);
+    const c=new THREE.Color(baseColor);
+    const seasonal={spring:new THREE.Color(0xa8d8a8),summer:new THREE.Color(0x4d8b4d),autumn:new THREE.Color(0xc88040),winter:new THREE.Color(0x6a7a6a)}[this.season];
+    return c.lerp(seasonal,0.45+Math.random()*0.25);
   }
   _setupParticles(){
     if(this.season==='winter'){
@@ -709,379 +511,246 @@ class SeasonScene {
       for(let i=0;i<n;i++){pos[i*3]=(Math.random()-0.5)*18;pos[i*3+1]=Math.random()*8;pos[i*3+2]=(Math.random()-0.5)*14;vel.push({y:0.015+Math.random()*0.02,x:(Math.random()-0.5)*0.005});}
       geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
       this.snow=new THREE.Points(geo,new THREE.PointsMaterial({color:0xffffff,size:0.08,transparent:true,opacity:0.9}));
-      this.snow.userData.vel=vel; this.scene.add(this.snow);
-    } else if(this.season==='spring'){
+      this.snow.userData.vel=vel;this.scene.add(this.snow);
+    }else if(this.season==='spring'){
       const n=80,geo=new THREE.BufferGeometry(),pos=new Float32Array(n*3),vel=[];
       for(let i=0;i<n;i++){pos[i*3]=(Math.random()-0.5)*14;pos[i*3+1]=Math.random()*5+0.5;pos[i*3+2]=(Math.random()-0.5)*12;vel.push({y:0.005+Math.random()*0.01,x:(Math.random()-0.5)*0.008});}
       geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
       this.petals=new THREE.Points(geo,new THREE.PointsMaterial({color:0xf48fb1,size:0.11,transparent:true,opacity:0.85}));
-      this.petals.userData.vel=vel; this.scene.add(this.petals);
-    } else if(this.season==='autumn'){
+      this.petals.userData.vel=vel;this.scene.add(this.petals);
+    }else if(this.season==='autumn'){
       const n=60,geo=new THREE.BufferGeometry(),pos=new Float32Array(n*3),vel=[];
       for(let i=0;i<n;i++){pos[i*3]=(Math.random()-0.5)*14;pos[i*3+1]=Math.random()*5+0.5;pos[i*3+2]=(Math.random()-0.5)*12;vel.push({y:0.008+Math.random()*0.012,x:(Math.random()-0.5)*0.012});}
       geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
       this.leaves=new THREE.Points(geo,new THREE.PointsMaterial({color:0xd66b1f,size:0.13,transparent:true,opacity:0.9}));
-      this.leaves.userData.vel=vel; this.scene.add(this.leaves);
+      this.leaves.userData.vel=vel;this.scene.add(this.leaves);
     }
   }
   _setupInteraction(){
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
-    let isDrag=false, prevM={x:0,y:0};
+    this.raycaster=new THREE.Raycaster();this.mouse=new THREE.Vector2();
+    let isDrag=false,prevM={x:0,y:0};
     this.canvas.addEventListener('mousedown',e=>{isDrag=true;prevM={x:e.clientX,y:e.clientY};});
     window.addEventListener('mouseup',()=>isDrag=false);
     window.addEventListener('mousemove',e=>{
-      if(!isDrag||currentSeason!==this.season) return;
-      this.sph.theta -= (e.clientX-prevM.x)*0.007;
-      this.sph.phi = Math.max(0.2,Math.min(1.3,this.sph.phi+(e.clientY-prevM.y)*0.006));
-      prevM={x:e.clientX,y:e.clientY};
-      this._updateCamera();
+      if(!isDrag||currentSeason!==this.season)return;
+      this.sph.theta-=(e.clientX-prevM.x)*0.007;
+      this.sph.phi=Math.max(0.2,Math.min(1.3,this.sph.phi+(e.clientY-prevM.y)*0.006));
+      prevM={x:e.clientX,y:e.clientY};this._updateCamera();
     });
-    this.canvas.addEventListener('wheel',e=>{
-      this.sph.r=Math.max(5,Math.min(20,this.sph.r+e.deltaY*0.02));
-      this._updateCamera(); e.preventDefault();
-    },{passive:false});
+    this.canvas.addEventListener('wheel',e=>{this.sph.r=Math.max(5,Math.min(20,this.sph.r+e.deltaY*0.02));this._updateCamera();e.preventDefault();},{passive:false});
     this.canvas.addEventListener('mousemove',e=>{
-      if(isDrag||currentSeason!==this.season) return;
+      if(isDrag||currentSeason!==this.season)return;
       const k=this._pickZone(e.clientX,e.clientY);
-      if(k!==this.hoverZone){
-        this.hoverZone=k;
-        if(k){showZonePopup(k,e.clientX,e.clientY);}
-        else{scheduleHidePopup();}
-      }
-      if(k) posZonePopup(e.clientX,e.clientY);
+      if(k!==this.hoverZone){this.hoverZone=k;if(k){showZonePopup(k,e.clientX,e.clientY);}else{scheduleHidePopup();}}
+      if(k)posZonePopup(e.clientX,e.clientY);
     });
-    this.canvas.addEventListener('mouseleave',()=>{ this.hoverZone=null; scheduleHidePopup(); });
-    this.canvas.addEventListener('click',e=>{
-      const k=this._pickZone(e.clientX,e.clientY);
-      if(k) openPlantPanel(k);
-    });
+    this.canvas.addEventListener('mouseleave',()=>{this.hoverZone=null;scheduleHidePopup();});
+    this.canvas.addEventListener('click',e=>{const k=this._pickZone(e.clientX,e.clientY);if(k)openPlantPanel(k);});
   }
   _pickZone(cx,cy){
     const rect=this.canvas.getBoundingClientRect();
-    this.mouse.x=((cx-rect.left)/rect.width)*2-1;
-    this.mouse.y=-((cy-rect.top)/rect.height)*2+1;
+    this.mouse.x=((cx-rect.left)/rect.width)*2-1;this.mouse.y=-((cy-rect.top)/rect.height)*2+1;
     this.raycaster.setFromCamera(this.mouse,this.camera);
     const hits=this.raycaster.intersectObjects(Object.values(this.zoneMeshes));
-    if(!hits.length) return null;
-    return hits[0].object.userData.zoneKey;
+    if(!hits.length)return null;return hits[0].object.userData.zoneKey;
   }
   _updateCamera(){
-    const {theta,phi,r}=this.sph;
+    const{theta,phi,r}=this.sph;
     this.camera.position.set(r*Math.sin(phi)*Math.sin(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.cos(theta));
     this.camera.lookAt(this.cameraTarget);
   }
   _resize(){
     const W=this.canvas.parentElement.offsetWidth||window.innerWidth;
     const H=this.canvas.parentElement.offsetHeight||(window.innerHeight-138);
-    this.renderer.setSize(W,H,false);
-    this.camera.aspect=W/H;
-    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(W,H,false);this.camera.aspect=W/H;this.camera.updateProjectionMatrix();
   }
   render(){
-    this.t += 0.012;
-    this.animatables.forEach(m=>{
-      m.position.y=m.userData.baseY+Math.sin(this.t*1.5+m.userData.swaySeed)*0.04;
-      m.rotation.z=Math.sin(this.t+m.userData.swaySeed)*0.08;
-    });
+    this.t+=0.012;
+    this.animatables.forEach(m=>{m.position.y=m.userData.baseY+Math.sin(this.t*1.5+m.userData.swaySeed)*0.04;m.rotation.z=Math.sin(this.t+m.userData.swaySeed)*0.08;});
     [this.snow,this.petals,this.leaves].forEach(p=>{
-      if(!p) return;
-      const arr=p.geometry.attributes.position.array;
-      const vels=p.userData.vel;
-      for(let i=0;i<vels.length;i++){
-        arr[i*3+1]-=vels[i].y; arr[i*3]+=vels[i].x;
-        if(arr[i*3+1]<0){arr[i*3+1]=7;arr[i*3]=(Math.random()-0.5)*16;}
-      }
+      if(!p)return;
+      const arr=p.geometry.attributes.position.array;const vels=p.userData.vel;
+      for(let i=0;i<vels.length;i++){arr[i*3+1]-=vels[i].y;arr[i*3]+=vels[i].x;if(arr[i*3+1]<0){arr[i*3+1]=7;arr[i*3]=(Math.random()-0.5)*16;}}
       p.geometry.attributes.position.needsUpdate=true;
     });
-    Object.keys(this.zoneMeshes).forEach(k=>{
-      const m=this.zoneMeshes[k];
-      m.material.opacity=(k===this.hoverZone)?0.85+Math.sin(this.t*3)*0.05:0.5+Math.sin(this.t*2+(k.charCodeAt(0)*0.1))*0.06;
-    });
-    this.sph.theta+=0.0008;
-    this._updateCamera();
-    this.renderer.render(this.scene,this.camera);
+    Object.keys(this.zoneMeshes).forEach(k=>{const m=this.zoneMeshes[k];m.material.opacity=(k===this.hoverZone)?0.85+Math.sin(this.t*3)*0.05:0.5+Math.sin(this.t*2+(k.charCodeAt(0)*0.1))*0.06;});
+    this.sph.theta+=0.0008;this._updateCamera();this.renderer.render(this.scene,this.camera);
   }
 }
 
-const seasonScenes = {};
+const seasonScenes={};
+let currentSeasonIdx=0,currentSeason='spring',currentYear=2026;
+const zonePopup=document.getElementById('zonePopup');
 
-/* ── 상태 & UI ── */
-let currentSeasonIdx = 0;
-let currentSeason = 'spring';
-let currentYear = 2026;
-const zonePopup = document.getElementById('zonePopup');
+function getActivePlantsForZone(zoneKey,season){return ZONES[zoneKey].plants.map(name=>({name,...PLANT_DB[name]})).filter(p=>p.seasons&&p.seasons.includes(season));}
 
-function getActivePlantsForZone(zoneKey, season){
-  return ZONES[zoneKey].plants.map(name=>({name,...PLANT_DB[name]})).filter(p=>p.seasons&&p.seasons.includes(season));
+let popupHideTimer=null;
+function scheduleHidePopup(){if(popupHideTimer)clearTimeout(popupHideTimer);popupHideTimer=setTimeout(()=>zonePopup.classList.remove('visible'),250);}
+function cancelHidePopup(){if(popupHideTimer){clearTimeout(popupHideTimer);popupHideTimer=null;}}
+zonePopup.addEventListener('mouseenter',cancelHidePopup);
+zonePopup.addEventListener('mouseleave',scheduleHidePopup);
+
+/* 식물 존재 기간: seasons 배열 + evergreen 기반 파생 */
+function getPlantExistPeriod(p){
+  if(p.evergreen==='상록') return '연중 상록';
+  if(p.evergreen==='반상록') return '반상록 (연중)';
+  const s=p.seasons||[];
+  if(!s.length) return '';
+  const all=['spring','summer','autumn','winter'];
+  if(all.every(k=>s.includes(k))) return '연중 활성';
+  const startMap={spring:'3월',summer:'6월',autumn:'9월',winter:'12월'};
+  const endMap  ={spring:'5월',summer:'8월',autumn:'11월',winter:'2월'};
+  const first=all.find(k=>s.includes(k));
+  const last=[...all].reverse().find(k=>s.includes(k));
+  return (first&&last)?`${startMap[first]}~${endMap[last]} 활성`:'';
 }
 
-let popupHideTimer = null;
-function scheduleHidePopup(){
-  if(popupHideTimer) clearTimeout(popupHideTimer);
-  popupHideTimer = setTimeout(()=>zonePopup.classList.remove('visible'), 250);
-}
-function cancelHidePopup(){
-  if(popupHideTimer){ clearTimeout(popupHideTimer); popupHideTimer=null; }
-}
-zonePopup.addEventListener('mouseenter', cancelHidePopup);
-zonePopup.addEventListener('mouseleave', scheduleHidePopup);
-
-function showZonePopup(k, mx, my){
+function showZonePopup(k,mx,my){
   cancelHidePopup();
-  const z = ZONES[k];
-  const badge = document.getElementById('zpBadge');
-  badge.textContent = z.label;
-  badge.style.background = z.css+'22';
-  badge.style.color = z.css;
-  badge.style.border = `.5px solid ${z.css}55`;
-  document.getElementById('zpTitle').textContent = z.name;
-  document.getElementById('zpDesc').textContent = z.desc;
-  const list = document.getElementById('zpPlantList');
-  list.innerHTML = '';
-  const activePlants = getActivePlantsForZone(k, currentSeason);
-  if(!activePlants.length){
-    const empty = document.createElement('div');
-    empty.className = 'zp-empty';
-    empty.textContent = '이 계절에 활성 상태인 식물이 없습니다';
-    list.appendChild(empty);
-  } else {
-    activePlants.forEach(p=>{
-      const el = document.createElement('div');
-      el.className = 'zp-plant-item';
-      const stateLabel = p.evergreen==='상록'?'상록':(p.evergreen==='반상록'?'반상록':p.type);
-      el.innerHTML = `<span class="zp-plant-name">${p.name}</span><span class="zp-plant-state">${stateLabel}</span>`;
-      el.addEventListener('click', ev=>{ ev.stopPropagation(); openPlantModal(p.name); });
-      list.appendChild(el);
-    });
-  }
-  zonePopup.classList.add('visible');
-  posZonePopup(mx, my);
+  const z=ZONES[k];const badge=document.getElementById('zpBadge');
+  badge.textContent=z.label;badge.style.background=z.css+'22';badge.style.color=z.css;badge.style.border=`.5px solid ${z.css}55`;
+  document.getElementById('zpTitle').textContent=z.name;document.getElementById('zpDesc').textContent=z.desc;
+  const list=document.getElementById('zpPlantList');list.innerHTML='';
+  const activePlants=getActivePlantsForZone(k,currentSeason);
+  if(!activePlants.length){const empty=document.createElement('div');empty.className='zp-empty';empty.textContent='이 계절에 활성 상태인 식물이 없습니다';list.appendChild(empty);}
+  else{activePlants.forEach(p=>{const el=document.createElement('div');el.className='zp-plant-item';
+    const bloomLabel=(p.bloom&&p.bloom!=='-')?p.bloom:'';
+    const existLabel=getPlantExistPeriod(p);
+    el.innerHTML=`<span class="zp-plant-name">${p.name}</span><div class="zp-plant-right">${bloomLabel?`<span class="zp-plant-bloom">🌸 ${bloomLabel}</span>`:''}<span class="zp-plant-state">${existLabel}</span></div>`;
+    el.addEventListener('click',ev=>{ev.stopPropagation();openPlantModal(p.name);});list.appendChild(el);});}
+  zonePopup.classList.add('visible');posZonePopup(mx,my);
 }
-
-function posZonePopup(mx, my){
-  const pw=zonePopup.offsetWidth||260;
-  const ph2=zonePopup.offsetHeight||220;
-  let l=mx+18, t=my-ph2/2;
-  if(l+pw>window.innerWidth-10) l=mx-pw-18;
-  t=Math.max(100,Math.min(t,window.innerHeight-ph2-48));
-  zonePopup.style.left=l+'px';
-  zonePopup.style.top=t+'px';
+function posZonePopup(mx,my){
+  const pw=zonePopup.offsetWidth||280,ph2=zonePopup.offsetHeight||220;
+  const rightReserved=258; /* right-cards(230)+right-margin(12)+buffer(16) */
+  let l=mx+20,t=my-ph2/2;
+  /* 오른쪽 카드 영역 침범하면 커서 왼쪽으로 */
+  if(l+pw>window.innerWidth-rightReserved)l=mx-pw-20;
+  /* 왼쪽 화면 밖으로 벗어나지 않도록 */
+  l=Math.max(10,l);
+  t=Math.max(110,Math.min(t,window.innerHeight-ph2-50));
+  zonePopup.style.left=l+'px';zonePopup.style.top=t+'px';
 }
-
 function openPlantModal(plantName){
-  const p = PLANT_DB[plantName];
-  if(!p) return;
-  document.getElementById('pmName').textContent = plantName;
-  document.getElementById('pmSci').textContent = p.sci||'';
-  document.getElementById('pmType').textContent = p.type||'';
-  const stateLabel = p.evergreen==='상록'?'상록 (연중 잎 유지)':(p.evergreen==='반상록'?'반상록 (일부 잎 유지)':'낙엽 (겨울 휴면)');
-  document.getElementById('pmBloom').textContent = `${(p.bloom==='-'||!p.bloom)?'개화 없음 (상록·서식지 기능)':p.bloom} · ${stateLabel}`;
-  const tags = document.getElementById('pmTags');
-  tags.innerHTML = '';
-  if(p.honey) tags.innerHTML += '<span class="dm-tag">🐝 밀원</span>';
-  if(p.fruit) tags.innerHTML += '<span class="dm-tag">🍒 열매</span>';
-  tags.innerHTML += `<span class="dm-tag">❄ 내한 ${p.hardy||'-'}</span>`;
-  document.getElementById('pmNote').textContent = p.note||'';
-  const list = document.getElementById('pmGrowList');
-  list.innerHTML = '';
+  const p=PLANT_DB[plantName];if(!p)return;
+  document.getElementById('pmName').textContent=plantName;document.getElementById('pmSci').textContent=p.sci||'';document.getElementById('pmType').textContent=p.type||'';
+  const stateLabel=p.evergreen==='상록'?'상록 (연중 잎 유지)':(p.evergreen==='반상록'?'반상록 (일부 잎 유지)':'낙엽 (겨울 휴면)');
+  document.getElementById('pmBloom').textContent=`${(p.bloom==='-'||!p.bloom)?'개화 없음':p.bloom} · ${stateLabel}`;
+  const tags=document.getElementById('pmTags');tags.innerHTML='';
+  if(p.honey)tags.innerHTML+='<span class="dm-tag">🐝 밀원</span>';if(p.fruit)tags.innerHTML+='<span class="dm-tag">🍒 열매</span>';
+  tags.innerHTML+=`<span class="dm-tag">❄ 내한 ${p.hardy||'-'}</span>`;
+  document.getElementById('pmNote').textContent=p.note||'';
+  const list=document.getElementById('pmGrowList');list.innerHTML='';
   ['spring','summer','autumn','winter'].forEach(s=>{
-    const v = (p.grow||{})[s]||0;
-    const color = v>=60?'#4ade80':(v>=40?'#fbbf24':'#f87171');
-    const row = document.createElement('div');
-    row.className = 'dm-trend';
-    row.innerHTML = `<span style="color:rgba(255,255,255,.6);min-width:48px">${SEASON_META[s].emoji} ${SEASON_META[s].label}</span><div class="dm-trend-bar-wrap"><div class="dm-trend-bar" style="width:${Math.min(100,v)}%;background:${color}"></div></div><span class="dm-trend-num" style="color:${color}">${Math.round(v)}</span>`;
+    const v=(p.grow||{})[s]||0;const color=v>=60?'#4ade80':(v>=40?'#fbbf24':'#f87171');
+    const row=document.createElement('div');row.className='dm-trend';
+    row.innerHTML=`<span style="color:rgba(255,255,255,.6);min-width:48px">${SEASON_META[s].emoji} ${SEASON_META[s].label}</span><div class="dm-trend-bar-wrap"><div class="dm-trend-bar" style="width:${Math.min(100,v)}%;background:${color}"></div></div><span class="dm-trend-num" style="color:${color}">${Math.round(v)}</span>`;
     list.appendChild(row);
   });
   document.getElementById('plantModal').classList.add('open');
 }
-
 function openFaunaModal(faunaKey){
-  const f = FAUNA_DB[faunaKey];
-  if(!f) return;
-  document.getElementById('fmIcon').textContent = f.emoji;
-  document.getElementById('fmName').textContent = faunaKey;
-  document.getElementById('fmType').textContent = f.type;
-  const chain = document.getElementById('fmChain');
-  chain.innerHTML = '';
-  f.chain.forEach((step,i)=>{
-    if(i>0){ const a=document.createElement('span'); a.className='dm-arrow'; a.textContent='→'; chain.appendChild(a); }
-    const s=document.createElement('span'); s.className='dm-chain-item'; s.textContent=step; chain.appendChild(s);
-  });
-  document.getElementById('fmReason').textContent = f.reason;
-  const counts = document.getElementById('fmCounts');
-  counts.innerHTML = '';
+  const f=FAUNA_DB[faunaKey];if(!f)return;
+  document.getElementById('fmIcon').textContent=f.emoji;document.getElementById('fmName').textContent=faunaKey;document.getElementById('fmType').textContent=f.type;
+  const chain=document.getElementById('fmChain');chain.innerHTML='';
+  f.chain.forEach((step,i)=>{if(i>0){const a=document.createElement('span');a.className='dm-arrow';a.textContent='→';chain.appendChild(a);}const s=document.createElement('span');s.className='dm-chain-item';s.textContent=step;chain.appendChild(s);});
+  document.getElementById('fmReason').textContent=f.reason;
+  const counts=document.getElementById('fmCounts');counts.innerHTML='';
+  let hasAnyCount=false;
   ['spring','summer','autumn','winter'].forEach(s=>{
     const c=getFaunaCount(faunaKey,s,currentYear);
-    const row=document.createElement('div');
-    row.className='dm-trend';
-    row.innerHTML=`<span style="color:rgba(255,255,255,.6);min-width:48px">${SEASON_META[s].emoji} ${SEASON_META[s].label}</span><div class="dm-trend-bar-wrap"><div class="dm-trend-bar" style="width:${Math.min(100,c/20*100)}%;background:${SEASON_META[s].color}"></div></div><span class="dm-trend-num">${c===0?'-':c+'마리'}</span>`;
+    if(c===0) return; /* 이 계절/연도에 존재하지 않으면 행 생략 */
+    hasAnyCount=true;
+    const row=document.createElement('div');row.className='dm-trend';
+    row.innerHTML=`<span style="color:rgba(255,255,255,.6);min-width:48px">${SEASON_META[s].emoji} ${SEASON_META[s].label}</span><div class="dm-trend-bar-wrap"><div class="dm-trend-bar" style="width:${Math.min(100,c/20*100)}%;background:${SEASON_META[s].color}"></div></div><span class="dm-trend-num">${c}마리</span>`;
     counts.appendChild(row);
   });
-  document.getElementById('fmTrend').textContent = f.trendNote;
+  if(!hasAnyCount){const empty=document.createElement('div');empty.style.cssText='font-size:11px;color:rgba(255,255,255,.4);padding:6px 0;font-style:italic';empty.textContent='현재 연도('+currentYear+'년)에는 이 종이 관찰되지 않습니다';counts.appendChild(empty);}
+  document.getElementById('fmTrend').textContent=f.trendNote;
   document.getElementById('faunaModal').classList.add('open');
 }
-
-document.querySelectorAll('.dm-close').forEach(btn=>{
-  btn.addEventListener('click',()=>document.getElementById(btn.dataset.close).classList.remove('open'));
-});
-document.querySelectorAll('.detail-modal').forEach(m=>{
-  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
-});
-window.addEventListener('keydown',e=>{
-  if(e.key==='Escape') document.querySelectorAll('.detail-modal.open').forEach(m=>m.classList.remove('open'));
-});
+document.querySelectorAll('.dm-close').forEach(btn=>{btn.addEventListener('click',()=>document.getElementById(btn.dataset.close).classList.remove('open'));});
+document.querySelectorAll('.detail-modal').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.detail-modal.open').forEach(m=>m.classList.remove('open'));});
 
 function openPlantPanel(zoneKey){
-  const activePlants = getActivePlantsForZone(zoneKey, currentSeason);
-  if(!activePlants.length){
-    const allPlants = ZONES[zoneKey].plants.filter(n=>PLANT_DB[n]);
-    if(allPlants[0]) openPlantModal(allPlants[0]);
-    return;
-  }
+  const activePlants=getActivePlantsForZone(zoneKey,currentSeason);
+  if(!activePlants.length){const allPlants=ZONES[zoneKey].plants.filter(n=>PLANT_DB[n]);if(allPlants[0])openPlantModal(allPlants[0]);return;}
   openPlantModal(activePlants[0].name);
 }
-
 function renderFaunaLayer(seasonKey){
-  const container = document.getElementById(`fauna-${seasonKey}`);
-  if(!container) return;
-  container.innerHTML = '';
-  const tiers = {1:[],2:[],3:[]};
-  Object.keys(FAUNA_DB).forEach(name=>{
-    const f=FAUNA_DB[name];
-    const count=getFaunaCount(name,seasonKey,currentYear);
-    if(count>0) tiers[f.tier].push({name,f,count});
-  });
-  const tierLabels = {1:'곤충',2:'양서류',3:'조류'};
+  const container=document.getElementById(`fauna-${seasonKey}`);if(!container)return;container.innerHTML='';
+  const tiers={1:[],2:[],3:[]};
+  Object.keys(FAUNA_DB).forEach(name=>{const f=FAUNA_DB[name];const count=getFaunaCount(name,seasonKey,currentYear);if(count>0)tiers[f.tier].push({name,f,count});});
+  const tierLabels={1:'곤충',2:'양서류',3:'조류'};
   [1,2,3].forEach(tier=>{
-    if(!tiers[tier].length) return;
-    const row=document.createElement('div');
-    row.className='fauna-row';
-    const lbl=document.createElement('span');
-    lbl.className='fauna-row-label';
-    lbl.textContent=tierLabels[tier];
-    row.appendChild(lbl);
-    tiers[tier].forEach(({name,f})=>{
-      const chip=document.createElement('div');
-      chip.className='fauna-chip';
-      chip.innerHTML=`<span class="fauna-emoji">${f.emoji}</span><span class="fauna-name">${name}</span>`;
-      chip.addEventListener('click',()=>openFaunaModal(name));
-      row.appendChild(chip);
-    });
+    if(!tiers[tier].length)return;
+    const row=document.createElement('div');row.className='fauna-row';
+    const lbl=document.createElement('span');lbl.className='fauna-row-label';lbl.textContent=tierLabels[tier];row.appendChild(lbl);
+    tiers[tier].forEach(({name,f})=>{const chip=document.createElement('div');chip.className='fauna-chip';chip.innerHTML=`<span class="fauna-emoji">${f.emoji}</span><span class="fauna-name">${name}</span>`;chip.addEventListener('click',()=>openFaunaModal(name));row.appendChild(chip);});
     container.appendChild(row);
   });
-  if(!container.children.length){
-    const empty=document.createElement('div');
-    empty.className='fauna-row';
-    empty.innerHTML='<span class="fauna-row-label">고요</span><span style="font-size:12px;color:rgba(255,255,255,.45)">대부분 휴면 · 일부 텃새만 관찰</span>';
-    container.appendChild(empty);
-  }
+  if(!container.children.length){const empty=document.createElement('div');empty.className='fauna-row';empty.innerHTML='<span class="fauna-row-label">고요</span><span style="font-size:12px;color:rgba(255,255,255,.45)">대부분 휴면 · 일부 텃새만 관찰</span>';container.appendChild(empty);}
 }
-
 function renderSeasonChips(seasonKey){
-  const chips=document.getElementById(`blooming-${seasonKey}`);
-  chips.innerHTML='';
+  const chips=document.getElementById(`blooming-${seasonKey}`);chips.innerHTML='';
   const evg=[],dec=[];
-  Object.keys(PLANT_DB).forEach(name=>{
-    const p=PLANT_DB[name];
-    if(!p.seasons.includes(seasonKey)) return;
-    (p.evergreen==='상록'||p.evergreen==='반상록'?evg:dec).push(name);
-  });
+  Object.keys(PLANT_DB).forEach(name=>{const p=PLANT_DB[name];if(!p.seasons.includes(seasonKey))return;(p.evergreen==='상록'||p.evergreen==='반상록'?evg:dec).push(name);});
   function makeLayer(label,plants,cls){
-    if(!plants.length) return;
-    const d=document.createElement('div');
-    const lbl=document.createElement('span');
-    lbl.className='bloom-layer-label';
-    lbl.textContent=label;
-    d.appendChild(lbl);
-    const row=document.createElement('div');
-    row.className='bloom-layer-row';
-    plants.forEach(n=>{
-      const c=document.createElement('span');
-      c.className='bloom-chip'+(cls?' '+cls:'');
-      c.textContent=n;
-      c.addEventListener('click',()=>{ if(PLANT_DB[n]) openPlantModal(n); });
-      row.appendChild(c);
-    });
-    d.appendChild(row);
-    chips.appendChild(d);
+    if(!plants.length)return;
+    const d=document.createElement('div');const lbl=document.createElement('span');lbl.className='bloom-layer-label';lbl.textContent=label;d.appendChild(lbl);
+    const row=document.createElement('div');row.className='bloom-layer-row';
+    plants.forEach(n=>{const c=document.createElement('span');c.className='bloom-chip'+(cls?' '+cls:'');c.textContent=n;c.addEventListener('click',()=>{if(PLANT_DB[n])openPlantModal(n);});row.appendChild(c);});
+    d.appendChild(row);chips.appendChild(d);
   }
-  makeLayer('🌿 상록·반상록',evg,'evg');
-  makeLayer('🍂 낙엽 활성',dec,'');
+  makeLayer('🌿 상록·반상록',evg,'evg');makeLayer('🍂 낙엽 활성',dec,'');
 }
-
 function updateRightCards(){
   const env=calcEnvIndicators(currentYear);
-  const bd=calcBiodiversity(currentYear);
   document.getElementById('envTemp').textContent=env.temp.toFixed(1)+'°C';
   document.getElementById('envRain').textContent=env.rain+'mm';
-  document.getElementById('envHeat').textContent=env.heatRelief.toFixed(1)+'°C';
-  const heatEl=document.getElementById('envHeat');
-  heatEl.className='env-val '+(env.heatRelief<=-0.9?'good':(env.heatRelief<=-0.5?'warn':'bad'));
-  const stressEl=document.getElementById('envStress');
-  stressEl.textContent=env.stress;
-  stressEl.className='env-val '+env.stressClass;
-  document.getElementById('bdShannon').textContent=bd.shannon.toFixed(2);
-  const shannonPct=Math.min(100,bd.shannon/3.5*100);
+  /* 열섬 완화: 정원 성숙도 기반 (RCP 4.5, 최대 1.2°C) */
+  const t_=Math.max(0,Math.min(1,(currentYear-2026)/24));
+  const g_=1/(1+Math.exp(-8*(t_-0.5)));
+  const heatModel=-(0.1+g_*1.1);
+  document.getElementById('envHeat').textContent=heatModel.toFixed(1)+'°C';
+  document.getElementById('envHeat').className='env-val '+(heatModel<=-0.9?'good':(heatModel<=-0.4?'warn':'bad'));
+  document.getElementById('envStress').textContent=env.stress;document.getElementById('envStress').className='env-val '+env.stressClass;
+  /* Shannon H' — 1.0(2026) → 3.1(2050) */
+  const shannonModel=(1.0+g_*2.1).toFixed(2);
+  document.getElementById('bdShannon').textContent=shannonModel;
+  const shannonPct=Math.min(100,(parseFloat(shannonModel)-1.0)/2.2*100);
   const bar=document.getElementById('bdShannonBar');
-  bar.style.width=shannonPct+'%';
-  bar.style.background=bd.shannon>=2.5?'#4ade80':(bd.shannon>=1.8?'#fbbf24':'#f87171');
-  document.getElementById('bdInsect').textContent=bd.insectSpecies+'종';
-  document.getElementById('bdBird').textContent=bd.birdSpecies+'종';
-  document.getElementById('bdTotal').textContent='~'+bd.totalIndividuals+'마리';
+  bar.style.width=shannonPct+'%';bar.style.background=parseFloat(shannonModel)>=2.5?'#4ade80':(parseFloat(shannonModel)>=1.5?'#fbbf24':'#f87171');
+  /* 곤충·조류 종 수 — 성숙도 스케일 */
+  document.getElementById('bdInsect').textContent=Math.round(2+g_*7)+'종';
+  document.getElementById('bdBird').textContent=Math.round(1+g_*8)+'종';
+  document.getElementById('bdTotal').textContent='~'+Math.round(8+g_*82)+'마리';
 }
-
-function goToSeason(idx, animate=true){
-  currentSeasonIdx = (idx+4)%4;
-  currentSeason = SEASON_KEYS[currentSeasonIdx];
-  const track=document.getElementById('seasonTrack');
-  track.style.transition=animate?'transform .5s cubic-bezier(.4,0,.2,1)':'none';
-  track.style.transform=`translateX(-${currentSeasonIdx*100}%)`;
+function goToSeason(idx,animate=true){
+  currentSeasonIdx=(idx+4)%4;currentSeason=SEASON_KEYS[currentSeasonIdx];
+  const track=document.getElementById('seasonTrack');track.style.transition=animate?'transform .5s cubic-bezier(.4,0,.2,1)':'none';track.style.transform=`translateX(-${currentSeasonIdx*100}%)`;
   document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===currentSeasonIdx));
-  const meta=SEASON_META[currentSeason];
-  document.getElementById('topEmoji').textContent=meta.emoji;
-  document.getElementById('topSeason').textContent=meta.label;
+  const meta=SEASON_META[currentSeason];document.getElementById('topEmoji').textContent=meta.emoji;document.getElementById('topSeason').textContent=meta.label;
 }
-
 document.getElementById('btnLeft').addEventListener('click',()=>goToSeason(currentSeasonIdx-1));
 document.getElementById('btnRight').addEventListener('click',()=>goToSeason(currentSeasonIdx+1));
 document.querySelectorAll('.dot').forEach((d,i)=>d.addEventListener('click',()=>goToSeason(i)));
-
 let txStart=0;
 document.getElementById('seasonTrack').addEventListener('touchstart',e=>{txStart=e.touches[0].clientX;},{passive:true});
-document.getElementById('seasonTrack').addEventListener('touchend',e=>{
-  const diff=txStart-e.changedTouches[0].clientX;
-  if(Math.abs(diff)>50) goToSeason(diff>0?currentSeasonIdx+1:currentSeasonIdx-1);
-},{passive:true});
-
+document.getElementById('seasonTrack').addEventListener('touchend',e=>{const diff=txStart-e.changedTouches[0].clientX;if(Math.abs(diff)>50)goToSeason(diff>0?currentSeasonIdx+1:currentSeasonIdx-1);},{passive:true});
 document.getElementById('yearSlider').addEventListener('input',e=>{
-  const idx=parseInt(e.target.value);
-  currentYear=YEARS[idx];
-  document.getElementById('yearValue').textContent=currentYear;
-  document.getElementById('topYear').textContent=currentYear+'년';
-  document.getElementById('yearTrend').innerHTML=`2025 대비 <strong>+${CLIMATE[currentYear].delta.toFixed(1)}°C</strong>`;
-  updateRightCards();
-  SEASON_KEYS.forEach(s=>renderFaunaLayer(s));
+  const idx=parseInt(e.target.value);currentYear=YEARS[idx];
+  document.getElementById('yearValue').textContent=currentYear;document.getElementById('topYear').textContent=currentYear+'년';
+  document.getElementById('yearTrend').innerHTML=`RCP 4.5 기준 <strong>+${CLIMATE[currentYear].delta.toFixed(1)}°C</strong>`;
+  updateRightCards();SEASON_KEYS.forEach(s=>renderFaunaLayer(s));
 });
 
-/* ── 초기화 ── */
-SEASON_KEYS.forEach(s=>{
-  seasonScenes[s] = new SeasonScene(`canvas-${s}`, s);
-  renderSeasonChips(s);
-  renderFaunaLayer(s);
-});
+SEASON_KEYS.forEach(s=>{seasonScenes[s]=new SeasonScene(`canvas-${s}`,s);renderSeasonChips(s);renderFaunaLayer(s);});
 updateRightCards();
-
-(function loop(){
-  requestAnimationFrame(loop);
-  Object.values(seasonScenes).forEach(sc=>sc.render());
-})();
-
-const _params=new URLSearchParams(location.search);
-const _initSeason=_params.get('season')||'spring';
-const _initIdx=SEASON_KEYS.indexOf(_initSeason);
-goToSeason(_initIdx>=0?_initIdx:0, false);
-
+(function loop(){requestAnimationFrame(loop);Object.values(seasonScenes).forEach(sc=>sc.render());})();
+const _params=new URLSearchParams(location.search);const _initSeason=_params.get('season')||'spring';const _initIdx=SEASON_KEYS.indexOf(_initSeason);
+goToSeason(_initIdx>=0?_initIdx:0,false);
 window.addEventListener('resize',()=>Object.values(seasonScenes).forEach(sc=>sc._resize()));
 </script>
 </body>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창원성민여자고등학교 생태 프로젝트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: #0c1409;
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    color: #e8f0e4;
+    overflow: hidden;
+  }
+
+  /* 배경 — 별빛 느낌 */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(74,103,65,0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 65%, rgba(45,58,46,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 60% 20%, rgba(184,136,66,0.10) 0%, transparent 40%);
+  }
+
+  .wrapper {
+    position: relative; z-index: 1;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  /* 상단 헤더 */
+  .header {
+    grid-column: 1 / -1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: 3.5rem;
+    text-align: center;
+  }
+
+  .school-name {
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    color: rgba(232,240,228,0.5);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .main-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #e8f0e4;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .main-title .accent {
+    color: #7ec87e;
+  }
+
+  .sub {
+    font-size: 0.9rem;
+    color: rgba(232,240,228,0.55);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* 구분선 */
+  .divider {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; justify-content: center;
+    gap: 1.5rem;
+    padding: 0 6vw;
+  }
+
+  .divider-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,240,228,0.2), transparent);
+  }
+
+  .divider-ornament {
+    font-size: 1.1rem;
+    color: rgba(232,240,228,0.35);
+    letter-spacing: 0.5em;
+  }
+
+  /* 카드 영역 */
+  .cards {
+    grid-column: 1 / -1;
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 2rem;
+    padding: 3rem 6vw 4rem;
+  }
+
+  .entry-card {
+    flex: 0 1 360px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2.8rem 2.4rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .entry-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--card-glow);
+    opacity: 0;
+    transition: opacity 0.4s;
+    border-radius: 20px;
+  }
+
+  .entry-card:hover::before { opacity: 1; }
+  .entry-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-6px);
+  }
+
+  .entry-card.garden {
+    --card-glow: radial-gradient(ellipse at 50% 0%, rgba(74,200,90,0.12), transparent 70%);
+  }
+  .entry-card.ground {
+    --card-glow: radial-gradient(ellipse at 50% 0%, rgba(184,136,66,0.12), transparent 70%);
+  }
+
+  .card-icon {
+    font-size: 3.2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    filter: drop-shadow(0 0 16px rgba(255,255,255,0.1));
+  }
+
+  .card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(232,240,228,0.45);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #e8f0e4;
+    margin-bottom: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: rgba(232,240,228,0.55);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .card-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .entry-card.garden .card-btn {
+    background: rgba(74,200,90,0.18);
+    color: #7ec87e;
+    border: 1px solid rgba(74,200,90,0.3);
+  }
+  .entry-card.garden:hover .card-btn {
+    background: rgba(74,200,90,0.32);
+  }
+
+  .entry-card.ground .card-btn {
+    background: rgba(184,136,66,0.15);
+    color: #c8a050;
+    border: 1px solid rgba(184,136,66,0.3);
+  }
+  .entry-card.ground .card-btn.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* 준비 중 배지 */
+  .wip-badge {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(184,136,66,0.2);
+    color: #c8a050;
+    border: 1px solid rgba(184,136,66,0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+  }
+
+  /* 하단 */
+  footer {
+    position: fixed; bottom: 1.5rem; left: 0; right: 0;
+    text-align: center;
+    font-size: 0.72rem;
+    color: rgba(232,240,228,0.28);
+    letter-spacing: 0.08em;
+    z-index: 1;
+  }
+
+  @media (max-width: 640px) {
+    .cards { flex-direction: column; align-items: center; padding: 2rem 5vw 3rem; }
+    .entry-card { width: 100%; }
+    .main-title { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="header">
+    <p class="school-name">Changwon Sungmin Girls' High School · 2026</p>
+    <h1 class="main-title">생태 <span class="accent">프로젝트</span></h1>
+    <p class="sub">자연과 공존하는 학교 공간 설계 연구</p>
+  </div>
+
+  <div class="divider">
+    <span class="divider-line"></span>
+    <span class="divider-ornament">· ❦ ·</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <div class="cards">
+
+    <!-- 별빛 정원 -->
+    <a class="entry-card garden" href="garden/simulation.html">
+      <span class="card-icon">🌿</span>
+      <p class="card-label">Rooftop Ecosystem</p>
+      <h2 class="card-title">별빛 정원 입장</h2>
+      <p class="card-desc">
+        창원성민여자고등학교 옥상정원.<br>
+        2026–2050년 생물다양성 시뮬레이션.<br>
+        41종 식물 · 19종 동물의 25년 궤적.
+      </p>
+      <span class="card-btn">입장하기 →</span>
+    </a>
+
+    <!-- 생태 운동장 (준비 중) -->
+    <div class="entry-card ground">
+      <span class="wip-badge">준비 중</span>
+      <span class="card-icon">🏃</span>
+      <p class="card-label">Ecological Playground</p>
+      <h2 class="card-title">생태 운동장 입장</h2>
+      <p class="card-desc">
+        운동장을 생태 공간으로 전환하는 프로젝트.<br>
+        투수성 포장 · 자생식물 도입 · 빗물 순환.<br>
+        현재 준비 중입니다.
+      </p>
+      <span class="card-btn disabled">준비 중</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>창원성민여자고등학교 생태 공간 설계 연구 · 2026</footer>
+
+</body>
+</html>
