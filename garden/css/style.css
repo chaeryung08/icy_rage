@@ -125,6 +125,7 @@ html, body {
   display: flex; flex-direction: column;
   justify-content: flex-end;
   padding: 1rem; gap: 4px;
+  pointer-events: none; /* 클릭이 카드까지 전달되도록 */
 }
 
 .season-emoji {

@@ -1,16 +1,52 @@
-/* seasons_page.js : seasons.html 전용 제어 */
+/* seasons.js : 생장 데이터 + seasons.html 슬라이드 제어 */
 
-var SEASONS_LIST = ['spring', 'summer', 'autumn', 'winter'];
-var SEASON_META = {
-  spring: { emoji: '🌸', name: '봄' },
-  summer: { emoji: '☀️', name: '여름' },
-  autumn: { emoji: '🍂', name: '가을' },
-  winter: { emoji: '❄️', name: '겨울' }
+var GROWTH_COLORS = ['#E8F5A3','#B8E04A','#78C028','#3E8C14','#1A5C0A'];
+var SEASONS_LIST  = ['spring','summer','autumn','winter'];
+var SEASON_META   = {
+  spring: { emoji:'🌸', name:'봄' },
+  summer: { emoji:'☀️', name:'여름' },
+  autumn: { emoji:'🍂', name:'가을' },
+  winter: { emoji:'❄️', name:'겨울' }
 };
 
 var currentSeasonIdx = 0;
-var currentYear = parseInt(sessionStorage.getItem('year') || '2026');
 
+/* ── simulation.html 용 ── */
+function updateStats(year) {
+  var t = Math.max(0, Math.min(1, (year - 2026) / 24));
+  var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
+  var heat    = document.getElementById('statHeat');
+  var shannon = document.getElementById('statShannon');
+  var solar   = document.getElementById('statSolar');
+  if (heat)    heat.textContent    = '-' + (g * 2.6).toFixed(1) + 'C';
+  if (shannon) shannon.textContent = (3.8 + g * 0.5).toFixed(2);
+  if (solar)   solar.textContent   = Math.round(g * 58) + '%';
+}
+
+function updateAllSeasons(year) {
+  SEASONS_LIST.forEach(function(s) { updateOneSeason(s, year); });
+}
+
+function updateOneSeason(season, year) {
+  var avgIdx = (typeof getAvgGrowthIndex === 'function') ? getAvgGrowthIndex(year, season) : 0;
+  var pct    = Math.min(100, Math.round(avgIdx));
+  var color  = GROWTH_COLORS[Math.min(Math.floor(pct / 20), 4)];
+
+  var fill  = document.getElementById('growth-' + season);
+  var pctEl = document.getElementById('growthPct-' + season);
+  if (fill)  { fill.style.width = pct + '%'; fill.style.backgroundColor = color; }
+  if (pctEl) pctEl.textContent = pct + '%';
+
+  var blooming = (typeof getBloomingPlants === 'function') ? getBloomingPlants(year, season) : [];
+  var chipsEl  = document.getElementById('blooming-' + season);
+  if (chipsEl) {
+    chipsEl.innerHTML = blooming.slice(0, 6).map(function(p) {
+      return '<span class="bloom-chip' + (p.honey ? ' honey' : '') + '">' + p.name + '</span>';
+    }).join('');
+  }
+}
+
+/* ── seasons.html 슬라이드 제어 ── */
 function changeSeason(dir) {
   currentSeasonIdx = (currentSeasonIdx + dir + 4) % 4;
   goToSeasonIdx(currentSeasonIdx);
@@ -19,34 +55,32 @@ function changeSeason(dir) {
 function goToSeasonIdx(idx) {
   currentSeasonIdx = idx;
   var track = document.getElementById('seasonTrack');
-  if (track) {
-    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
-  }
+  if (track) track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+
   for (var i = 0; i < 4; i++) {
     var dot = document.getElementById('dot-' + i);
-    if (dot) {
-      dot.classList.toggle('active', i === idx);
-    }
+    if (dot) dot.classList.toggle('active', i === idx);
   }
   updateTopbar();
 }
 
 function updateTopbar() {
   var season = SEASONS_LIST[currentSeasonIdx];
-  var meta = SEASON_META[season];
+  var meta   = SEASON_META[season];
+  var year   = parseInt(sessionStorage.getItem('year') || '2026');
 
-  var topEmoji = document.getElementById('topEmoji');
+  var topEmoji  = document.getElementById('topEmoji');
   var topSeason = document.getElementById('topSeason');
-  var topYear = document.getElementById('topYear');
-  if (topEmoji) topEmoji.textContent = meta.emoji;
+  var topYear   = document.getElementById('topYear');
+  if (topEmoji)  topEmoji.textContent  = meta.emoji;
   if (topSeason) topSeason.textContent = meta.name;
-  if (topYear) topYear.textContent = currentYear + '년';
+  if (topYear)   topYear.textContent   = year + '년';
 
-  var t = Math.max(0, Math.min(1, (currentYear - 2026) / 24));
+  var t = Math.max(0, Math.min(1, (year - 2026) / 24));
   var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
-  var topHeat = document.getElementById('topHeat');
+  var topHeat    = document.getElementById('topHeat');
   var topShannon = document.getElementById('topShannon');
-  if (topHeat) topHeat.textContent = '-' + (g * 2.6).toFixed(1) + 'C';
+  if (topHeat)    topHeat.textContent    = '-' + (g * 2.6).toFixed(1) + 'C';
   if (topShannon) topShannon.textContent = (3.8 + g * 0.5).toFixed(2);
 }
 
@@ -54,47 +88,50 @@ function getCurrentSeason() {
   return SEASONS_LIST[currentSeasonIdx];
 }
 
+/* seasons.html 초기화 */
 document.addEventListener('DOMContentLoaded', function() {
-  // URL 파라미터로 시작 계절 결정
-  var params = new URLSearchParams(location.search);
+  var track = document.getElementById('seasonTrack');
+  if (!track) return; /* simulation.html이면 스킵 */
+
+  /* URL 파라미터로 시작 계절 결정 */
+  var params     = new URLSearchParams(location.search);
   var initSeason = params.get('season') || 'spring';
-  var idx = SEASONS_LIST.indexOf(initSeason);
+  var idx        = SEASONS_LIST.indexOf(initSeason);
   currentSeasonIdx = idx >= 0 ? idx : 0;
 
-  // 버튼 이벤트
-  var btnLeft = document.getElementById('btnLeft');
+  /* < > 버튼 */
+  var btnLeft  = document.getElementById('btnLeft');
   var btnRight = document.getElementById('btnRight');
-  if (btnLeft) btnLeft.addEventListener('click', function() { changeSeason(-1); });
-  if (btnRight) btnRight.addEventListener('click', function() { changeSeason(1); });
+  if (btnLeft)  btnLeft.addEventListener('click',  function() { changeSeason(-1); });
+  if (btnRight) btnRight.addEventListener('click', function() { changeSeason(1);  });
 
-  // 인디케이터 클릭
+  /* 인디케이터 dots */
   for (var i = 0; i < 4; i++) {
-    (function(idx) {
-      var dot = document.getElementById('dot-' + idx);
-      if (dot) dot.addEventListener('click', function() { goToSeasonIdx(idx); });
+    (function(i) {
+      var dot = document.getElementById('dot-' + i);
+      if (dot) dot.addEventListener('click', function() { goToSeasonIdx(i); });
     })(i);
   }
 
-  // 팝업 닫기
-  var overlay = document.getElementById('popupOverlay');
-  var closeBtn = document.getElementById('popupClose');
-  if (overlay) overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) closePopup();
-  });
-  if (closeBtn) closeBtn.addEventListener('click', closePopup);
-
-  // 키보드
+  /* 키보드 */
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft') changeSeason(-1);
+    if (e.key === 'ArrowLeft')  changeSeason(-1);
     if (e.key === 'ArrowRight') changeSeason(1);
   });
 
-  // 초기화
+  /* 초기 위치 */
   goToSeasonIdx(currentSeasonIdx);
 
-  // plants 데이터 로드 후 업데이트
-  loadPlantsData().then(function() {
-    initLoader();
-    updateAllSeasons(currentYear);
-  });
+  /* 데이터 로드 */
+  var year = parseInt(sessionStorage.getItem('year') || '2026');
+  if (typeof loadPlantsData === 'function') {
+    loadPlantsData().then(function() {
+      if (typeof initLoader === 'function') initLoader();
+      updateAllSeasons(year);
+    }).catch(function() {
+      if (typeof initLoader === 'function') initLoader();
+    });
+  } else {
+    if (typeof initLoader === 'function') initLoader();
+  }
 });
