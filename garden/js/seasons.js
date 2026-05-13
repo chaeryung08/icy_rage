@@ -9,26 +9,67 @@ var SEASON_META   = {
   winter: { emoji:'❄️', name:'겨울' }
 };
 
+/* 계절별 유입 동물 이모지 (simulation.html 카드용) */
+var SEASON_FAUNA_ICONS = {
+  spring:  [['🐝','꿀벌'],['🐝','뒤영벌'],['🪰','꽃등에'],['🦋','나비'],['🐸','청개구리'],['🐦','동박새'],['🐦','박새']],
+  summer:  [['🐝','꿀벌'],['🦋','나비'],['🦋','박각시나방'],['🪲','잠자리'],['🪰','꽃등에'],['🐞','무당벌레'],['🐦','꾀꼬리'],['🐦','제비'],['🐸','청개구리']],
+  autumn:  [['🐝','꿀벌'],['🦋','나비'],['🐞','무당벌레'],['🐦','직박구리'],['🐦','황여새'],['🐦','개똥지빠귀'],['🐦','물총새']],
+  winter:  [['🐦','동박새'],['🐦','박새'],['🐦','직박구리'],['🐦','오목눈이'],['🐦','황여새'],['🐦','개똥지빠귀'],['🐞','무당벌레']]
+};
+
 var currentSeasonIdx = 0;
 
 /* ── simulation.html 용 ── */
-function updateStats(year) {
+function calcG(year) {
   var t = Math.max(0, Math.min(1, (year - 2026) / 24));
-  var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
+  return 1 / (1 + Math.exp(-8 * (t - 0.5)));
+}
+
+function updateStats(year) {
+  var g = calcG(year);
   var heat    = document.getElementById('statHeat');
   var shannon = document.getElementById('statShannon');
   var solar   = document.getElementById('statSolar');
-  if (heat)    heat.textContent    = '-' + (g * 2.6).toFixed(1) + 'C';
+  var animals = document.getElementById('statAnimals');
+  if (heat)    heat.textContent    = '-' + (g * 2.6).toFixed(1) + '°C';
   if (shannon) shannon.textContent = (3.8 + g * 0.5).toFixed(2);
   if (solar)   solar.textContent   = Math.round(g * 58) + '%';
+  if (animals) animals.textContent = Math.round(14 + g * 5) + '종';
 }
 
 function updateAllSeasons(year) {
   SEASONS_LIST.forEach(function(s) { updateOneSeason(s, year); });
+  updateAnimalIcons(year);
+}
+
+/* simulation.html 계절 카드 동물 아이콘 채우기 */
+function updateAnimalIcons(year) {
+  var t = Math.max(0, Math.min(1, (year - 2026) / 24));
+  SEASONS_LIST.forEach(function(s) {
+    var el = document.getElementById('animals-' + s);
+    if (!el) return;
+    el.innerHTML = '';
+    var icons = SEASON_FAUNA_ICONS[s] || [];
+    var show = Math.round(icons.length * (0.5 + t * 0.5));
+    icons.slice(0, show).forEach(function(pair, i) {
+      var span = document.createElement('span');
+      span.className = 'animal-icon';
+      span.textContent = pair[0];
+      span.title = pair[1];
+      span.style.animationDelay = (i * 70) + 'ms';
+      el.appendChild(span);
+    });
+  });
 }
 
 function updateOneSeason(season, year) {
   var avgIdx = (typeof getAvgGrowthIndex === 'function') ? getAvgGrowthIndex(year, season) : 0;
+  /* plants.json 비어있을 때 폴백: PLANT_DB 평균값 기반 */
+  if (!avgIdx) {
+    var base = {spring:62, summer:78, autumn:69, winter:37}[season] || 60;
+    var g2 = calcG(year);
+    avgIdx = base * (0.88 + g2 * 0.22);
+  }
   var pct    = Math.min(100, Math.round(avgIdx));
   var color  = GROWTH_COLORS[Math.min(Math.floor(pct / 20), 4)];
 
@@ -39,7 +80,8 @@ function updateOneSeason(season, year) {
 
   var blooming = (typeof getBloomingPlants === 'function') ? getBloomingPlants(year, season) : [];
   var chipsEl  = document.getElementById('blooming-' + season);
-  if (chipsEl) {
+  /* blooming 데이터가 있을 때만 덮어쓰기 (없으면 renderSeasonChips의 2층 구조 유지) */
+  if (chipsEl && blooming.length > 0) {
     chipsEl.innerHTML = blooming.slice(0, 6).map(function(p) {
       return '<span class="bloom-chip' + (p.honey ? ' honey' : '') + '">' + p.name + '</span>';
     }).join('');

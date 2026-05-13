@@ -80,7 +80,9 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
 
 .panel-info{position:relative;z-index:3;padding:0 2rem 1.6rem;pointer-events:none}
 .panel-info > *{pointer-events:auto}
-.bloom-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.bloom-chips{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.bloom-layer-label{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:.07em;text-transform:uppercase;font-weight:700;margin-bottom:3px}
+.bloom-layer-row{display:flex;flex-wrap:wrap;gap:5px}
 .bloom-chip{
   font-size:12px;padding:4px 10px;border-radius:20px;
   background:rgba(255,255,255,.16);color:rgba(255,255,255,.92);
@@ -88,6 +90,7 @@ html,body{height:100%;overflow:hidden;background:#0f1117;font-family:'Noto Sans 
   cursor:pointer;transition:background .15s,transform .15s;
 }
 .bloom-chip:hover{background:rgba(255,255,255,.28);transform:translateY(-1px)}
+.bloom-chip.evg{background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.38);color:rgba(255,255,255,.95)}
 
 .fauna-layer{
   position:absolute;left:2rem;right:2rem;bottom:80px;z-index:3;
@@ -976,16 +979,35 @@ function renderFaunaLayer(seasonKey){
 }
 
 function renderSeasonChips(seasonKey){
-  const meta=SEASON_META[seasonKey];
   const chips=document.getElementById(`blooming-${seasonKey}`);
   chips.innerHTML='';
-  meta.blooming.forEach(n=>{
-    const c=document.createElement('span');
-    c.className='bloom-chip';
-    c.textContent=n;
-    c.addEventListener('click',()=>{ if(PLANT_DB[n]) openPlantModal(n); });
-    chips.appendChild(c);
+  const evg=[],dec=[];
+  Object.keys(PLANT_DB).forEach(name=>{
+    const p=PLANT_DB[name];
+    if(!p.seasons.includes(seasonKey)) return;
+    (p.evergreen==='상록'||p.evergreen==='반상록'?evg:dec).push(name);
   });
+  function makeLayer(label,plants,cls){
+    if(!plants.length) return;
+    const d=document.createElement('div');
+    const lbl=document.createElement('span');
+    lbl.className='bloom-layer-label';
+    lbl.textContent=label;
+    d.appendChild(lbl);
+    const row=document.createElement('div');
+    row.className='bloom-layer-row';
+    plants.forEach(n=>{
+      const c=document.createElement('span');
+      c.className='bloom-chip'+(cls?' '+cls:'');
+      c.textContent=n;
+      c.addEventListener('click',()=>{ if(PLANT_DB[n]) openPlantModal(n); });
+      row.appendChild(c);
+    });
+    d.appendChild(row);
+    chips.appendChild(d);
+  }
+  makeLayer('🌿 상록·반상록',evg,'evg');
+  makeLayer('🍂 낙엽 활성',dec,'');
 }
 
 function updateRightCards(){

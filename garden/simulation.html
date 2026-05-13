@@ -37,9 +37,10 @@
     </div>
     <div class="stats-row">
       <div class="stat-chip">🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong></div>
-      <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">3.8</strong></div>
+      <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">3.80</strong></div>
       <div class="stat-chip">☀️ 태양복사 감소 <strong id="statSolar">0%</strong></div>
-      <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">조사 중</strong></div>
+      <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">14종</strong></div>
+      <button class="trend-btn" onclick="openTrendModal()">📈 연도별 추세</button>
     </div>
   </section>
 
@@ -80,7 +81,7 @@
       <div class="season-content">
         <span class="season-emoji">☀️</span>
         <h2 class="season-name">여름</h2>
-        <p class="season-period">6월 – 8월</p>
+        <p class="season-period">6월 – 9월</p>
         <div class="growth-bar-wrap">
           <div class="growth-bar" id="growth-summer"></div>
         </div>
@@ -101,7 +102,7 @@
       <div class="season-content">
         <span class="season-emoji">🍂</span>
         <h2 class="season-name">가을</h2>
-        <p class="season-period">9월 – 11월</p>
+        <p class="season-period">10월 – 11월</p>
         <div class="growth-bar-wrap">
           <div class="growth-bar" id="growth-autumn"></div>
         </div>
@@ -138,6 +139,23 @@
     <a href="conclusion.html">2050년 결론 보기 →</a>
   </div>
 
+  <!-- 연도별 생물다양성 추세 모달 -->
+  <div class="trend-modal" id="trendModal" onclick="if(event.target===this)closeTrendModal()">
+    <div class="trend-card">
+      <div class="trend-header">
+        <span>📈 연도별 생물다양성 변화 (2026–2050)</span>
+        <button class="trend-close" onclick="closeTrendModal()">✕</button>
+      </div>
+      <canvas id="trendCanvas"></canvas>
+      <div class="trend-legend">
+        <span class="l-shannon">Shannon H' (생물다양성 지수)</span>
+        <span class="l-animals">동물 종 수</span>
+        <span class="l-heat">열섬 완화 효과 (°C)</span>
+      </div>
+      <p class="trend-note">현재 선택 연도는 세로선으로 표시됩니다. 슬라이더를 움직이면 실시간 반영됩니다.</p>
+    </div>
+  </div>
+
   <script src="src_plants/plants.js"></script>
   <!-- TODO: 동물 자료 오면 주석 해제 -->
   <!-- <script src="src_creatures/animals.js"></script> -->
@@ -145,6 +163,181 @@
   <script src="js/timeline.js"></script>
   <script src="js/seasons.js"></script>
   <script src="js/main.js"></script>
+
+  <script>
+  /* ── 연도별 추세 차트 ── */
+  var CHART_YEARS = [2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050];
+
+  function openTrendModal() {
+    document.getElementById('trendModal').classList.add('open');
+    drawTrendChart();
+  }
+  function closeTrendModal() {
+    document.getElementById('trendModal').classList.remove('open');
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeTrendModal();
+  });
+
+  function drawTrendChart() {
+    var canvas = document.getElementById('trendCanvas');
+    if (!canvas) return;
+    var dpr = window.devicePixelRatio || 1;
+    var W = Math.min(560, canvas.parentElement.clientWidth - 40);
+    var H = 240;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    var ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var pL=46, pR=42, pT=28, pB=38;
+    var cW = W - pL - pR;
+    var cH = H - pT - pB;
+
+    /* 데이터 계산 */
+    var shannon=[], animals=[], heat=[];
+    CHART_YEARS.forEach(function(yr) {
+      var g = calcG(yr);
+      shannon.push(3.8 + g * 0.5);
+      animals.push(14 + g * 5);
+      heat.push(g * 2.6);
+    });
+
+    /* 배경 */
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0, 0, W, H);
+
+    /* 격자 */
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    for (var i = 0; i <= 4; i++) {
+      var gy = pT + cH - (cH / 4) * i;
+      ctx.beginPath(); ctx.moveTo(pL, gy); ctx.lineTo(pL + cW, gy); ctx.stroke();
+    }
+    for (var j = 0; j < CHART_YEARS.length; j++) {
+      var gx = pL + (j / (CHART_YEARS.length - 1)) * cW;
+      ctx.beginPath(); ctx.moveTo(gx, pT); ctx.lineTo(gx, pT + cH); ctx.stroke();
+    }
+
+    /* X축 레이블 */
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    CHART_YEARS.forEach(function(yr, i) {
+      if (i % 2 === 0) {
+        var lx = pL + (i / (CHART_YEARS.length - 1)) * cW;
+        ctx.fillText("'" + String(yr).slice(2), lx, H - 10);
+      }
+    });
+
+    /* 현재 연도 세로선 */
+    var curIdx = CHART_YEARS.indexOf(currentYear);
+    if (curIdx < 0) {
+      /* 슬라이더 홀수 연도 → 가장 가까운 짝수로 */
+      for (var k = 0; k < CHART_YEARS.length; k++) {
+        if (CHART_YEARS[k] >= currentYear) { curIdx = k; break; }
+      }
+    }
+    if (curIdx >= 0) {
+      var cx = pL + (curIdx / (CHART_YEARS.length - 1)) * cW;
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + cH); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(CHART_YEARS[curIdx] + '년', cx, pT - 8);
+    }
+
+    /* 선 그리기 헬퍼 */
+    function drawLine(vals, minV, maxV, color, fillAlpha) {
+      var pts = vals.map(function(v, i) {
+        return [
+          pL + (i / (vals.length - 1)) * cW,
+          pT + cH - ((v - minV) / (maxV - minV)) * cH
+        ];
+      });
+      /* 채움 */
+      ctx.beginPath();
+      pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
+      ctx.lineTo(pts[pts.length-1][0], pT + cH);
+      ctx.lineTo(pts[0][0], pT + cH);
+      ctx.closePath();
+      ctx.fillStyle = color.replace(')', ', ' + fillAlpha + ')').replace('rgb(', 'rgba(');
+      ctx.fill();
+      /* 선 */
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
+      ctx.stroke();
+      /* 점 */
+      ctx.fillStyle = color;
+      pts.forEach(function(p, i) {
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], i === curIdx ? 5 : 3, 0, Math.PI * 2);
+        ctx.fill();
+        if (i === curIdx) {
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
+          ctx.stroke();
+          /* 값 레이블 */
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(vals[i].toFixed(vals[i] < 10 ? 2 : 0), p[0], p[1] - 10);
+          ctx.fillStyle = color;
+        }
+      });
+    }
+
+    /* Y 좌축 (Shannon) */
+    ctx.fillStyle = 'rgba(74,222,128,0.7)';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    [3.8, 3.9, 4.0, 4.1, 4.2, 4.3].forEach(function(v, i) {
+      var ly = pT + cH - ((v - 3.8) / 0.5) * cH;
+      ctx.fillText(v.toFixed(1), pL - 5, ly + 3);
+    });
+    ctx.fillStyle = 'rgba(74,222,128,0.5)';
+    ctx.font = '9px sans-serif';
+    ctx.save(); ctx.translate(12, pT + cH / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText("Shannon H'", 0, 0); ctx.restore();
+
+    /* Y 우축 (동물 종 수) */
+    ctx.fillStyle = 'rgba(147,197,253,0.7)';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'left';
+    [14, 15, 16, 17, 18, 19].forEach(function(v, i) {
+      var ly = pT + cH - ((v - 14) / 5) * cH;
+      ctx.fillText(v + '종', W - pR + 5, ly + 3);
+    });
+    ctx.fillStyle = 'rgba(147,197,253,0.5)';
+    ctx.font = '9px sans-serif';
+    ctx.save(); ctx.translate(W - 8, pT + cH / 2); ctx.rotate(Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText('동물 종 수', 0, 0); ctx.restore();
+
+    /* 선 3개 */
+    drawLine(shannon, 3.8, 4.3, 'rgb(74,222,128)',  0.10);
+    drawLine(animals, 14,  19,  'rgb(147,197,253)', 0.08);
+    drawLine(heat,    0,   2.6, 'rgb(251,146,60)',  0.08);
+  }
+
+  /* 슬라이더 변경 시 차트도 갱신 */
+  document.addEventListener('DOMContentLoaded', function() {
+    var sl = document.getElementById('yearSlider');
+    if (sl) sl.addEventListener('input', function() {
+      var modal = document.getElementById('trendModal');
+      if (modal && modal.classList.contains('open')) drawTrendChart();
+    });
+  });
+  </script>
 
 </body>
 </html>

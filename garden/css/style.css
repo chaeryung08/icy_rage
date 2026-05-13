@@ -207,3 +207,64 @@ html, body {
   transition: background .2s;
 }
 .back-btn:hover { background: var(--green-pale); }
+
+/* ── 연도별 추세 버튼 ── */
+.trend-btn {
+  background: var(--green-pale); border: 1.5px solid var(--green-mid);
+  color: var(--green-dark); padding: 3px 13px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  transition: background .2s, transform .15s;
+  font-family: inherit;
+}
+.trend-btn:hover { background: #c8e6c9; transform: scale(1.04); }
+
+/* ── 연도별 추세 모달 ── */
+.trend-modal {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.68); backdrop-filter: blur(5px);
+}
+.trend-modal.open { display: flex; }
+.trend-card {
+  background: #111827; border-radius: 16px;
+  padding: 1.3rem 1.5rem 1rem;
+  width: 620px; max-width: 96vw;
+  border: 0.5px solid rgba(255,255,255,0.12);
+  animation: trendIn .22s ease;
+}
+@keyframes trendIn {
+  from { opacity:0; transform: translateY(10px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.trend-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.8rem;
+  font-size: 14px; font-weight: 700; color: #e8eaf0;
+}
+.trend-close {
+  background: rgba(255,255,255,0.1); border: none;
+  color: rgba(255,255,255,0.7); width: 28px; height: 28px;
+  border-radius: 50%; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.trend-close:hover { background: rgba(255,255,255,0.22); }
+#trendCanvas { display: block; width: 100%; border-radius: 8px; }
+.trend-legend {
+  display: flex; gap: 1.4rem; margin-top: 0.7rem;
+  font-size: 11px; flex-wrap: wrap;
+}
+.trend-legend span {
+  display: flex; align-items: center; gap: 6px;
+  color: rgba(255,255,255,0.6);
+}
+.trend-legend span::before {
+  content: ''; display: inline-block;
+  width: 18px; height: 3px; border-radius: 2px;
+}
+.trend-legend .l-shannon::before { background: #4ade80; }
+.trend-legend .l-animals::before { background: #93c5fd; }
+.trend-legend .l-heat::before    { background: #fb923c; }
+.trend-note {
+  font-size: 10px; color: rgba(255,255,255,0.3);
+  margin-top: 0.5rem; text-align: center;
+}
