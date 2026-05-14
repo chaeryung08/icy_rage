@@ -3,10 +3,18 @@
 var GROWTH_COLORS = ['#E8F5A3','#B8E04A','#78C028','#3E8C14','#1A5C0A'];
 var SEASONS_LIST  = ['spring','summer','autumn','winter'];
 var SEASON_META   = {
-  spring: { emoji:'🌸', name:'봄' },
-  summer: { emoji:'☀️', name:'여름' },
-  autumn: { emoji:'🍂', name:'가을' },
-  winter: { emoji:'❄️', name:'겨울' }
+  spring: { emoji:'🌸', name:'봄',   label:'🌸 봄'   },
+  summer: { emoji:'☀️', name:'여름', label:'☀️ 여름' },
+  autumn: { emoji:'🍂', name:'가을', label:'🍂 가을' },
+  winter: { emoji:'❄️', name:'겨울', label:'❄️ 겨울' }
+};
+
+/* 계절별 생태 가중치 (여름=1.0 기준 정규화) */
+var SEASON_FACTORS = {
+  spring: { heat: 0.65, shannon: 0.80, solar: 0.52, nBase: 28 },
+  summer: { heat: 1.00, shannon: 1.00, solar: 1.00, nBase: 58 },
+  autumn: { heat: 0.75, shannon: 0.73, solar: 0.52, nBase: 38 },
+  winter: { heat: 0.25, shannon: 0.40, solar: 0.09, nBase: 11 }
 };
 
 /* 계절별 유입 동물 이모지 (simulation.html 카드용) */
@@ -19,22 +27,68 @@ var SEASON_FAUNA_ICONS = {
 
 var currentSeasonIdx = 0;
 
-/* ── simulation.html 용 ── */
+/* ── 공통 계산 함수 ── */
 function calcG(year) {
   var t = Math.max(0, Math.min(1, (year - 2026) / 24));
   return 1 / (1 + Math.exp(-8 * (t - 0.5)));
 }
 
-function updateStats(year) {
-  var g = calcG(year);
-  var heat    = document.getElementById('statHeat');
-  var shannon = document.getElementById('statShannon');
-  var solar   = document.getElementById('statSolar');
-  var animals = document.getElementById('statAnimals');
-  if (heat)    heat.textContent    = '-' + (0.1 + g * 1.1).toFixed(1) + '°C';
-  if (shannon) shannon.textContent = (1.0 + g * 2.1).toFixed(2);
-  if (solar)   solar.textContent   = Math.round(2 + g * 38) + '%';
-  if (animals) animals.textContent = Math.round(3 + g * 15) + '종';
+/**
+ * 생태 지수 계산 (Shannon H', Pielou J', Margalef d)
+ * season: 'spring'|'summer'|'autumn'|'winter' (없으면 summer 기준)
+ */
+function calcEcoIndices(year, season) {
+  var g  = calcG(year);
+  var sf = SEASON_FACTORS[season] || SEASON_FACTORS['summer'];
+  var t  = Math.max(0, Math.min(1, (year - 2026) / 24));
+
+  /* ① Shannon H' */
+  var H = (1.0 + g * 2.1) * sf.shannon;
+
+  /* ② 종 수 S — 계절별 목록 길이 기반 */
+  var icons = SEASON_FAUNA_ICONS[season] || SEASON_FAUNA_ICONS['summer'];
+  var S = Math.max(1, Math.round(icons.length * (0.5 + t * 0.5)));
+
+  /* ③ 총 개체수 N */
+  var N = Math.max(2, Math.round((sf.nBase + g * 120) * (0.5 + t * 0.5)));
+
+  /* ④ Pielou's Evenness  J' = H' / ln(S) */
+  var J = S > 1 ? Math.min(1, H / Math.log(S)) : 1;
+
+  /* ⑤ Margalef's Richness  d = (S-1) / ln(N) */
+  var d = N > 1 ? (S - 1) / Math.log(N) : 0;
+
+  return {
+    H:       H.toFixed(2),
+    S:       S,
+    N:       N,
+    J:       J.toFixed(2),
+    d:       d.toFixed(2),
+    heat:    -(0.1 + g * 1.1) * sf.heat,
+    solar:   Math.round((2 + g * 38) * sf.solar)
+  };
+}
+
+/* ── simulation.html 용 ── */
+function updateStats(year, season) {
+  var s   = season || 'summer';
+  var idx = calcEcoIndices(year, s);
+
+  var elHeat    = document.getElementById('statHeat');
+  var elShannon = document.getElementById('statShannon');
+  var elSolar   = document.getElementById('statSolar');
+  var elAnimals = document.getElementById('statAnimals');
+  var elPielou  = document.getElementById('statPielou');
+  var elMargalef= document.getElementById('statMargalef');
+  var elLabel   = document.getElementById('statSeasonLabel');
+
+  if (elHeat)     elHeat.textContent    = idx.heat.toFixed(1) + '°C';
+  if (elShannon)  elShannon.textContent = idx.H;
+  if (elSolar)    elSolar.textContent   = idx.solar + '%';
+  if (elAnimals)  elAnimals.textContent = idx.S + '종';
+  if (elPielou)   elPielou.textContent  = idx.J;
+  if (elMargalef) elMargalef.textContent= idx.d;
+  if (elLabel && SEASON_META[s]) elLabel.textContent = SEASON_META[s].label;
 }
 
 function updateAllSeasons(year) {
@@ -64,14 +118,13 @@ function updateAnimalIcons(year) {
 
 function updateOneSeason(season, year) {
   var avgIdx = (typeof getAvgGrowthIndex === 'function') ? getAvgGrowthIndex(year, season) : 0;
-  /* plants.json 비어있을 때 폴백: PLANT_DB 평균값 기반 */
   if (!avgIdx) {
     var base = {spring:62, summer:78, autumn:69, winter:37}[season] || 60;
     var g2 = calcG(year);
     avgIdx = base * (0.88 + g2 * 0.22);
   }
-  var pct    = Math.min(100, Math.round(avgIdx));
-  var color  = GROWTH_COLORS[Math.min(Math.floor(pct / 20), 4)];
+  var pct   = Math.min(100, Math.round(avgIdx));
+  var color = GROWTH_COLORS[Math.min(Math.floor(pct / 20), 4)];
 
   var fill  = document.getElementById('growth-' + season);
   var pctEl = document.getElementById('growthPct-' + season);
@@ -80,7 +133,6 @@ function updateOneSeason(season, year) {
 
   var blooming = (typeof getBloomingPlants === 'function') ? getBloomingPlants(year, season) : [];
   var chipsEl  = document.getElementById('blooming-' + season);
-  /* blooming 데이터가 있을 때만 덮어쓰기 (없으면 renderSeasonChips의 2층 구조 유지) */
   if (chipsEl && blooming.length > 0) {
     chipsEl.innerHTML = blooming.slice(0, 6).map(function(p) {
       return '<span class="bloom-chip' + (p.honey ? ' honey' : '') + '">' + p.name + '</span>';
@@ -118,12 +170,15 @@ function updateTopbar() {
   if (topSeason) topSeason.textContent = meta.name;
   if (topYear)   topYear.textContent   = year + '년';
 
-  var t = Math.max(0, Math.min(1, (year - 2026) / 24));
-  var g = 1 / (1 + Math.exp(-8 * (t - 0.5)));
+  var idx = calcEcoIndices(year, season);
   var topHeat    = document.getElementById('topHeat');
   var topShannon = document.getElementById('topShannon');
-  if (topHeat)    topHeat.textContent    = '-' + (0.1 + g * 1.1).toFixed(1) + '°C';
-  if (topShannon) topShannon.textContent = (1.0 + g * 2.1).toFixed(2);
+  var topPielou  = document.getElementById('topPielou');
+  var topMargalef= document.getElementById('topMargalef');
+  if (topHeat)     topHeat.textContent     = idx.heat.toFixed(1) + '°C';
+  if (topShannon)  topShannon.textContent  = idx.H;
+  if (topPielou)   topPielou.textContent   = idx.J;
+  if (topMargalef) topMargalef.textContent = idx.d;
 }
 
 function getCurrentSeason() {
@@ -135,19 +190,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var track = document.getElementById('seasonTrack');
   if (!track) return; /* simulation.html이면 스킵 */
 
-  /* URL 파라미터로 시작 계절 결정 */
   var params     = new URLSearchParams(location.search);
   var initSeason = params.get('season') || 'spring';
   var idx        = SEASONS_LIST.indexOf(initSeason);
   currentSeasonIdx = idx >= 0 ? idx : 0;
 
-  /* < > 버튼 */
   var btnLeft  = document.getElementById('btnLeft');
   var btnRight = document.getElementById('btnRight');
   if (btnLeft)  btnLeft.addEventListener('click',  function() { changeSeason(-1); });
   if (btnRight) btnRight.addEventListener('click', function() { changeSeason(1);  });
 
-  /* 인디케이터 dots */
   for (var i = 0; i < 4; i++) {
     (function(i) {
       var dot = document.getElementById('dot-' + i);
@@ -155,16 +207,13 @@ document.addEventListener('DOMContentLoaded', function() {
     })(i);
   }
 
-  /* 키보드 */
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowLeft')  changeSeason(-1);
     if (e.key === 'ArrowRight') changeSeason(1);
   });
 
-  /* 초기 위치 */
   goToSeasonIdx(currentSeasonIdx);
 
-  /* 데이터 로드 */
   var year = parseInt(sessionStorage.getItem('year') || '2026');
   if (typeof loadPlantsData === 'function') {
     loadPlantsData().then(function() {

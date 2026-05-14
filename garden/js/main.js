@@ -1,5 +1,6 @@
 /* main.js */
 var currentYear = 2026;
+var currentHoverSeason = null;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     slider.addEventListener('input', function() {
       currentYear = parseInt(slider.value);
       if (display) display.textContent = currentYear + '년';
-      updateAll(currentYear);
+      updateAll(currentYear, currentHoverSeason);
     });
   }
 
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       currentYear = Math.max(2026, currentYear - 2);
       if (slider) slider.value = currentYear;
       if (display) display.textContent = currentYear + '년';
-      updateAll(currentYear);
+      updateAll(currentYear, currentHoverSeason);
     });
   }
   if (btnNext) {
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
       currentYear = Math.min(2050, currentYear + 2);
       if (slider) slider.value = currentYear;
       if (display) display.textContent = currentYear + '년';
-      updateAll(currentYear);
+      updateAll(currentYear, currentHoverSeason);
     });
   }
 
@@ -60,12 +61,27 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   /* 초기 업데이트 */
-  updateAll(2026);
+  updateAll(2026, 'spring');
 });
 
-function updateAll(year) {
+/* 카드 hover 시 해당 계절 stats 반영 */
+function expandCard(el) {
+  var season = el && el.id ? el.id.replace('card-', '') : null;
+  if (!season) return;
+  currentHoverSeason = season;
+  if (typeof updateStats === 'function') updateStats(currentYear, season);
+}
+
+function collapseCard(el) {
+  var season = el && el.id ? el.id.replace('card-', '') : null;
+  currentHoverSeason = null;
+  /* hover 해제 후 가장 먼저 나타난 계절(봄)로 복원 */
+  if (typeof updateStats === 'function') updateStats(currentYear, 'spring');
+}
+
+function updateAll(year, season) {
   currentYear = year;
-  if (typeof updateStats === 'function') updateStats(year);
+  if (typeof updateStats === 'function') updateStats(year, season || 'spring');
   if (typeof updateAllSeasons === 'function') updateAllSeasons(year);
   var toast = document.getElementById('conclusionToast');
   if (toast && year >= 2050) toast.classList.add('show');

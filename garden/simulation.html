@@ -10,6 +10,7 @@
 
   <!-- ── 헤더 ── -->
   <header class="header">
+    <a href="../index.html" class="back-btn" style="position:absolute;left:1.2rem;top:50%;transform:translateY(-50%)">← 처음으로</a>
     <h1 class="header-title">별빛 정원 생물 다양성 시뮬레이션</h1>
     <p class="header-sub">창원성민여자고등학교 · 2026 – 2050</p>
   </header>
@@ -35,10 +36,13 @@
       <span class="slider-edge-label">2050</span>
     </div>
     <div class="stats-row">
+      <div class="stat-chip season-active-chip" id="statSeasonLabel">🌸 봄</div>
       <div class="stat-chip">🌡️ 열섬 완화 <strong id="statHeat">–0.0°C</strong></div>
-      <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">3.80</strong></div>
+      <div class="stat-chip">🌿 Shannon H' <strong id="statShannon">1.00</strong></div>
       <div class="stat-chip">☀️ 태양복사 감소 <strong id="statSolar">0%</strong></div>
-      <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">14종</strong></div>
+      <div class="stat-chip">🦋 유입 동물 <strong id="statAnimals">3종</strong></div>
+      <div class="stat-chip">⚖️ Pielou J' <strong id="statPielou">–</strong></div>
+      <div class="stat-chip">📊 Margalef d <strong id="statMargalef">–</strong></div>
       <button class="trend-btn" onclick="openTrendModal()">📈 연도별 추세</button>
     </div>
   </section>
@@ -59,9 +63,6 @@
         <span class="season-emoji">🌸</span>
         <h2 class="season-name">봄</h2>
         <p class="season-period">3월 – 5월</p>
-        <div class="growth-bar-wrap">
-          <div class="growth-bar" id="growth-spring"></div>
-        </div>
         <div class="animal-icons" id="animals-spring"></div>
       </div>
       <div class="hover-hint">클릭해서 자세히 보기 →</div>
@@ -80,9 +81,6 @@
         <span class="season-emoji">☀️</span>
         <h2 class="season-name">여름</h2>
         <p class="season-period">6월 – 9월</p>
-        <div class="growth-bar-wrap">
-          <div class="growth-bar" id="growth-summer"></div>
-        </div>
         <div class="animal-icons" id="animals-summer"></div>
       </div>
       <div class="hover-hint">클릭해서 자세히 보기 →</div>
@@ -101,9 +99,6 @@
         <span class="season-emoji">🍂</span>
         <h2 class="season-name">가을</h2>
         <p class="season-period">10월 – 11월</p>
-        <div class="growth-bar-wrap">
-          <div class="growth-bar" id="growth-autumn"></div>
-        </div>
         <div class="animal-icons" id="animals-autumn"></div>
       </div>
       <div class="hover-hint">클릭해서 자세히 보기 →</div>
@@ -122,9 +117,6 @@
         <span class="season-emoji">❄️</span>
         <h2 class="season-name">겨울</h2>
         <p class="season-period">12월 – 2월</p>
-        <div class="growth-bar-wrap">
-          <div class="growth-bar" id="growth-winter"></div>
-        </div>
         <div class="animal-icons" id="animals-winter"></div>
       </div>
       <div class="hover-hint">클릭해서 자세히 보기 →</div>
