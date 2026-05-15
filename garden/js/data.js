@@ -8,7 +8,7 @@ async function loadPlantsData() {
     const res = await fetch('src_plants/plants.json');
     PLANTS_DATA = await res.json();
     console.log('식물 데이터 로드 완료:', Object.keys(PLANTS_DATA.baseInfo).length, '종');
-  } catch(e) {
+  } catch (e) {
     console.warn('plants.json 로드 실패, 기본값 사용');
     PLANTS_DATA = { baseInfo: {}, yearData: {} };
   }
@@ -16,7 +16,7 @@ async function loadPlantsData() {
 
 // 해당 연도에 가장 가까운 데이터 연도 반환 (2026~2050 짝수)
 function getNearestYear(year) {
-  const available = [2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050];
+  const available = [2026, 2028, 2030, 2032, 2034, 2036, 2038, 2040, 2042, 2044, 2046, 2048, 2050];
   if (year <= 2026) return '2026';
   if (year >= 2050) return '2050';
   // 올림 처리 (2027 → 2028)

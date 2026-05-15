@@ -11,26 +11,26 @@ const ZONE_INFO = {
   A: {
     name: 'Site A — 습지 생태계',
     desc: '멸종위기종 및 다양한 습지식물 관찰 공간',
-    plants: ['조름나물','독미나리','두메부추','골풀','꽃창포',
-             '긴산꼬리풀','배초향','부처꽃','붓꽃','물레나물','히어리','너도개미자리']
+    plants: ['조름나물', '독미나리', '두메부추', '골풀', '꽃창포',
+      '긴산꼬리풀', '배초향', '부처꽃', '붓꽃', '물레나물', '히어리', '너도개미자리']
   },
   B: {
     name: 'Site B — 초지 생태계',
     desc: '교관목 및 그래스, 초화류 공간',
-    plants: ['배롱나무','남천','미스김라일락','영춘화','에메랄드 그린',
-             '실유카','삼색조팝','홍가시나무','은쑥','백리향',
-             '홍지네고사리','휴케라','베르가못','아주가','노루오줌']
+    plants: ['배롱나무', '남천', '미스김라일락', '영춘화', '에메랄드 그린',
+      '실유카', '삼색조팝', '홍가시나무', '은쑥', '백리향',
+      '홍지네고사리', '휴케라', '베르가못', '아주가', '노루오줌']
   },
   C: {
     name: 'Site C — 커뮤니티 공간',
     desc: '습지·비오톱 관찰 및 휴식 공간',
-    plants: ['목수국','낙상홍','흰말채나무','꽃범의꼬리','돌단풍','은사초']
+    plants: ['목수국', '낙상홍', '흰말채나무', '꽃범의꼬리', '돌단풍', '은사초']
   },
   D: {
     name: 'Site D — 세덤 정원',
     desc: '겨울에도 상록성을 띠는 세덤 군락지',
-    plants: ['블루엔젤','공조팝','세잎꿩의비름','상록기린초',
-             '애기기린초','땅채송화','블루솔','알붐']
+    plants: ['블루엔젤', '공조팝', '세잎꿩의비름', '상록기린초',
+      '애기기린초', '땅채송화', '블루솔', '알붐']
   }
 };
 
@@ -51,7 +51,7 @@ function openZonePopup(zoneId, season) {
     .filter(p => info.plants.includes(p.name));
 
   // 팝업 내용 구성
-  document.getElementById('popupZone').textContent  = `Site ${zoneId}`;
+  document.getElementById('popupZone').textContent = `Site ${zoneId}`;
   document.getElementById('popupTitle').textContent = info.name;
   document.getElementById('popupBody').innerHTML = `
     <p style="font-size:12px;color:#999;margin-bottom:10px">${info.desc}</p>

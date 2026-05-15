@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 모델 뷰어 – 별빛 정원</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      text-decoration: none;
+      color: var(--green-dark);
+      font-size: 14px;
+    }
+
+    #viewer-wrap {
+      flex: 1;
+      position: relative;
+      background: #0d1a0d;
+      overflow: hidden;
+    }
+
+    #three-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── 로딩 ── */
+    #loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #0d1a0d;
+      color: #a0c8a0;
+      font-size: 15px;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #2a4a2a;
+      border-top-color: #4a8a4a;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── 조작 안내 ── */
+    #controls-hint {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+
+    /* ── 카메라 리셋 ── */
+    #reset-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(74, 138, 74, 0.85);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    #reset-btn:hover {
+      background: rgba(74, 138, 74, 1);
+    }
+
+    /* ── 에러 ── */
+    #error-msg {
+      display: none;
+      position: absolute;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      color: #f87171;
+      font-size: 15px;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    #error-msg.show {
+      display: flex;
+    }
+
+    /* ── 구역 핀 ── */
+    .zone-pin {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      z-index: 20;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s;
+    }
+
+    .zone-pin:hover {
+      transform: translate(-50%, -50%) scale(1.12);
+    }
+
+    .pin-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .pin-label {
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 2px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+    }
+
+    /* 구역별 색 */
+    .zone-pin[data-zone="1"] .pin-circle {
+      background: rgba(74, 222, 128, 0.75);
+    }
+
+    .zone-pin[data-zone="2"] .pin-circle {
+      background: rgba(251, 191, 36, 0.80);
+    }
+
+    .zone-pin[data-zone="3"] .pin-circle {
+      background: rgba(147, 197, 253, 0.80);
+    }
+
+    /* ── 팝업 오버레이 ── */
+    #popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.60);
+      backdrop-filter: blur(5px);
+    }
+
+    #popup-overlay.active {
+      display: flex;
+    }
+
+    #popup-card {
+      background: #111827;
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem 1.2rem;
+      width: 480px;
+      max-width: 94vw;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+      animation: popIn .22s ease;
+      position: relative;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .popup-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .popup-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #e8eaf0;
+      margin-bottom: 4px;
+    }
+
+    .popup-desc {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+
+    .popup-section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #d1d5db;
+      margin-bottom: 5px;
+      margin-top: 12px;
+    }
+
+    .plant-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 4px;
+    }
+
+    .plant-tag {
+      font-size: 11px;
+      color: #d1fae5;
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      padding: 3px 9px;
+      border-radius: 12px;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-close:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <a href="simulation.html" class="back-btn">← 뒤로</a>
+    <h1 class="header-title">3D 모델 뷰어</h1>
+    <p class="header-sub">마우스로 회전 · 스크롤로 확대 · 핀 클릭으로 구역 정보</p>
+  </header>
+
+  <div id="viewer-wrap">
+    <canvas id="three-canvas"></canvas>
+
+    <!-- 로딩 -->
+    <div id="loading">
+      <div class="spinner"></div>
+      <span>모델 불러오는 중...</span>
+    </div>
+
+    <!-- 에러 -->
+    <div id="error-msg">
+      <span style="font-size:2rem">⚠️</span>
+      <span id="error-text">모델을 불러올 수 없어요.</span>
+      <span style="color:rgba(255,255,255,0.4);font-size:12px">
+        ground/models/ 폴더에 GLB 파일이 있는지 확인해 주세요.
+      </span>
+    </div>
+
+    <!-- 구역 핀 (위치는 left/top % 로 조정) -->
+    <div class="zone-pin" data-zone="1" style="left:28%;top:45%" onclick="openZonePopup(1)">
+      <div class="pin-circle">①</div>
+      <div class="pin-label">외곽 구역</div>
+    </div>
+
+    <div class="zone-pin" data-zone="2" style="left:52%;top:58%" onclick="openZonePopup(2)">
+      <div class="pin-circle">②</div>
+      <div class="pin-label">중앙 구역</div>
+    </div>
+
+    <div class="zone-pin" data-zone="3" style="left:76%;top:42%" onclick="openZonePopup(3)">
+      <div class="pin-circle">③</div>
+      <div class="pin-label">암석 구역</div>
+    </div>
+
+    <!-- 카메라 리셋 -->
+    <button id="reset-btn" onclick="resetCamera()">카메라 초기화</button>
+
+    <!-- 조작 안내 -->
+    <div id="controls-hint">
+      <span>🖱️ 드래그: 회전</span>
+      <span>🔍 스크롤: 확대/축소</span>
+      <span>✋ 우클릭: 이동</span>
+    </div>
+  </div>
+
+  <!-- 팝업 -->
+  <div id="popup-overlay" onclick="if(event.target===this)closeZonePopup()">
+    <div id="popup-card">
+      <button class="popup-close" onclick="closeZonePopup()">✕</button>
+      <div class="popup-badge" id="popup-badge"></div>
+      <div class="popup-title" id="popup-title"></div>
+      <div class="popup-desc" id="popup-desc"></div>
+      <div id="popup-body"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ── 구역 데이터 ── */
+    const ZONES = {
+      1: {
+        name: '구역 1 — 외곽 생태 링',
+        desc: '정원 외곽을 둘러싸는 초화·관목 군락. 다양한 초화류와 관목이 계절마다 꽃을 피워요.',
+        color: '#4ade80',
+        plants: [
+          '삼각수목', '애기아주까리', '산사초', '포매비로비', '선인장',
+          '타가수목', '꼬마로너무', '금낭화', '산채비름', '화지',
+          '세네시아', '수선화', '백두', '쑥 모로스', '천엽충',
+          '바리미나', '에란', '크마들', '코더이드',
+          '아산파라서', '이끼류', '전복초', '단꽃이서', '금다순',
+          '워가족', '항새여덟'
+        ],
+        features: ['계절별 꽃 연속 개화', '하천 수공간 인접', '다양한 식피 구조']
+      },
+      2: {
+        name: '구역 2 — 중앙 교목 군락',
+        desc: '정원 중심부의 교목·관목 군락. 수고형 나무들이 그늘을 만들고 새와 곤충을 유인해요.',
+        color: '#fbbf24',
+        plants: [
+          '사명안개나무', '그린라이온', '항궁클나석', '산클나무',
+          '흥꽃풀', '드윈보러씨(수고형)', '벚나무', '먹나무',
+          '참나무', '매비들이', '명화나무'
+        ],
+        features: ['수고형 교목 중심', '그늘 서식지 제공', '조류 유인 구조']
+      },
+      3: {
+        name: '구역 3 — 암석 건생 구역',
+        desc: '암석 지형을 활용한 건생 식물 군락. 척박한 환경에 강한 식물들이 자라요.',
+        color: '#93c5fd',
+        plants: [
+          '족단화', '유담자작나무', '흰말채나무', '향나무',
+          '선만초', '하산나무', '원많채나무',
+          '삼지락나무', '항박복나무', '원망가자니가'
+        ],
+        features: ['암석 틈 적응 식물', '건생·척박지 특화', '경관석과 식물 조화']
+      }
+    };
+
+    function openZonePopup(zoneId) {
+      const z = ZONES[zoneId];
+      document.getElementById('popup-badge').textContent = `구역 ${zoneId}`;
+      document.getElementById('popup-badge').style.background = z.color + '33';
+      document.getElementById('popup-badge').style.color = z.color;
+      document.getElementById('popup-badge').style.border = `1px solid ${z.color}55`;
+      document.getElementById('popup-title').textContent = z.name;
+      document.getElementById('popup-desc').textContent = z.desc;
+
+      const tags = z.plants.map(p =>
+        `<span class="plant-tag">${p}</span>`
+      ).join('');
+
+      const feats = z.features.map(f =>
+        `<li style="font-size:12px;color:#9ca3af;margin-bottom:3px">${f}</li>`
+      ).join('');
+
+      document.getElementById('popup-body').innerHTML = `
+        <div class="popup-section-label">🌿 주요 식물 (${z.plants.length}종)</div>
+        <div class="plant-tags">${tags}</div>
+        <div class="popup-section-label" style="margin-top:14px">✨ 구역 특징</div>
+        <ul style="padding-left:1.2rem;margin:0">${feats}</ul>
+      `;
+
+      document.getElementById('popup-overlay').classList.add('active');
+    }
+
+    function closeZonePopup() {
+      document.getElementById('popup-overlay').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeZonePopup();
+    });
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const MODEL_PATH = 'models/groundbottom.glb';
+
+    const canvas = document.getElementById('three-canvas');
+    const loading = document.getElementById('loading');
+    const errorEl = document.getElementById('error-msg');
+    const errorTx = document.getElementById('error-text');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0d1a0d);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
+    camera.position.set(3, 2, 5);
+
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dirLight = new THREE.DirectionalLight(0xfff5e0, 1.5);
+    dirLight.position.set(5, 8, 5);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+    const fillLight = new THREE.DirectionalLight(0xa0c8ff, 0.4);
+    fillLight.position.set(-5, 2, -3);
+    scene.add(fillLight);
+
+    let defaultCamPos, defaultTarget;
+
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/libs/draco/');
+
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+    loader.load(
+      MODEL_PATH,
+      (gltf) => {
+        const modelRoot = gltf.scene;
+        const box = new THREE.Box3().setFromObject(modelRoot);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const scale = 4 / Math.max(size.x, size.y, size.z);
+        modelRoot.scale.setScalar(scale);
+        modelRoot.position.sub(center.multiplyScalar(scale));
+        modelRoot.traverse(obj => {
+          if (obj.isMesh) { obj.castShadow = true; obj.receiveShadow = true; }
+        });
+        scene.add(modelRoot);
+        defaultCamPos = camera.position.clone();
+        defaultTarget = controls.target.clone();
+        loading.style.display = 'none';
+      },
+      (xhr) => {
+        if (xhr.total) {
+          loading.querySelector('span').textContent =
+            `모델 불러오는 중... ${Math.round(xhr.loaded / xhr.total * 100)}%`;
+        }
+      },
+      (err) => {
+        loading.style.display = 'none';
+        errorTx.textContent = `모델 로드 실패: ${err.message ?? err}`;
+        errorEl.classList.add('show');
+        console.error(err);
+      }
+    );
+
+    window.resetCamera = () => {
+      if (!defaultCamPos) return;
+      camera.position.copy(defaultCamPos);
+      controls.target.copy(defaultTarget);
+      controls.update();
+    };
+
+    function resize() {
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+  </script>
+
+</body>
+
+</html>

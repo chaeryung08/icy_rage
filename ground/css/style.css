@@ -1,0 +1,525 @@
+/* ── 리셋 & 기본 ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --green-dark: #1a3a1a;
+  --green-mid: #4a8a4a;
+  --green-pale: #d4edda;
+  --white: #f5fdf5;
+  --text-dark: #1a2e1a;
+  --text-muted: #5a7a5a;
+  --radius: 12px;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  background: #f0faf0;
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 헤더 ── */
+.header {
+  padding: 0.8rem 2rem 0.6rem;
+  border-bottom: 1px solid #c8e6c8;
+  text-align: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.header-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── 슬라이더 섹션 ── */
+.slider-section {
+  padding: 0.6rem 2rem 0.4rem;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 연도 컨트롤 [<] 2026년 [>] */
+.year-control {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.year-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--green-mid);
+  background: transparent;
+  color: var(--green-dark);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .15s;
+}
+
+.year-btn:hover {
+  background: var(--green-pale);
+  transform: scale(1.1);
+}
+
+.year-btn:active {
+  transform: scale(0.95);
+}
+
+.year-display {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-dark);
+  min-width: 80px;
+  text-align: center;
+}
+
+/* 슬라이더 바 */
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 680px;
+}
+
+.slider-edge-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 30px;
+}
+
+.slider-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.year-slider {
+  width: 100%;
+  accent-color: var(--green-mid);
+  cursor: pointer;
+}
+
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8ab88a;
+}
+
+/* 수치 칩 */
+.stats-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-chip {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--green-pale);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.stat-chip strong {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+.season-active-chip {
+  background: var(--green-dark);
+  color: #fff;
+  font-weight: 600;
+  transition: background .3s;
+}
+
+/* ── 사계절 4분할 ── */
+.seasons-section {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 10px;
+  padding: 0.75rem 1.5rem 1rem;
+  min-height: 0;
+}
+
+/* ── 계절 카드 ── */
+.season-card {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  /* 호버 확대 애니메이션 */
+  transition: flex 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 호버 시 확대 */
+.season-card.expanded {
+  flex: 3.5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* 배경 이미지 */
+.season-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.season-card.expanded .season-bg {
+  transform: scale(1.05);
+}
+
+/* 임시 배경색 */
+.season-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.spring-fallback {
+  background: linear-gradient(160deg, #fce4ec, #f8bbd0, #e8f5e9);
+}
+
+.summer-fallback {
+  background: linear-gradient(160deg, #e8f5e9, #c8e6c9, #dcedc8);
+}
+
+.autumn-fallback {
+  background: linear-gradient(160deg, #fff8e1, #ffe0b2, #fbe9e7);
+}
+
+.winter-fallback {
+  background: linear-gradient(160deg, #e3f2fd, #e8eaf6, #f3e5f5);
+}
+
+/* 오버레이 */
+.season-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  transition: background 0.3s;
+}
+
+.season-card.expanded .season-overlay {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* 카드 콘텐츠 */
+.season-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 4px;
+  pointer-events: none;
+  /* 클릭이 카드까지 전달되도록 */
+}
+
+.season-emoji {
+  font-size: 28px;
+  transition: font-size 0.3s;
+}
+
+.season-card.expanded .season-emoji {
+  font-size: 38px;
+}
+
+.season-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  transition: font-size 0.3s;
+}
+
+.season-card.expanded .season-name {
+  font-size: 28px;
+}
+
+.season-period {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* 생장 바 */
+.growth-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+  opacity: 0;
+  transition: opacity 0.3s 0.1s;
+}
+
+.season-card.expanded .growth-bar-wrap {
+  opacity: 1;
+}
+
+.growth-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 3px;
+  transition: width 0.7s ease, background-color 0.7s ease;
+}
+
+/* 동물 아이콘 — simulation 카드에서는 표시 안 함 */
+.animal-icons {
+  display: none;
+}
+
+.animal-icon {
+  font-size: 18px;
+  animation: popIn 0.5s ease forwards;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) translateY(10px);
+  }
+
+  70% {
+    transform: scale(1.2) translateY(-3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 호버 힌트 */
+.hover-hint {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px 8px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.season-card.expanded .hover-hint {
+  opacity: 1;
+}
+
+/* ── 결론 토스트 ── */
+.conclusion-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity .4s, transform .4s;
+}
+
+.conclusion-toast.show {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.conclusion-toast a {
+  display: block;
+  padding: 10px 22px;
+  background: var(--green-dark);
+  color: #fff;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ── back 버튼 (seasons.html 공용) ── */
+.back-btn {
+  font-size: 13px;
+  color: var(--green-dark);
+  text-decoration: none;
+  padding: 5px 12px;
+  border: 1px solid var(--green-mid);
+  border-radius: 20px;
+  transition: background .2s;
+}
+
+.back-btn:hover {
+  background: var(--green-pale);
+}
+
+/* ── 연도별 추세 버튼 ── */
+.trend-btn {
+  background: var(--green-pale);
+  border: 1.5px solid var(--green-mid);
+  color: var(--green-dark);
+  padding: 3px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  font-family: inherit;
+}
+
+.trend-btn:hover {
+  background: #c8e6c9;
+  transform: scale(1.04);
+}
+
+/* ── 연도별 추세 모달 ── */
+.trend-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(5px);
+}
+
+.trend-modal.open {
+  display: flex;
+}
+
+.trend-card {
+  background: #111827;
+  border-radius: 16px;
+  padding: 1.3rem 1.5rem 1rem;
+  width: 620px;
+  max-width: 96vw;
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  animation: trendIn .22s ease;
+}
+
+@keyframes trendIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trend-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-size: 14px;
+  font-weight: 700;
+  color: #e8eaf0;
+}
+
+.trend-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trend-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+#trendCanvas {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.trend-legend {
+  display: flex;
+  gap: 1.4rem;
+  margin-top: 0.7rem;
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+
+.trend-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.trend-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.trend-legend .l-shannon::before {
+  background: #4ade80;
+}
+
+.trend-legend .l-animals::before {
+  background: #93c5fd;
+}
+
+.trend-legend .l-heat::before {
+  background: #fb923c;
+}
+
+.trend-note {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 0.5rem;
+  text-align: center;
+}

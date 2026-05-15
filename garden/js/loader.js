@@ -24,13 +24,13 @@ const SEASON_COLORS = {
 };
 
 // 계절별 Three.js 씬 저장
-const threeScenes    = {};
+const threeScenes = {};
 const threeRenderers = {};
-const threeCameras   = {};
-const threeZones     = {}; // 클릭 가능한 구역 mesh
+const threeCameras = {};
+const threeZones = {}; // 클릭 가능한 구역 mesh
 
 function initLoader() {
-  ['spring','summer','autumn','winter'].forEach(season => {
+  ['spring', 'summer', 'autumn', 'winter'].forEach(season => {
     setupScene(season);
   });
 }
@@ -39,7 +39,7 @@ function setupScene(season) {
   const canvas = document.getElementById(`canvas-${season}`);
   if (!canvas) return;
 
-  const W = canvas.parentElement.clientWidth  || 800;
+  const W = canvas.parentElement.clientWidth || 800;
   const H = canvas.parentElement.clientHeight || 500;
 
   // Scene
@@ -48,7 +48,7 @@ function setupScene(season) {
   threeScenes[season] = scene;
 
   // Camera — 탑뷰 (위에서 내려다보기)
-  const camera = new THREE.PerspectiveCamera(50, W/H, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 1000);
   camera.position.set(0, 14, 5);
   camera.lookAt(0, 0, 0);
   threeCameras[season] = camera;
@@ -76,7 +76,7 @@ function setupScene(season) {
   window.addEventListener('resize', () => {
     const W2 = canvas.parentElement.clientWidth;
     const H2 = canvas.parentElement.clientHeight;
-    threeCameras[season].aspect = W2/H2;
+    threeCameras[season].aspect = W2 / H2;
     threeCameras[season].updateProjectionMatrix();
     threeRenderers[season].setSize(W2, H2);
   });
@@ -117,10 +117,10 @@ function setupScene(season) {
 function buildBlockGarden(season, scene) {
   const color = SEASON_COLORS[season].zone;
   const zones = [
-    { id:'A', x:-2.8, z:1.8,  w:2.5, d:2.5 },
-    { id:'B', x: 1.5, z:-1.5, w:3.5, d:1.8 },
-    { id:'C', x: 0.2, z: 0.8, w:1.8, d:1.8 },
-    { id:'D', x:-0.8, z:-1.0, w:1.8, d:0.9 },
+    { id: 'A', x: -2.8, z: 1.8, w: 2.5, d: 2.5 },
+    { id: 'B', x: 1.5, z: -1.5, w: 3.5, d: 1.8 },
+    { id: 'C', x: 0.2, z: 0.8, w: 1.8, d: 1.8 },
+    { id: 'D', x: -0.8, z: -1.0, w: 1.8, d: 0.9 },
   ];
 
   zones.forEach(z => {
@@ -140,7 +140,7 @@ function buildBlockGarden(season, scene) {
     new THREE.PlaneGeometry(16, 12),
     new THREE.MeshLambertMaterial({ color: 0xd7ccc8 })
   );
-  floor.rotation.x = -Math.PI/2;
+  floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.16;
   scene.add(floor);
 }
@@ -150,7 +150,7 @@ function onCanvasClick(e, season) {
   const canvas = document.getElementById(`canvas-${season}`);
   const rect = canvas.getBoundingClientRect();
   const mouse = new THREE.Vector2(
-    ((e.clientX - rect.left) / rect.width)  * 2 - 1,
+    ((e.clientX - rect.left) / rect.width) * 2 - 1,
     -((e.clientY - rect.top) / rect.height) * 2 + 1
   );
   const raycaster = new THREE.Raycaster();
