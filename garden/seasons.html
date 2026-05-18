@@ -7,6 +7,7 @@
   <title>별빛 정원 — 계절·연도별 생태계 시뮬레이션</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
@@ -1318,24 +1319,29 @@
       }
 
       /* GLB clone 받아서 씬에 추가 */
-      attachModel(sourceRoot) {
+      attachModel(sourceRoot, fitInfo) {
         if (!sourceRoot) return;
-        // clone (재질도 복제해서 계절별로 다르게 색칠 가능)
         this.gltfRoot = sourceRoot.clone(true);
         this.gltfRoot.traverse(n => {
           if (n.isMesh && n.material) {
-            // 재질 clone (계절 tint가 다른 씬에 영향 주지 않게)
             n.material = Array.isArray(n.material) ? n.material.map(m => m.clone()) : n.material.clone();
             const mats = Array.isArray(n.material) ? n.material : [n.material];
             mats.forEach(m => { if (m.color) m.userData.origColor = m.color.clone(); });
           }
         });
 
-        // GLB 원본 그대로 추가 (모델 사이즈 50, 중심 (0,-2.7,0))
-        // 바닥을 y=0으로 올리기 위해 +9.686 만큼 위로
-        this.gltfRoot.position.y = 9.686;
-        this.scene.add(this.gltfRoot);
+        /* fitInfo: 원본 GLB 로드 시 계산한 바운딩 정보로 모든 씬에 동일 적용 */
+        if (fitInfo) {
+          this.gltfRoot.position.set(fitInfo.offsetX, fitInfo.offsetY, fitInfo.offsetZ);
+          this.cameraTarget.set(fitInfo.cx, fitInfo.cy, fitInfo.cz);
+          this.sph.r = fitInfo.camR;
+          this._updateCamera();
+        } else {
+          /* fallback: 기존 하드코딩 값 */
+          this.gltfRoot.position.y = 9.686;
+        }
 
+        this.scene.add(this.gltfRoot);
         this.applySeasonTint();
         dbg(`[${this.season}] 씬에 추가됨`);
       }
@@ -1831,16 +1837,25 @@
     dbg('[GLB] 로드 시작: ' + MODEL_URL);
     dbg('[GLB] 현재 위치: ' + location.href);
 
-    // file:// 프로토콜 경고
+    /* file:// 프로토콜: 브라우저 보안 정책에 따라 GLB 로드 실패 가능
+     * Chrome: 대부분 가능 / Firefox·Edge: 차단될 수 있음
+     * 이 경우 컬러 블록 fallback으로 자동 전환됩니다 */
     if (location.protocol === 'file:') {
-      dbg('[⚠ 경고] file:// 로 열면 GLB 로드 불가!');
-      dbg('  → 로컬 서버 필요: 터미널에서');
-      dbg('     cd ICY_RAGE/garden');
-      dbg('     python3 -m http.server 8000');
-      dbg('  → http://localhost:8000/seasons.html 접속');
+      dbg('[ℹ] file:// 프로토콜로 열림');
+      dbg('  Chrome은 로컬 GLB 로드 가능, 다른 브라우저는 실패 시 블록 fallback 표시');
+      dbg('  모든 브라우저에서 GLB 보려면: python -m http.server 8080 후 localhost:8080 접속');
     }
 
     const gltfLoader = new THREE.GLTFLoader();
+    /* DRACOLoader 연결 — 압축 GLB 지원 */
+    if (typeof THREE.DRACOLoader !== 'undefined') {
+      try {
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        gltfLoader.setDRACOLoader(dracoLoader);
+        dbg('[GLB] DRACOLoader 연결됨');
+      } catch(e) { dbg('[GLB] DRACOLoader 실패(무시): ' + e.message); }
+    }
     gltfLoader.load(
       MODEL_URL,
       (gltf) => {
@@ -1853,16 +1868,30 @@
           return;
         }
 
-        // 바운딩박스 확인
+        // ── 자동 피팅: 모델을 원점 기준으로 조정 ──
         const box = new THREE.Box3().setFromObject(gltf.scene);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
         dbg(`[GLB] 크기: ${size.x.toFixed(1)}×${size.y.toFixed(1)}×${size.z.toFixed(1)}`);
         dbg(`[GLB] 중심: (${center.x.toFixed(1)}, ${center.y.toFixed(1)}, ${center.z.toFixed(1)})`);
 
+        /* 모델 바닥을 y=0에, 수평 중심을 원점에 맞춤 */
+        const fitInfo = {
+          offsetX: -center.x,
+          offsetY: -box.min.y,   /* 바닥 → y=0 */
+          offsetZ: -center.z,
+          /* 카메라 타겟 = 월드 중심 (x=0, y=모델높이/2, z=0) */
+          cx: 0,
+          cy: size.y / 2,
+          cz: 0,
+          /* 카메라 거리 = 최대 치수의 1.6배 (4개 구역 모두 화면 안에) */
+          camR: Math.max(size.x, size.z) * 1.6
+        };
+        dbg(`[GLB] fitInfo: offsetY=${fitInfo.offsetY.toFixed(2)}, camR=${fitInfo.camR.toFixed(1)}`);
+
         // 4개 씬에 clone 분배
         SEASON_KEYS.forEach(s => {
-          seasonScenes[s].attachModel(gltf.scene);
+          seasonScenes[s].attachModel(gltf.scene, fitInfo);
         });
         dbg('[GLB] 4개 씬에 적용 완료');
 
@@ -1929,6 +1958,13 @@
         console.error('[GLB] 상세:', err);
 
         /* GLB 없을 때 블록+바닥 플레이스홀더 + 구역 3D 점선 */
+        /* 카메라 타겟·거리도 fallback 씬에 맞게 조정 */
+        SEASON_KEYS.forEach(s => {
+          seasonScenes[s].cameraTarget.set(0, 0, 0);
+          seasonScenes[s].sph.r = 55;
+          seasonScenes[s].sph.phi = 0.32;
+          seasonScenes[s]._updateCamera();
+        });
         const SCENE_HALF = 25; // 씬 절반 크기 (SVG 0-100 → -25~+25)
         const ZONE_COLORS = {
           spring: { A: 0xa5d6a7, B: 0xf48fb1, C: 0xffcc80, D: 0x80cbc4 },

@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir \"c:\\\\Users\\\\joyew\\\\Desktop\\\\생명\\\\icy_rage\")"
+      "Bash(dir \"c:\\\\Users\\\\joyew\\\\Desktop\\\\생명\\\\icy_rage\")",
+      "Bash(git -C \"/c/Users/joyew/Desktop/생명/icy_rage\" log --oneline -8)",
+      "Bash(git -C \"/c/Users/joyew/Desktop/생명/icy_rage\" show \"1eee942:garden/simulation.html\")",
+      "Bash(git -C \"/c/Users/joyew/Desktop/생명/icy_rage\" show \"HEAD:garden/simulation.html\")",
+      "Bash(git -C \"/c/Users/joyew/Desktop/생명/icy_rage\" show \"HEAD:garden/js/main.js\")"
     ]
   }
 }
