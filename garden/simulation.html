@@ -12,14 +12,15 @@
 
   <!-- ── 헤더 ── -->
   <header class="header">
-<<<<<<< HEAD
-    <a href="../index.html" class="back-btn" style="position:absolute;left:1.2rem;top:50%;transform:translateY(-50%)">← 처음으로</a>
-=======
-    <a href="../index.html" class="back-btn" style="position:absolute;left:1.2rem;top:50%;transform:translateY(-50%)">←
-      처음으로</a>
->>>>>>> 1eee942 (5차 수정)
-    <h1 class="header-title">별빛 정원 생물 다양성 시뮬레이션</h1>
-    <p class="header-sub">창원성민여자고등학교 · 2026 – 2050</p>
+    <<<<<<< HEAD <a href="../index.html" class="back-btn"
+      style="position:absolute;left:1.2rem;top:50%;transform:translateY(-50%)">← 처음으로</a>
+      =======
+      <a href="../index.html" class="back-btn"
+        style="position:absolute;left:1.2rem;top:50%;transform:translateY(-50%)">←
+        처음으로</a>
+      >>>>>>> 1eee942 (5차 수정)
+      <h1 class="header-title">별빛 정원 생물 다양성 시뮬레이션</h1>
+      <p class="header-sub">창원성민여자고등학교 · 2026 – 2050</p>
   </header>
 
   <!-- ── 연도 슬라이더 ── -->
@@ -32,13 +33,11 @@
     <div class="slider-wrap">
       <span class="slider-edge-label">2026</span>
       <div class="slider-inner">
-<<<<<<< HEAD
-        <input type="range" id="yearSlider"
-               min="2026" max="2050" step="2" value="2026"
-               class="year-slider"/>
-=======
+        <<<<<<< HEAD <input type="range" id="yearSlider" min="2026" max="2050" step="2" value="2026"
+          class="year-slider" />
+        =======
         <input type="range" id="yearSlider" min="2026" max="2050" step="2" value="2026" class="year-slider" />
->>>>>>> 1eee942 (5차 수정)
+        >>>>>>> 1eee942 (5차 수정)
         <div class="slider-ticks">
           <span>2026</span><span>2032</span><span>2038</span>
           <span>2044</span><span>2050</span>
@@ -146,12 +145,12 @@
         <span class="l-heat">열섬 완화 효과 (°C)</span>
       </div>
       <p class="trend-note">현재 선택 연도는 세로선으로 표시됩니다. 슬라이더를 움직이면 실시간 반영됩니다.</p>
-<<<<<<< HEAD
-      <p class="trend-note" style="color:rgba(255,255,255,0.4);font-size:10px;margin-top:4px">※ RCP 4.5 시나리오 기준 — 2050년까지 창원 연평균 +3.0°C 상승 가정</p>
-=======
-      <p class="trend-note" style="color:rgba(255,255,255,0.4);font-size:10px;margin-top:4px">※ RCP 4.5 시나리오 기준 —
-        2050년까지 창원 연평균 +3.0°C 상승 가정</p>
->>>>>>> 1eee942 (5차 수정)
+      <<<<<<< HEAD <p class="trend-note" style="color:rgba(255,255,255,0.4);font-size:10px;margin-top:4px">※ RCP 4.5
+        시나리오 기준 — 2050년까지 창원 연평균 +3.0°C 상승 가정</p>
+        =======
+        <p class="trend-note" style="color:rgba(255,255,255,0.4);font-size:10px;margin-top:4px">※ RCP 4.5 시나리오 기준 —
+          2050년까지 창원 연평균 +3.0°C 상승 가정</p>
+        >>>>>>> 1eee942 (5차 수정)
     </div>
   </div>
 
@@ -164,221 +163,7 @@
   <script src="js/main.js"></script>
 
   <script>
-<<<<<<< HEAD
-  /* ================================================================
-     RCP 4.5 기후 데이터 (창원, 2025년 기준 연평균 15.8°C)
-     2050년까지 총 +3.0°C 상승
-     강수량: 1150mm 기준 +6% 증가
-  ================================================================ */
-  var CHART_YEARS = [2026,2028,2030,2032,2034,2036,2038,2040,2042,2044,2046,2048,2050];
-
-  /* RCP 4.5 기후 테이블 */
-  var CLIMATE_RCP45 = {
-    2026:{temp:15.9, rain:1152, delta:0.1},
-    2028:{temp:16.0, rain:1158, delta:0.2},
-    2030:{temp:16.2, rain:1163, delta:0.4},
-    2032:{temp:16.5, rain:1169, delta:0.7},
-    2034:{temp:16.7, rain:1174, delta:0.9},
-    2036:{temp:16.9, rain:1180, delta:1.1},
-    2038:{temp:17.2, rain:1185, delta:1.4},
-    2040:{temp:17.4, rain:1191, delta:1.6},
-    2042:{temp:17.7, rain:1196, delta:1.9},
-    2044:{temp:18.0, rain:1202, delta:2.2},
-    2046:{temp:18.2, rain:1207, delta:2.4},
-    2048:{temp:18.5, rain:1213, delta:2.7},
-    2050:{temp:18.8, rain:1219, delta:3.0}
-  };
-
-  /* 현재 선택 연도 (main.js 등에서 공유) */
-  var currentYear = 2026;
-
-  /* calcG: 연도별 생태 성숙도 (0~1) */
-  function calcG(yr) {
-    var t = (yr - 2026) / 24;
-    return Math.pow(t, 0.7);
-  }
-
-  /* 열섬 완화: RCP 4.5에서는 더 낮은 기온 상승폭으로 완화 효과 안정 유지 */
-  function calcHeatRelief(yr) {
-    var c = CLIMATE_RCP45[yr];
-    /* 기온 상승 +1.5°C 초과분부터 미미한 약화 시작 */
-    return -1.2 + Math.max(0, (c.delta - 1.5)) * 0.08;
-  }
-
-  /* 고온 스트레스: RCP 4.5에서 2050년 18.8°C — "중간" 상한선 조정 */
-  function calcStress(yr) {
-    var temp = CLIMATE_RCP45[yr].temp;
-    if (temp >= 18.5) return {text:'중간', cls:'warn'};
-    if (temp >= 17.5) return {text:'약간', cls:'warn'};
-    return {text:'낮음', cls:'good'};
-  }
-
-  function openTrendModal() {
-    document.getElementById('trendModal').classList.add('open');
-    drawTrendChart();
-  }
-  function closeTrendModal() {
-    document.getElementById('trendModal').classList.remove('open');
-  }
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeTrendModal();
-  });
-
-  function drawTrendChart() {
-    var canvas = document.getElementById('trendCanvas');
-    if (!canvas) return;
-    var dpr = window.devicePixelRatio || 1;
-    var W = Math.min(560, canvas.parentElement.clientWidth - 40);
-    var H = 240;
-    canvas.style.width  = W + 'px';
-    canvas.style.height = H + 'px';
-    canvas.width  = W * dpr;
-    canvas.height = H * dpr;
-    var ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-
-    var pL=46, pR=42, pT=28, pB=38;
-    var cW = W - pL - pR;
-    var cH = H - pT - pB;
-
-    /* RCP 4.5 반영 데이터 계산 — H'는 1.0에서 시작해 성숙도에 따라 성장 */
-    var shannon=[], animals=[], heat=[];
-    CHART_YEARS.forEach(function(yr) {
-      var g = calcG(yr);
-      shannon.push(1.0 + g * 2.1);
-      animals.push(3 + g * 15);
-      heat.push(0.1 + g * 1.1);
-    });
-
-    /* 배경 */
-    ctx.fillStyle = '#111827';
-    ctx.fillRect(0, 0, W, H);
-
-    /* 격자 */
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-    ctx.lineWidth = 1;
-    for (var i = 0; i <= 4; i++) {
-      var gy = pT + cH - (cH / 4) * i;
-      ctx.beginPath(); ctx.moveTo(pL, gy); ctx.lineTo(pL + cW, gy); ctx.stroke();
-    }
-    for (var j = 0; j < CHART_YEARS.length; j++) {
-      var gx = pL + (j / (CHART_YEARS.length - 1)) * cW;
-      ctx.beginPath(); ctx.moveTo(gx, pT); ctx.lineTo(gx, pT + cH); ctx.stroke();
-    }
-
-    /* X축 레이블 */
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'center';
-    CHART_YEARS.forEach(function(yr, i) {
-      if (i % 2 === 0) {
-        var lx = pL + (i / (CHART_YEARS.length - 1)) * cW;
-        ctx.fillText("'" + String(yr).slice(2), lx, H - 10);
-      }
-    });
-
-    /* 현재 연도 세로선 */
-    var curIdx = CHART_YEARS.indexOf(currentYear);
-    if (curIdx < 0) {
-      for (var k = 0; k < CHART_YEARS.length; k++) {
-        if (CHART_YEARS[k] >= currentYear) { curIdx = k; break; }
-      }
-    }
-    if (curIdx >= 0) {
-      var cx = pL + (curIdx / (CHART_YEARS.length - 1)) * cW;
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + cH); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 10px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(CHART_YEARS[curIdx] + '년', cx, pT - 8);
-    }
-
-    function drawLine(vals, minV, maxV, color, fillAlpha) {
-      var pts = vals.map(function(v, i) {
-        return [
-          pL + (i / (vals.length - 1)) * cW,
-          pT + cH - ((v - minV) / (maxV - minV)) * cH
-        ];
-      });
-      ctx.beginPath();
-      pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
-      ctx.lineTo(pts[pts.length-1][0], pT + cH);
-      ctx.lineTo(pts[0][0], pT + cH);
-      ctx.closePath();
-      ctx.fillStyle = color.replace(')', ', ' + fillAlpha + ')').replace('rgb(', 'rgba(');
-      ctx.fill();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.5;
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
-      ctx.stroke();
-      ctx.fillStyle = color;
-      pts.forEach(function(p, i) {
-        ctx.beginPath();
-        ctx.arc(p[0], p[1], i === curIdx ? 5 : 3, 0, Math.PI * 2);
-        ctx.fill();
-        if (i === curIdx) {
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.fillStyle = '#fff';
-          ctx.font = 'bold 11px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(vals[i].toFixed(vals[i] < 10 ? 2 : 0), p[0], p[1] - 10);
-          ctx.fillStyle = color;
-        }
-      });
-    }
-
-    /* Y 좌축 (Shannon H') */
-    ctx.fillStyle = 'rgba(74,222,128,0.7)';
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'right';
-    [1.0, 1.5, 2.0, 2.5, 3.0].forEach(function(v) {
-      var ly = pT + cH - ((v - 1.0) / 2.2) * cH;
-      ctx.fillText(v.toFixed(1), pL - 5, ly + 3);
-    });
-    ctx.fillStyle = 'rgba(74,222,128,0.5)';
-    ctx.font = '9px sans-serif';
-    ctx.save(); ctx.translate(12, pT + cH / 2); ctx.rotate(-Math.PI / 2);
-    ctx.textAlign = 'center'; ctx.fillText("Shannon H'", 0, 0); ctx.restore();
-
-    /* Y 우축 (동물 종 수) */
-    ctx.fillStyle = 'rgba(147,197,253,0.7)';
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'left';
-    [3, 6, 9, 12, 15, 18].forEach(function(v) {
-      var ly = pT + cH - ((v - 3) / 15) * cH;
-      ctx.fillText(v + '종', W - pR + 5, ly + 3);
-    });
-    ctx.fillStyle = 'rgba(147,197,253,0.5)';
-    ctx.font = '9px sans-serif';
-    ctx.save(); ctx.translate(W - 8, pT + cH / 2); ctx.rotate(Math.PI / 2);
-    ctx.textAlign = 'center'; ctx.fillText('동물 종 수', 0, 0); ctx.restore();
-
-    drawLine(shannon, 1.0, 3.2, 'rgb(74,222,128)',  0.10);
-    drawLine(animals, 3,   18,  'rgb(147,197,253)', 0.08);
-    drawLine(heat,    0,   1.2, 'rgb(251,146,60)',  0.08);
-  }
-
-  /* 슬라이더 연동 */
-  document.addEventListener('DOMContentLoaded', function() {
-    var sl = document.getElementById('yearSlider');
-    if (sl) {
-      sl.addEventListener('input', function() {
-        currentYear = parseInt(this.value);
-        var modal = document.getElementById('trendModal');
-        if (modal && modal.classList.contains('open')) drawTrendChart();
-      });
-    }
-  });
-=======
+    /*<<<<<<< HEAD */
     /* ================================================================
        RCP 4.5 기후 데이터 (창원, 2025년 기준 연평균 15.8°C)
        2050년까지 총 +3.0°C 상승
@@ -592,7 +377,221 @@
         });
       }
     });
->>>>>>> 1eee942 (5차 수정)
+
+    /* ================================================================
+       RCP 4.5 기후 데이터 (창원, 2025년 기준 연평균 15.8°C)
+       2050년까지 총 +3.0°C 상승
+       강수량: 1150mm 기준 +6% 증가
+    ================================================================ */
+    var CHART_YEARS = [2026, 2028, 2030, 2032, 2034, 2036, 2038, 2040, 2042, 2044, 2046, 2048, 2050];
+
+    /* RCP 4.5 기후 테이블 */
+    var CLIMATE_RCP45 = {
+      2026: { temp: 15.9, rain: 1152, delta: 0.1 },
+      2028: { temp: 16.0, rain: 1158, delta: 0.2 },
+      2030: { temp: 16.2, rain: 1163, delta: 0.4 },
+      2032: { temp: 16.5, rain: 1169, delta: 0.7 },
+      2034: { temp: 16.7, rain: 1174, delta: 0.9 },
+      2036: { temp: 16.9, rain: 1180, delta: 1.1 },
+      2038: { temp: 17.2, rain: 1185, delta: 1.4 },
+      2040: { temp: 17.4, rain: 1191, delta: 1.6 },
+      2042: { temp: 17.7, rain: 1196, delta: 1.9 },
+      2044: { temp: 18.0, rain: 1202, delta: 2.2 },
+      2046: { temp: 18.2, rain: 1207, delta: 2.4 },
+      2048: { temp: 18.5, rain: 1213, delta: 2.7 },
+      2050: { temp: 18.8, rain: 1219, delta: 3.0 }
+    };
+
+    /* 현재 선택 연도 (main.js 등에서 공유) */
+    var currentYear = 2026;
+
+    /* calcG: 연도별 생태 성숙도 (0~1) */
+    function calcG(yr) {
+      var t = (yr - 2026) / 24;
+      return Math.pow(t, 0.7);
+    }
+
+    /* 열섬 완화: RCP 4.5에서는 더 낮은 기온 상승폭으로 완화 효과 안정 유지 */
+    function calcHeatRelief(yr) {
+      var c = CLIMATE_RCP45[yr];
+      /* 기온 상승 +1.5°C 초과분부터 미미한 약화 시작 */
+      return -1.2 + Math.max(0, (c.delta - 1.5)) * 0.08;
+    }
+
+    /* 고온 스트레스: RCP 4.5에서 2050년 18.8°C — "중간" 상한선 조정 */
+    function calcStress(yr) {
+      var temp = CLIMATE_RCP45[yr].temp;
+      if (temp >= 18.5) return { text: '중간', cls: 'warn' };
+      if (temp >= 17.5) return { text: '약간', cls: 'warn' };
+      return { text: '낮음', cls: 'good' };
+    }
+
+    function openTrendModal() {
+      document.getElementById('trendModal').classList.add('open');
+      drawTrendChart();
+    }
+    function closeTrendModal() {
+      document.getElementById('trendModal').classList.remove('open');
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeTrendModal();
+    });
+
+    function drawTrendChart() {
+      var canvas = document.getElementById('trendCanvas');
+      if (!canvas) return;
+      var dpr = window.devicePixelRatio || 1;
+      var W = Math.min(560, canvas.parentElement.clientWidth - 40);
+      var H = 240;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      var pL = 46, pR = 42, pT = 28, pB = 38;
+      var cW = W - pL - pR;
+      var cH = H - pT - pB;
+
+      /* RCP 4.5 반영 데이터 계산 — H'는 1.0에서 시작해 성숙도에 따라 성장 */
+      var shannon = [], animals = [], heat = [];
+      CHART_YEARS.forEach(function (yr) {
+        var g = calcG(yr);
+        shannon.push(1.0 + g * 2.1);
+        animals.push(3 + g * 15);
+        heat.push(0.1 + g * 1.1);
+      });
+
+      /* 배경 */
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(0, 0, W, H);
+
+      /* 격자 */
+      ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+      ctx.lineWidth = 1;
+      for (var i = 0; i <= 4; i++) {
+        var gy = pT + cH - (cH / 4) * i;
+        ctx.beginPath(); ctx.moveTo(pL, gy); ctx.lineTo(pL + cW, gy); ctx.stroke();
+      }
+      for (var j = 0; j < CHART_YEARS.length; j++) {
+        var gx = pL + (j / (CHART_YEARS.length - 1)) * cW;
+        ctx.beginPath(); ctx.moveTo(gx, pT); ctx.lineTo(gx, pT + cH); ctx.stroke();
+      }
+
+      /* X축 레이블 */
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      CHART_YEARS.forEach(function (yr, i) {
+        if (i % 2 === 0) {
+          var lx = pL + (i / (CHART_YEARS.length - 1)) * cW;
+          ctx.fillText("'" + String(yr).slice(2), lx, H - 10);
+        }
+      });
+
+      /* 현재 연도 세로선 */
+      var curIdx = CHART_YEARS.indexOf(currentYear);
+      if (curIdx < 0) {
+        for (var k = 0; k < CHART_YEARS.length; k++) {
+          if (CHART_YEARS[k] >= currentYear) { curIdx = k; break; }
+        }
+      }
+      if (curIdx >= 0) {
+        var cx = pL + (curIdx / (CHART_YEARS.length - 1)) * cW;
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + cH); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(CHART_YEARS[curIdx] + '년', cx, pT - 8);
+      }
+
+      function drawLine(vals, minV, maxV, color, fillAlpha) {
+        var pts = vals.map(function (v, i) {
+          return [
+            pL + (i / (vals.length - 1)) * cW,
+            pT + cH - ((v - minV) / (maxV - minV)) * cH
+          ];
+        });
+        ctx.beginPath();
+        pts.forEach(function (p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
+        ctx.lineTo(pts[pts.length - 1][0], pT + cH);
+        ctx.lineTo(pts[0][0], pT + cH);
+        ctx.closePath();
+        ctx.fillStyle = color.replace(')', ', ' + fillAlpha + ')').replace('rgb(', 'rgba(');
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        pts.forEach(function (p, i) { i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); });
+        ctx.stroke();
+        ctx.fillStyle = color;
+        pts.forEach(function (p, i) {
+          ctx.beginPath();
+          ctx.arc(p[0], p[1], i === curIdx ? 5 : 3, 0, Math.PI * 2);
+          ctx.fill();
+          if (i === curIdx) {
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(vals[i].toFixed(vals[i] < 10 ? 2 : 0), p[0], p[1] - 10);
+            ctx.fillStyle = color;
+          }
+        });
+      }
+
+      /* Y 좌축 (Shannon H') */
+      ctx.fillStyle = 'rgba(74,222,128,0.7)';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'right';
+      [1.0, 1.5, 2.0, 2.5, 3.0].forEach(function (v) {
+        var ly = pT + cH - ((v - 1.0) / 2.2) * cH;
+        ctx.fillText(v.toFixed(1), pL - 5, ly + 3);
+      });
+      ctx.fillStyle = 'rgba(74,222,128,0.5)';
+      ctx.font = '9px sans-serif';
+      ctx.save(); ctx.translate(12, pT + cH / 2); ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center'; ctx.fillText("Shannon H'", 0, 0); ctx.restore();
+
+      /* Y 우축 (동물 종 수) */
+      ctx.fillStyle = 'rgba(147,197,253,0.7)';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'left';
+      [3, 6, 9, 12, 15, 18].forEach(function (v) {
+        var ly = pT + cH - ((v - 3) / 15) * cH;
+        ctx.fillText(v + '종', W - pR + 5, ly + 3);
+      });
+      ctx.fillStyle = 'rgba(147,197,253,0.5)';
+      ctx.font = '9px sans-serif';
+      ctx.save(); ctx.translate(W - 8, pT + cH / 2); ctx.rotate(Math.PI / 2);
+      ctx.textAlign = 'center'; ctx.fillText('동물 종 수', 0, 0); ctx.restore();
+
+      drawLine(shannon, 1.0, 3.2, 'rgb(74,222,128)', 0.10);
+      drawLine(animals, 3, 18, 'rgb(147,197,253)', 0.08);
+      drawLine(heat, 0, 1.2, 'rgb(251,146,60)', 0.08);
+    }
+
+    /* 슬라이더 연동 */
+    document.addEventListener('DOMContentLoaded', function () {
+      var sl = document.getElementById('yearSlider');
+      if (sl) {
+        sl.addEventListener('input', function () {
+          currentYear = parseInt(this.value);
+          var modal = document.getElementById('trendModal');
+          if (modal && modal.classList.contains('open')) drawTrendChart();
+        });
+      }
+    });
+    /*>>>>>>> 1eee942 (5차 수정)*/
   </script>
 
 </body>
